@@ -55,22 +55,36 @@ public class MainForm{
         });
 
         groupComboBox.addActionListener(e -> {
-            state.setGroup(groupComboBox.getSelectedItem().toString());
+            if(groupComboBox.getSelectedIndex() !=0){
+                state.setGroup(groupComboBox.getSelectedItem().toString());
+            }
+            else{
+                state.setGroup(null);
+            }
+
         });
         Vector<String> groupNames = databaseWorker.getGroupNames();
         if(groupNames != null){
             groupComboBox.setModel(new DefaultComboBoxModel(databaseWorker.getGroupNames()));
-        }
-
+        };
+        groupComboBox.insertItemAt("Не выбрано",0);
+        groupComboBox.setSelectedIndex(0);
         groupComboBox.setToolTipText("Например: \"A-11\"");
 
         teacherComboBox.addActionListener(e -> {
-            state.setTeacher(teacherComboBox.getSelectedItem().toString());
+            if(teacherComboBox.getSelectedIndex() != 0){
+                state.setTeacher(teacherComboBox.getSelectedItem().toString());
+            }
+            else{
+                state.setTeacher(null);
+            }
         });
         Vector<String> teacherNames = databaseWorker.getTeacherNames();
         if(teacherNames != null){
             teacherComboBox.setModel(new DefaultComboBoxModel(databaseWorker.getTeacherNames()));
-        }
+        };
+        teacherComboBox.insertItemAt("Не выбрано", 0);
+        teacherComboBox.setSelectedIndex(0);
         teacherComboBox.setToolTipText("Например: \"Иванов И.И\"");
 
         backwardButton.addActionListener(e -> {

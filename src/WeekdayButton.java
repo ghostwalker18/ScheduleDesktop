@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -46,6 +48,7 @@ public class WeekdayButton extends JPanel implements Observer {
         add(buttonContainer);
 
         table.setModel(makeDataModel(date, group, teacher));
+        table.setFocusable(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         table.setDefaultRenderer(Object.class, centerRenderer);
@@ -61,16 +64,28 @@ public class WeekdayButton extends JPanel implements Observer {
         button.setForeground(Color.WHITE);
         button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-down.gif")));
         button.setText(generateTitle(date, this.dayOfWeek));
-        button.addActionListener(e -> {
-            isOpened = !isOpened;
-            tablePanel.setVisible(isOpened);
-            if(isOpened){
-                button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-up.gif")));
-            }
-            else{
-                button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-down.gif")));
+        button.addActionListener(e -> setTableVisible());
+
+        button.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    setTableVisible();
+                }
             }
         });
+    }
+
+    private void setTableVisible(){
+        isOpened = !isOpened;
+        tablePanel.setVisible(isOpened);
+        if(isOpened){
+            button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-up.gif")));
+        }
+        else{
+            button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-down.gif")));
+        }
     }
 
     private String generateTitle(Calendar date,  String dayOfWeek){

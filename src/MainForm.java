@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Vector;
@@ -90,10 +92,26 @@ public class MainForm{
         backwardButton.addActionListener(e -> {
             state.goPreviousWeek();
         });
+        backwardButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                    state.goPreviousWeek();
+            }
+        });
         backwardButton.setToolTipText("Предыдущая неделя");
 
         forwardButton.addActionListener(e -> {
             state.goNextWeek();
+        });
+        forwardButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                    state.goNextWeek();
+            }
         });
         forwardButton.setToolTipText("Следующая неделя");
     }

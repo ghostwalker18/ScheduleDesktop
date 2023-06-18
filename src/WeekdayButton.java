@@ -17,6 +17,7 @@ public class WeekdayButton extends JPanel implements Observer {
         weekdaysNumbers.put("Четверг", Calendar.THURSDAY);
         weekdaysNumbers.put("Пятница", Calendar.FRIDAY);
     }
+    private Theme theme = new DefaulTheme();
     private boolean isOpened = false;
 
     private JPanel tablePanel = new JPanel();
@@ -60,8 +61,8 @@ public class WeekdayButton extends JPanel implements Observer {
         tablePanel.setVisible(isOpened);
         add(tablePanel);
 
-        button.setBackground(new Color(102,161,1));
-        button.setForeground(Color.WHITE);
+        button.setBackground(theme.getPrimaryColor());
+        button.setForeground(theme.getTextColor());
         button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-down.gif")));
         button.setText(generateTitle(date, this.dayOfWeek));
         button.addActionListener(e -> setTableVisible());
@@ -117,7 +118,7 @@ public class WeekdayButton extends JPanel implements Observer {
         }
         return false;
     }
-    public DefaultTableModel makeDataModel(Calendar date, String group, String teacher){
+    private DefaultTableModel makeDataModel(Calendar date, String group, String teacher){
         Vector<String[]> scheduleItems = databaseWorker.getDaySchedule(date, group, teacher);
         DefaultTableModel tableModel = new DefaultTableModel(tableColumnNames, 0);
         if(scheduleItems != null){

@@ -9,6 +9,7 @@ import java.util.Vector;
 public class MainForm{
 
     private ScheduleState state;
+    private Theme theme = new DefaulTheme();
     private DatabaseWorker databaseWorker = DatabaseWorker.getInstance();
     private JComboBox groupComboBox;
     private JButton clearButton;
@@ -42,9 +43,11 @@ public class MainForm{
         state.addObserver(fridayButton);
     }
     public MainForm() throws SQLException{
+        UIManager.put("ToolTip.background", theme.getBackgroundColor());
+        UIManager.put("ToolTip.foreground", theme.getAccentColor());
         scheduleScroll.getVerticalScrollBar().setUnitIncrement(6);
-        scheduleScroll.getVerticalScrollBar().setBackground(Color.WHITE);
-        scheduleScroll.getVerticalScrollBar().setForeground(new Color(40,158,46));
+        scheduleScroll.getVerticalScrollBar().setBackground(theme.getBackgroundColor());
+        scheduleScroll.getVerticalScrollBar().setForeground(theme.getPrimaryColor());
 
         clearButton.addActionListener(e -> {
             groupComboBox.setSelectedIndex(0);

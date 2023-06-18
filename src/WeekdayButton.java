@@ -23,7 +23,7 @@ public class WeekdayButton extends JPanel implements Observer {
     private JPanel tablePanel = new JPanel();
     private  JButton button = new JButton();
 
-    private String[] tableColumnNames = new String[]{
+    private final String[] tableColumnNames = new String[]{
             "Пара", "Время", "Предмет", "Преподаватель", "Кабинет"
     };
     private JTable table = new JTable();
@@ -42,11 +42,13 @@ public class WeekdayButton extends JPanel implements Observer {
         };
         button.setToolTipText(toolTip);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        Box buttonContainer = Box.createHorizontalBox();
-        buttonContainer.add(Box.createVerticalStrut(0));
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new GridLayout(1,3));
+        buttonContainer.add(new JPanel());
         buttonContainer.add(button);
-        buttonContainer.add(Box.createVerticalStrut(0));
+        buttonContainer.add(new JPanel());
         add(buttonContainer);
+
 
         table.setModel(makeDataModel(date, group, teacher));
         table.setFocusable(false);

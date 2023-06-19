@@ -8,7 +8,7 @@ public class Main {
         DatabaseWorker databaseWorker = DatabaseWorker.getInstance();
         databaseWorker.updateDatabase();
         JFrame app = new JFrame("Расписание");
-        app.setSize(600, 400);
+        app.setPreferredSize(new Dimension(800,500));
         app.setIconImage(Toolkit.getDefaultToolkit().createImage(Main.class.getResource("/images/favicon.gif")));
         app.setContentPane(new MainForm().mainPanel);
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

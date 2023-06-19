@@ -1,8 +1,10 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
@@ -30,7 +32,7 @@ public class MainForm{
     private JScrollPane scheduleScroll;
 
     private void createUIComponents() throws SQLException {
-        state = new ScheduleState(new Date(2023 - 1900, 6 - 1, 8));
+        state = new ScheduleState(new Date(2023 - 1900, Calendar.JUNE, 8));
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Понедельник");
         state.addObserver(mondayButton);
         tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Вторник");
@@ -45,9 +47,22 @@ public class MainForm{
     public MainForm() throws SQLException{
         UIManager.put("ToolTip.background", theme.getBackgroundColor());
         UIManager.put("ToolTip.foreground", theme.getAccentColor());
+        schedulePanel.setBackground(theme.getBackgroundColor());
         scheduleScroll.getVerticalScrollBar().setUnitIncrement(6);
-        scheduleScroll.getVerticalScrollBar().setBackground(theme.getBackgroundColor());
-        scheduleScroll.getVerticalScrollBar().setForeground(theme.getPrimaryColor());
+        scheduleScroll.getVerticalScrollBar().setUI(new BasicScrollBarUI(){
+            @Override
+            protected void configureScrollBarColors(){
+                this.thumbColor = theme.getSecondaryColor();
+                this.trackColor = theme.getBackgroundColor();
+            }
+        });
+        scheduleScroll.getHorizontalScrollBar().setUI(new BasicScrollBarUI(){
+            @Override
+            protected void configureScrollBarColors(){
+                this.thumbColor = theme.getSecondaryColor();
+                this.trackColor = theme.getBackgroundColor();
+            }
+        });
 
         clearButton.addActionListener(e -> {
             groupComboBox.setSelectedIndex(0);

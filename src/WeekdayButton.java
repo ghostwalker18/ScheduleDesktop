@@ -57,6 +57,8 @@ public class WeekdayButton extends JPanel implements Observer {
         table.setDefaultRenderer(Object.class, centerRenderer);
 
         JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setBackground(theme.getSecondaryColor());
+        tableHeader.setForeground(theme.getTextColor());
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
         tablePanel.add(tableHeader);
         tablePanel.add(table);

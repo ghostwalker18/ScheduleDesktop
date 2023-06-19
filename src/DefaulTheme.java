@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class DefaulTheme implements Theme{
@@ -24,5 +25,10 @@ public class DefaulTheme implements Theme{
     @Override
     public Color getBackgroundColor() {
         return Color.WHITE;
+    }
+
+    @Override
+    public ImageIcon getThemeIcon() {
+        return null;
     }
 }

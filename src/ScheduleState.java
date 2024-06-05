@@ -1,7 +1,6 @@
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
-import java.util.Observer;
 public class ScheduleState extends Observable {
     private String group;
     private String teacher;

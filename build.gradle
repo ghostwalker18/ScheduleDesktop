@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'com.ghostwalker18'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+dependencies {
+    implementation "org.jsoup:jsoup:1.12.2"
+    implementation "org.apache.poi:poi-ooxml:3.17"
+    implementation "org.xerial:sqlite-jdbc:3.42.0.0"
+    implementation "org.apache.xmlbeans:xmlbeans:3.1.0"
+    implementation "javax.xml.stream:stax-api:1.0"
+    implementation "com.fasterxml:aalto-xml:1.2.2"
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

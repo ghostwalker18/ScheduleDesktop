@@ -71,4 +71,22 @@ public class XMLStoLessonsConverter {
         }
         return lessons;
     }
+
+    private static String getCellContentsAsString(XSSFSheet sheet, int row, int column){
+        CellType cellType = sheet.getRow(row)
+                .getCell(column)
+                .getCellTypeEnum();
+        switch (cellType){
+            case STRING:
+                return sheet.getRow(row)
+                        .getCell(column)
+                        .getStringCellValue();
+            case NUMERIC:
+                return String.valueOf((int)sheet.getRow(row)
+                        .getCell(column)
+                        .getNumericCellValue());
+            default:
+                return "";
+        }
+    }
 }

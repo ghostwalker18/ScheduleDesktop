@@ -5,17 +5,13 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.TreeMap;
+
+import java.util.*;
 
 public class XMLStoLessonsConverter {
     public static List<Lesson> convert(XSSFWorkbook excelFile){
         List<Lesson> lessons = new ArrayList<>();
+        DateConverters dateConverters = new DateConverters();
 
         for(int i = 0; i < excelFile.getNumberOfSheets(); i++){
             XSSFSheet sheet = excelFile.getSheetAt(i);
@@ -39,33 +35,33 @@ public class XMLStoLessonsConverter {
                         if(sheet.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
                             break scheduleFilling;
                         Lesson lesson = new Lesson();
-                        lesson.date = DateConverters.fromString(date);
-                        lesson.group = Objects.requireNonNull(groups.get(k));
-                        lesson.lessonNumber = sheet.getRow(j)
+                        lesson.setDate(dateConverters.convertToEntityAttribute(date));
+                        lesson.setGroup(Objects.requireNonNull(groups.get(k)));
+                        lesson.setLessonNumber(sheet.getRow(j)
                                 .getCell(1)
-                                .getStringCellValue();
-                        lesson.times = sheet.getRow(j+1)
+                                .getStringCellValue());
+                        lesson.setTimes(sheet.getRow(j + 1)
                                 .getCell(1)
-                                .getStringCellValue();
-                        lesson.subject = sheet.getRow(j)
+                                .getStringCellValue());
+                        lesson.setSubject(sheet.getRow(j)
                                 .getCell(k)
-                                .getStringCellValue();
-                        lesson.teacher = sheet.getRow(j+1)
+                                .getStringCellValue());
+                        lesson.setTeacher(sheet.getRow(j + 1)
                                 .getCell(k)
-                                .getStringCellValue();
+                                .getStringCellValue());
                         Integer nextGroupBound = groupBounds.higher(k);
                         if(nextGroupBound != null){
-                            lesson.roomNumber = getCellContentsAsString(sheet, j, nextGroupBound - 1);
+                            lesson.setRoomNumber(getCellContentsAsString(sheet, j, nextGroupBound - 1));
                         }
                         else{
                             String roomNumber = getCellContentsAsString(sheet, j, k + 2);
                             if(!roomNumber.equals(""))
-                                lesson.roomNumber = roomNumber;
+                                lesson.setRoomNumber(roomNumber);
                             else
-                                lesson.roomNumber = getCellContentsAsString(sheet, j, k + 3);
+                                lesson.setRoomNumber(getCellContentsAsString(sheet, j, k + 3));
                         }
                         //Required for primary key
-                        if(!lesson.subject.equals(""))
+                        if(!lesson.getSubject().equals(""))
                             lessons.add(lesson);
                     }
                 }

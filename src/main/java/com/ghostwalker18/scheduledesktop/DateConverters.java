@@ -1,22 +1,27 @@
 package com.ghostwalker18.scheduledesktop;
 
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-public class DateConverters {
+@Converter
+public class DateConverters implements AttributeConverter<Calendar, String> {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-    static public String toString(Calendar date){
-        return date == null ? null : dateFormat.format(date.getTime());
+    @Override
+    public String convertToDatabaseColumn(Calendar attribute) {
+        return attribute == null ? null : dateFormat.format(attribute.getTime());
     }
 
-    static public Calendar fromString(String date){
-        if(date == null){
+    @Override
+    public Calendar convertToEntityAttribute(String dbData) {
+        if(dbData == null){
             return null;
         }
         else{
             try{
                 Calendar cal = Calendar.getInstance();
-                cal.setTime(dateFormat.parse(date));
+                cal.setTime(dateFormat.parse(dbData));
                 return cal;
             }
             catch (java.text.ParseException e){

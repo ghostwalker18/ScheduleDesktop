@@ -9,7 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.*;
 
 public class XMLStoLessonsConverter {
-    public static List<Lesson> convert(XSSFWorkbook excelFile){
+    public static List<Lesson> convertFirstCorpus(XSSFWorkbook excelFile){
         List<Lesson> lessons = new ArrayList<>();
         DateConverters dateConverters = new DateConverters();
 

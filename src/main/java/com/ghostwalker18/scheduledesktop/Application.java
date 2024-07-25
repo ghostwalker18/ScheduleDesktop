@@ -16,6 +16,7 @@ package com.ghostwalker18.scheduledesktop;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.prefs.Preferences;
 
@@ -39,13 +40,14 @@ public class Application {
         mainForm.setIconImage(Toolkit.getDefaultToolkit()
                 .createImage(Application.class.getResource("/images/favicon.gif")));
         mainForm.setContentPane(new MainForm().mainPanel);
-        mainForm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainForm.addWindowStateListener(e -> {
-            switch (e.getID()){
-                case WindowEvent.WINDOW_CLOSING:
-                    preferences.putInt("main_form_width", mainForm.getWidth());
-                    preferences.putInt("main_form_height", mainForm.getHeight());
-                    System.exit(0);
+        mainForm.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        mainForm.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                preferences.putInt("main_form_width", mainForm.getWidth());
+                preferences.putInt("main_form_height", mainForm.getHeight());
+                mainForm.dispose();
+                System.exit(0);
             }
         });
         mainForm.pack();

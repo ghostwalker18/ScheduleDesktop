@@ -37,19 +37,24 @@ public class MainForm {
     private WeekdayButton fridayButton;
     private JPanel schedulePanel;
     private JScrollPane scheduleScroll;
+    private JTabbedPane tabs;
+    private JPanel schedule;
+    private JPanel times;
+    private JButton shareButton;
+    private JButton settingsButton;
 
     private void createUIComponents() {
-            state = new ScheduleState(new Date(2023 - 1900, Calendar.JUNE, 8));
-            mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Понедельник");
-            state.addObserver(mondayButton);
-            tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Вторник");
-            state.addObserver(tuesdayButton);
-            wednesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Среда");
-            state.addObserver(wednesdayButton);
-            thursdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Четверг");
-            state.addObserver(thursdayButton);
-            fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Пятница");
-            state.addObserver(fridayButton);
+        state = new ScheduleState(new Date(2023 - 1900, Calendar.JUNE, 8));
+        mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Понедельник");
+        state.addObserver(mondayButton);
+        tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Вторник");
+        state.addObserver(tuesdayButton);
+        wednesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Среда");
+        state.addObserver(wednesdayButton);
+        thursdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Четверг");
+        state.addObserver(thursdayButton);
+        fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Пятница");
+        state.addObserver(fridayButton);
     }
 
     public MainForm() throws SQLException {
@@ -154,11 +159,17 @@ public class MainForm {
     private void $$$setupUI$$$() {
         createUIComponents();
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        tabs = new JTabbedPane();
+        tabs.setTabPlacement(1);
+        mainPanel.add(tabs, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        schedule = new JPanel();
+        schedule.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        tabs.addTab("Расписание", schedule);
         headerPanel = new JPanel();
         headerPanel.setLayout(new GridLayoutManager(1, 6, new Insets(0, 10, 0, 10), -1, -1));
         headerPanel.setBackground(new Color(-10051327));
-        mainPanel.add(headerPanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
+        schedule.add(headerPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
         chooseGroupLabel = new JLabel();
         chooseGroupLabel.setBackground(new Color(-1));
         chooseGroupLabel.setForeground(new Color(-1));
@@ -187,18 +198,11 @@ public class MainForm {
         clearButton1.setForeground(new Color(-16249741));
         clearButton1.setText("Очистить");
         headerPanel.add(clearButton1, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label1 = new JLabel();
-        label1.setText("Label");
-        mainPanel.add(label1, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        mainPanel.add(spacer1, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        mainPanel.add(spacer2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         schedulePanel = new JPanel();
         schedulePanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));
         schedulePanel.setBackground(new Color(-1));
         schedulePanel.setForeground(new Color(-1));
-        mainPanel.add(schedulePanel, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(24, 105), null, 0, false));
+        schedule.add(schedulePanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(24, 105), null, 0, false));
         backwardButton = new JButton();
         backwardButton.setBackground(new Color(-14115282));
         backwardButton.setForeground(new Color(-1));
@@ -220,6 +224,19 @@ public class MainForm {
         panel1.add(wednesdayButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(thursdayButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(fridayButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        times = new JPanel();
+        times.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        tabs.addTab("Звонки", times);
+        final JToolBar toolBar1 = new JToolBar();
+        mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        toolBar1.add(spacer1);
+        shareButton = new JButton();
+        shareButton.setText("Скопировать");
+        toolBar1.add(shareButton);
+        settingsButton = new JButton();
+        settingsButton.setText("Настройки");
+        toolBar1.add(settingsButton);
     }
 
     /**

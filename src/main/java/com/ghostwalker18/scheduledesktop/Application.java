@@ -14,6 +14,9 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -36,6 +39,7 @@ public class Application {
 
     private Application() throws Exception{
         repository.update();
+        ScheduleDesktopLightTheme.setup();
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

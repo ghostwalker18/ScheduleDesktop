@@ -21,18 +21,21 @@ import java.awt.event.WindowEvent;
 import java.util.prefs.Preferences;
 
 public class Application {
-    private static Application application = null;
-    private Preferences preferences = Preferences.userNodeForPackage(Application.class);
+    public static final String mondayTimesURL = "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
+    public static final String otherTimesURL = "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
+    private static Application instance = null;
+    private final ScheduleRepository repository = ScheduleRepository.getRepository();
+    private final Preferences preferences = repository.getPreferences();
     private JFrame mainForm;
 
     public static Application getInstance() throws Exception{
-        if(application == null)
-            application = new Application();
-        return application;
+        if(instance == null)
+            instance = new Application();
+        return instance;
     }
 
-
     private Application() throws Exception{
+        repository.update();
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),
@@ -54,9 +57,10 @@ public class Application {
         mainForm.setVisible(true);
     }
 
-    public Preferences getPreferences(){
-        return preferences;
+    public ScheduleRepository getRepository(){
+        return repository;
     }
+
     public static void main(String[] args) throws Exception{
         Application app = Application.getInstance();
     }

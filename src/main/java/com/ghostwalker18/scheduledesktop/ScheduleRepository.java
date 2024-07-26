@@ -24,25 +24,36 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.prefs.Preferences;
 
 public class ScheduleRepository {
 
     private static ScheduleRepository repository = null;
+    private  final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ScheduleNetworkAPI api;
     private final String baseUri = "https://ptgh.onego.ru/9006/";
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
+    private final String mondayTimesPath = "mondayTimes.jpg";
+    private final String otherTimesPath = "otherTimes.jpg";
 
-    public ScheduleRepository getRepository(){
+    private BufferedImage mondayTimes;
+    private BufferedImage otherTimes;
+
+    public static ScheduleRepository getRepository() throws Exception {
         if(repository == null)
                 repository = new ScheduleRepository();
         return repository;
     }
 
-    private ScheduleRepository(){
+    private ScheduleRepository() throws Exception {
         api = new Retrofit.Builder()
                 .baseUrl(baseUri)
                 .callbackExecutor(Executors.newSingleThreadExecutor())
@@ -50,7 +61,67 @@ public class ScheduleRepository {
                 .create(ScheduleNetworkAPI.class);
     }
 
+    public Preferences getPreferences(){
+        return preferences;
+    }
+
     public void update(){
+        //updating times files
+        File mondayTimesFile = new File(mondayTimesPath);
+        File otherTimesFile = new File(otherTimesPath);
+        if(!preferences.getBoolean("doNotUpdateTimes", true) || !mondayTimesFile.exists() || !otherTimesFile.exists()){
+            Call<ResponseBody> mondayTimesResponse = api.getMondayTimes();
+            mondayTimesResponse.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(response.body() != null){
+                        try{
+                            BufferedImage image = ImageIO.read(response.body().byteStream());
+                            mondayTimes = image;
+                            ImageIO.write(image, "jpg", mondayTimesFile);
+                        }
+                        catch (Exception e){}
+                        finally {
+                            response.body().close();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {}
+            });
+            Call<ResponseBody> otherTimesResponse = api.getOtherTimes();
+            otherTimesResponse.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(response.body() != null){
+                        try{
+                            BufferedImage image = ImageIO.read(response.body().byteStream());
+                            otherTimes = image;
+                            ImageIO.write(image, "jpg", otherTimesFile);
+                        }
+                        catch (Exception e){}
+                        finally {
+                            response.body().close();
+                        };
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {}
+            });
+        }
+        else{
+            new Thread(() -> {
+                try{
+                    BufferedImage bitmap1 = ImageIO.read(mondayTimesFile);
+                    mondayTimes = bitmap1;
+                    BufferedImage bitmap2 = ImageIO.read(otherTimesFile);
+                    otherTimes = bitmap2;
+                }
+                catch(Exception e){}
+            }).start();
+        }
         new Thread(() -> {
             List<String> scheduleLinks = getLinksForScheduleFirstCorpus();
             if(scheduleLinks.size() == 0)

@@ -20,6 +20,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Url;
 
 public interface ScheduleNetworkAPI {
+    @GET(Application.mondayTimesURL)
+    Call<ResponseBody> getMondayTimes();
+
+    @GET(Application.otherTimesURL)
+    Call<ResponseBody> getOtherTimes();
+
     @GET
     Call<ResponseBody> getScheduleFile(@Url String url);
 }

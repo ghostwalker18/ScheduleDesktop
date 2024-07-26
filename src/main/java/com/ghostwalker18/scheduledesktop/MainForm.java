@@ -64,20 +64,20 @@ public class MainForm {
         UIManager.put("ToolTip.foreground", theme.getAccentColor());
         schedulePanel.setBackground(theme.getBackgroundColor());
         scheduleScroll.getVerticalScrollBar().setUnitIncrement(6);
-        scheduleScroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+        /*scheduleScroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
             @Override
             protected void configureScrollBarColors() {
                 this.thumbColor = theme.getSecondaryColor();
                 this.trackColor = theme.getBackgroundColor();
             }
-        });
-        scheduleScroll.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+        });*/
+        /*scheduleScroll.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
             @Override
             protected void configureScrollBarColors() {
                 this.thumbColor = theme.getSecondaryColor();
                 this.trackColor = theme.getBackgroundColor();
             }
-        });
+        });*/
 
         clearButton.addActionListener(e -> {
             groupComboBox.setSelectedIndex(0);

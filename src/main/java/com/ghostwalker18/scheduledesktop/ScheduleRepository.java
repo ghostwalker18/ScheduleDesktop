@@ -47,6 +47,7 @@ public class ScheduleRepository {
 
     private final PublishSubject<BufferedImage> mondayTimes = PublishSubject.create();
     private final PublishSubject<BufferedImage> otherTimes = PublishSubject.create();
+    private final PublishSubject<Status> status = PublishSubject.create();
 
     public static ScheduleRepository getRepository() throws Exception {
         if(repository == null)
@@ -64,6 +65,18 @@ public class ScheduleRepository {
 
     public Preferences getPreferences(){
         return preferences;
+    }
+
+    public Observable<Status> getStatus(){
+        return status;
+    }
+
+    public Observable<BufferedImage> getMondayTimes(){
+        return mondayTimes;
+    }
+
+    public Observable<BufferedImage> getOtherTimes(){
+        return otherTimes;
     }
 
     public void update(){
@@ -126,13 +139,17 @@ public class ScheduleRepository {
         new Thread(() -> {
             List<String> scheduleLinks = getLinksForScheduleFirstCorpus();
             if(scheduleLinks.size() == 0)
+                status.onNext(new Status("Ошибка при скачивании", 0));
             for(String link : scheduleLinks){
+                status.onNext(new Status("Скачивание расписания", 10));
                 api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(response.body() != null){
+                            status.onNext(new Status("Обработка расписания", 33));
                             try(XSSFWorkbook excelFile = new XSSFWorkbook(response.body().byteStream())){
                                 List<Lesson> lessons = XMLStoLessonsConverter.convertFirstCorpus(excelFile);
+                                status.onNext(new Status("Расписание успешно обновлено", 100));
                             }
                             catch (IOException e){
                             }
@@ -163,6 +180,21 @@ public class ScheduleRepository {
         }
         catch (IOException e){
             return links;
+        }
+    }
+
+    public String getLinkForScheduleSecondCorpusMain(){
+        try{
+            Document doc = Jsoup.connect(baseUri).get();
+            Element linkElement = doc.select(mainSelector).get(0)
+                    .select("tr").get(1)
+                    .select("td").get(0)
+                    .select("p > a").get(0);
+            String link = linkElement.attr("href");
+            return link;
+        }
+        catch (IOException e){
+            return null;
         }
     }
 

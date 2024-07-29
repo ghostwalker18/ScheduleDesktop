@@ -14,6 +14,8 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.Jsoup;
@@ -24,7 +26,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -44,8 +45,8 @@ public class ScheduleRepository {
     private final String mondayTimesPath = "mondayTimes.jpg";
     private final String otherTimesPath = "otherTimes.jpg";
 
-    private BufferedImage mondayTimes;
-    private BufferedImage otherTimes;
+    private final PublishSubject<BufferedImage> mondayTimes = PublishSubject.create();
+    private final PublishSubject<BufferedImage> otherTimes = PublishSubject.create();
 
     public static ScheduleRepository getRepository() throws Exception {
         if(repository == null)
@@ -77,7 +78,7 @@ public class ScheduleRepository {
                     if(response.body() != null){
                         try{
                             BufferedImage image = ImageIO.read(response.body().byteStream());
-                            mondayTimes = image;
+                            mondayTimes.onNext(image);
                             ImageIO.write(image, "jpg", mondayTimesFile);
                         }
                         catch (Exception e){}
@@ -97,7 +98,7 @@ public class ScheduleRepository {
                     if(response.body() != null){
                         try{
                             BufferedImage image = ImageIO.read(response.body().byteStream());
-                            otherTimes = image;
+                            otherTimes.onNext(image);
                             ImageIO.write(image, "jpg", otherTimesFile);
                         }
                         catch (Exception e){}
@@ -115,9 +116,9 @@ public class ScheduleRepository {
             new Thread(() -> {
                 try{
                     BufferedImage bitmap1 = ImageIO.read(mondayTimesFile);
-                    mondayTimes = bitmap1;
+                    mondayTimes.onNext(bitmap1);
                     BufferedImage bitmap2 = ImageIO.read(otherTimesFile);
-                    otherTimes = bitmap2;
+                    otherTimes.onNext(bitmap2);
                 }
                 catch(Exception e){}
             }).start();

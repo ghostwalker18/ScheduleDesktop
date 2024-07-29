@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation "com.intellij:forms_rt:7.0.3"
     implementation "com.formdev:flatlaf:3.5"
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
     implementation "org.jsoup:jsoup:1.12.2"
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "org.apache.poi:poi-ooxml:3.17"

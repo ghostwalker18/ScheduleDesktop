@@ -39,7 +39,7 @@ public class Application {
 
     private Application() throws Exception{
         repository.update();
-        ScheduleDesktopLightTheme.setup();
+        FlatLightLaf.setup();
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

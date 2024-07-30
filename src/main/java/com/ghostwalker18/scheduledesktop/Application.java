@@ -23,6 +23,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 import java.util.prefs.Preferences;
 
 public class Application {
@@ -41,7 +44,10 @@ public class Application {
 
     private Application() throws Exception{
         repository.update();
+        repository.getStatus().subscribe(System.out::println);
         FlatLightLaf.setup();
+        AppDatabase database = AppDatabase.getInstance();
+
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="app_name">Расписание ПАСТ (неофициальное)</entry>
+    <entry key="schedule">Расписание</entry>
+    <entry key="settings">Настройки</entry>
+    <entry key="days_tab">Расписание занятий</entry>
+    <entry key="times_tab">Расписание звонков</entry>
+    <entry key="day_table">Расписание на</entry>
+    <entry key="monday">Понедельник</entry>
+    <entry key="tuesday">Вторник</entry>
+    <entry key="wednesday">Среда</entry>
+    <entry key="thursday">Четверг</entry>
+    <entry key="friday">Пятница</entry>
+    <entry key="today">Сегодня</entry>
+    <entry key="app_settings">Приложение</entry>
+    <entry key="option_theme">Тема</entry>
+    <entry key="option_add_teacher_search">Поиск по преподавателю</entry>
+    <entry key="date">Дата</entry>
+    <entry key="number">Пара</entry>
+    <entry key="room">Каб</entry>
+    <entry key="times">Время</entry>
+    <entry key="subject">Предмет</entry>
+    <entry key="group_choice_text">Выберите группу:</entry>
+    <entry key="teacher_choice_text">Выберите преподавателя:</entry>
+    <entry key="share">Поделиться</entry>
+    <entry key="nothing_to_share">Пока нечем делиться</entry>
+    <entry key="back">Назад</entry>
+    <entry key="forward">Вперед</entry>
+    <entry key="teacher">Препод.</entry>
+    <entry key="schedule_style">Режим отображения расписания</entry>
+    <entry key="option_do_not_update_times">Не обновлять звонки</entry>
+    <entry key="download_schedule">Скачать файл расписания</entry>
+    <entry key="schedule_settings">Расписание</entry>
+    <entry key="option_language">Язык</entry>
+    <entry key="schedule_download_error">Ошибка при скачивании расписания</entry>
+    <entry key="schedule_parsing_error">Ошибка при обработке расписания</entry>
+    <entry key="schedule_download_status">Скачивание расписания</entry>
+    <entry key="schedule_parsing_status">Обработка расписания</entry>
+    <entry key="processing_completed_status">Расписание успешно обновлено</entry>
+</properties>

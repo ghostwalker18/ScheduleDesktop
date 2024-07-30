@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="app_name">PACC Schedule (unofficial)</entry>
+    <entry key="settings">Settings</entry>
+    <entry key="days_tab">Lessons</entry>
+    <entry key="times_tab">Times</entry>
+    <entry key="day_table">Schedule for</entry>
+    <entry key="monday">Monday</entry>
+    <entry key="tuesday">Tuesday</entry>
+    <entry key="wednesday">Wednesday</entry>
+    <entry key="thursday">Thursday</entry>
+    <entry key="friday">Friday</entry>
+    <entry key="today">Today</entry>
+    <entry key="app_settings">App</entry>
+    <entry key="option_theme">Theme</entry>
+    <entry key="option_add_teacher_search">Teacher search</entry>
+    <entry key="date">Date</entry>
+    <entry key="number">Num.</entry>
+    <entry key="room">Room</entry>
+    <entry key="times">Time</entry>
+    <entry key="subject">Subject</entry>
+    <entry key="group_choice_text">Choose group:</entry>
+    <entry key="teacher_choice_text">Choose teacher:</entry>
+    <entry key="share">Share</entry>
+    <entry key="nothing_to_share">Nothing to share yet</entry>
+    <entry key="back">Back</entry>
+    <entry key="forward">Forward</entry>
+    <entry key="teacher">Teacher</entry>
+    <entry key="schedule_style">Schedule mode</entry>
+    <entry key="option_do_not_update_times">Do not update times</entry>
+    <entry key="download_schedule">Download schedule`s file</entry>
+    <entry key="schedule_settings">Schedule</entry>
+    <entry key="option_language">Language</entry>
+    <entry key="schedule_download_error">Schedule download error</entry>
+    <entry key="schedule_parsing_error">Schedule parsing error</entry>
+    <entry key="schedule_parsing_status">Schedule parsing</entry>
+    <entry key="processing_completed_status">Schedule successfully updated</entry>
+    <entry key="schedule_download_status">Schedule download</entry>
+    <entry key="schedule">Schedule</entry>
+</properties>

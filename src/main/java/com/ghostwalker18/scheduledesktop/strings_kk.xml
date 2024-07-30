@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="app_name">Кесте ПСҚК (бейресми)</entry>
+    <entry key="settings">Параметрлер</entry>
+    <entry key="days_tab">Сабақ кестесі</entry>
+    <entry key="times_tab">Қоңырау кестесі</entry>
+    <entry key="day_table">Кесте</entry>
+    <entry key="monday">Дүйсенбі</entry>
+    <entry key="tuesday">Сейсенбі</entry>
+    <entry key="wednesday">Сәрсенбі</entry>
+    <entry key="thursday">Бейсенбі</entry>
+    <entry key="friday">Жұма</entry>
+    <entry key="today">Бүгін</entry>
+    <entry key="app_settings">Қолдану</entry>
+    <entry key="option_theme">Тақырып</entry>
+    <entry key="option_add_teacher_search">Мұғалім бойынша іздеу</entry>
+    <entry key="date">Күні</entry>
+    <entry key="number">Нөмірі</entry>
+    <entry key="room">Каб</entry>
+    <entry key="times">Уақыт</entry>
+    <entry key="subject">Тақырып</entry>
+    <entry key="group_choice_text">Топты таңдаңыз:</entry>
+    <entry key="teacher_choice_text">Мұғалімді таңдаңыз:</entry>
+    <entry key="share">Бөлісу</entry>
+    <entry key="nothing_to_share">Бөлісетін ештеңе жоқ</entry>
+    <entry key="back">Артқа</entry>
+    <entry key="forward">Алға</entry>
+    <entry key="teacher">Мұғалім</entry>
+    <entry key="schedule_style">Кестені көрсету режимі</entry>
+    <entry key="option_do_not_update_times">Қоңырауларды жаңартпаңыз</entry>
+    <entry key="download_schedule">Кесте файлын жүктеп алыңыз</entry>
+    <entry key="schedule_settings">Кесте</entry>
+    <entry key="option_language">Тіл</entry>
+    <entry key="schedule_download_error">Кестені жүктеу кезінде қате</entry>
+    <entry key="schedule_parsing_error">Кестені өңдеу кезінде қате</entry>
+    <entry key="schedule_parsing_status">Кестені өңдеу</entry>
+    <entry key="processing_completed_status">Кесте сәтті жаңартылды</entry>
+    <entry key="schedule_download_status">Кестені жүктеу</entry>
+    <entry key="schedule">Кесте</entry>
+</properties>

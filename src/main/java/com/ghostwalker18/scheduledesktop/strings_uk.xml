@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="app_name">Розклад ПАБТ (неофіційний)</entry>
+    <entry key="settings">Налаштування</entry>
+    <entry key="days_tab">Розклад занять</entry>
+    <entry key="times_tab">Розклад дзвінків</entry>
+    <entry key="day_table">Розклад на</entry>
+    <entry key="monday">Понеділок</entry>
+    <entry key="tuesday">Вівторок</entry>
+    <entry key="wednesday">Середа</entry>
+    <entry key="thursday">Четвер</entry>
+    <entry key="friday">П\'ятниця</entry>
+    <entry key="today">Сьогодні</entry>
+    <entry key="app_settings">Додаток</entry>
+    <entry key="option_theme">Тема</entry>
+    <entry key="option_add_teacher_search">Пошук за викладачем</entry>
+    <entry key="date">Дата</entry>
+    <entry key="number">Пара</entry>
+    <entry key="room">Каб</entry>
+    <entry key="times">Час</entry>
+    <entry key="subject">Предмет</entry>
+    <entry key="group_choice_text">Виберіть групу:</entry>
+    <entry key="teacher_choice_text">Виберіть викладача:</entry>
+    <entry key="share">Поділитися</entry>
+    <entry key="nothing_to_share">Поки що нема чим ділитися</entry>
+    <entry key="back">Назад</entry>
+    <entry key="forward">Уперед</entry>
+    <entry key="teacher">Викладач.</entry>
+    <entry key="schedule_style">Режим відображення розкладу</entry>
+    <entry key="option_do_not_update_times">Не оновлювати дзвінки</entry>
+    <entry key="download_schedule">Завантажити файл розкладу</entry>
+    <entry key="schedule_settings">Розклад</entry>
+    <entry key="option_language">Мова</entry>
+    <entry key="schedule_download_error">Помилка при скачуванні розкладу</entry>
+    <entry key="schedule_parsing_error">Помилка при обробці розкладу</entry>
+    <entry key="schedule_parsing_status">Обробка розкладу</entry>
+    <entry key="processing_completed_status">Розклад успішно оновлено</entry>
+    <entry key="schedule_download_status">Скачування розкладу</entry>
+    <entry key="schedule">Розклад</entry>
+</properties>

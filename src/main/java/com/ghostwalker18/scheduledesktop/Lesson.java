@@ -37,7 +37,7 @@ public class Lesson {
     @Id
     @Column(name="groupName")
     @Nationalized
-    private String group;
+    private String groupName;
     @Id
     @Column(name="subjectName")
     @Nationalized
@@ -56,7 +56,7 @@ public class Lesson {
         this.lessonNumber = lessonNumber;
         this.roomNumber = roomNumber;
         this.times = times;
-        this.group = group;
+        this.groupName = group;
         this.subject = subject;
         this.teacher = teacher;
     }
@@ -78,7 +78,7 @@ public class Lesson {
     }
 
     public String getGroup() {
-        return group;
+        return groupName;
     }
 
     public String getSubject() {
@@ -106,7 +106,7 @@ public class Lesson {
     }
 
     public void setGroup(String group) {
-        this.group = group;
+        this.groupName = group;
     }
 
     public void setSubject(String subject) {
@@ -118,18 +118,51 @@ public class Lesson {
     }
 
     public static class LessonPK implements Serializable {
+        @Convert(converter = DateConverters.class)
         protected Calendar date;
         protected String lessonNumber;
-        protected String group;
+        protected String groupName;
         protected String subject;
 
         public LessonPK(){};
 
-        public LessonPK(Calendar date, String lessonNumber, String group, String subject){
+        public LessonPK(Calendar date, String lessonNumber, String groupName, String subject){
             this.date = date;
             this.lessonNumber = lessonNumber;
-            this.group = group;
+            this.groupName = groupName;
             this.subject = subject;
+        }
+
+        public String getLessonNumber(){
+            return lessonNumber;
+        }
+
+        public String getGroupName(){
+            return groupName;
+        }
+
+        public String getSubject(){
+            return subject;
+        }
+
+        public Calendar getDate(){
+            return date;
+        }
+
+        public void setLessonNumber(String lessonNumber) {
+            this.lessonNumber = lessonNumber;
+        }
+
+        public void setSubject(String subject) {
+            this.subject = subject;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
+        }
+
+        public void setDate(Calendar date) {
+            this.date = date;
         }
     }
 }

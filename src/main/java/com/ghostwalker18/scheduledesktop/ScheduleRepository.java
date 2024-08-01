@@ -14,7 +14,9 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.internal.operators.observable.ObservableElementAt;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,6 +33,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
@@ -40,6 +43,7 @@ public class ScheduleRepository {
     private static ScheduleRepository repository = null;
     private  final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ScheduleNetworkAPI api;
+    private final AppDatabase db;
     private final String baseUri = "https://ptgh.onego.ru/9006/";
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     private final String mondayTimesPath = "mondayTimes.jpg";
@@ -56,6 +60,7 @@ public class ScheduleRepository {
     }
 
     private ScheduleRepository() throws Exception {
+        db = AppDatabase.getInstance();
         api = new Retrofit.Builder()
                 .baseUrl(baseUri)
                 .callbackExecutor(Executors.newSingleThreadExecutor())
@@ -149,6 +154,7 @@ public class ScheduleRepository {
                             status.onNext(new Status("Обработка расписания", 33));
                             try(XSSFWorkbook excelFile = new XSSFWorkbook(response.body().byteStream())){
                                 List<Lesson> lessons = XMLStoLessonsConverter.convertFirstCorpus(excelFile);
+                                db.insertMany(lessons);
                                 status.onNext(new Status("Расписание успешно обновлено", 100));
                             }
                             catch (IOException e){
@@ -163,6 +169,24 @@ public class ScheduleRepository {
                 });
             }
         }).start();
+    }
+
+    public Observable<List<String>> getTeachers(){
+        return db.getTeachers();
+    }
+
+    public Observable<List<String>> getGroups(){
+        return db.getGroups();
+    }
+
+    public Observable<List<Lesson>> getSchedule(Calendar date, @Nullable String teacher, @Nullable String group){
+        if (teacher != null && group != null)
+            return db.getLessonsForGroupWithTeacher(date, group, teacher);
+        else if (teacher != null)
+            return db.getLessonsForTeacher(date, teacher);
+        else if (group != null)
+            return db.getLessonsForGroup(date, group);
+        else return null;
     }
 
     public List<String> getLinksForScheduleFirstCorpus(){

@@ -47,7 +47,7 @@ public class Application {
         repository.getStatus().subscribe(System.out::println);
         FlatLightLaf.setup();
         AppDatabase database = AppDatabase.getInstance();
-
+        database.getGroups().subscribe(System.out::print);
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

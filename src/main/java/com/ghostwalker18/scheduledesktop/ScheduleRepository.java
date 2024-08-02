@@ -16,7 +16,6 @@ package com.ghostwalker18.scheduledesktop;
 
 import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.internal.operators.observable.ObservableElementAt;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -38,6 +37,9 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
 
+/**
+ * Этот класс представляет собой репозиторий данных приложения.
+ */
 public class ScheduleRepository {
 
     private static ScheduleRepository repository = null;
@@ -53,13 +55,18 @@ public class ScheduleRepository {
     private final PublishSubject<BufferedImage> otherTimes = PublishSubject.create();
     private final PublishSubject<Status> status = PublishSubject.create();
 
-    public static ScheduleRepository getRepository() throws Exception {
+    /**
+     * Этот метод используется для получения доступа к репозиторию.
+     *
+     * @return синглтон репозитория приложения
+     */
+    public static ScheduleRepository getRepository(){
         if(repository == null)
                 repository = new ScheduleRepository();
         return repository;
     }
 
-    private ScheduleRepository() throws Exception {
+    private ScheduleRepository(){
         db = AppDatabase.getInstance();
         api = new Retrofit.Builder()
                 .baseUrl(baseUri)
@@ -68,22 +75,50 @@ public class ScheduleRepository {
                 .create(ScheduleNetworkAPI.class);
     }
 
+    /**
+     * Этот метод используется для получения настроек приложения.
+     *
+     * @return настройки приложения
+     */
     public Preferences getPreferences(){
         return preferences;
     }
 
+    /**
+     * Этот метод используется для получения состояния,
+     * в котором находится процесс обновления репозитория.
+     *
+     * @return статус состояния
+     */
     public Observable<Status> getStatus(){
         return status;
     }
 
+    /**
+     * Этот метод используется для получения буфферизированого файла изображения
+     * расписания звонков на понедельник.
+     *
+     * @return фото расписания звонков на понедельник
+     */
     public Observable<BufferedImage> getMondayTimes(){
         return mondayTimes;
     }
 
+    /**
+     * Этот метод используется для получения буфферизированого файла изображения
+     * расписания звонков со вторника по пятницу.
+     *
+     * @return фото расписания звонков со вторника по пятницу
+     */
     public Observable<BufferedImage> getOtherTimes(){
         return otherTimes;
     }
 
+    /**
+     * Этот метод обновляет репозиторий приложения.
+     * Метод использует многопоточность и может вызывать исключения в других потоках.
+     * Требуется интернет соединение.
+     */
     public void update(){
         //updating times files
         File mondayTimesFile = new File(mondayTimesPath);
@@ -171,14 +206,35 @@ public class ScheduleRepository {
         }).start();
     }
 
+    /**
+     * Этот метод возвращает всех учителей, упоминаемых в расписании.
+     *
+     * @return список учителей
+     */
     public Observable<List<String>> getTeachers(){
         return db.getTeachers();
     }
 
+    /**
+     * Этот метод возвращает все группы, упоминаемые в расписании.
+     *
+     * @return список групп
+     */
     public Observable<List<String>> getGroups(){
         return db.getGroups();
     }
 
+    /**
+     * Этот метод возращает список занятий в этот день у группы у данного преподавателя.
+     * Если группа не указана, то возвращается список занятий у преподавателя в этот день.
+     * Если учитель не указан, то возвращается список занятй у группы в этот день.
+     *
+     * @param date день
+     * @param teacher преподаватель
+     * @param group группа
+     * @return
+     */
+    @Nullable
     public Observable<List<Lesson>> getSchedule(Calendar date, @Nullable String teacher, @Nullable String group){
         if (teacher != null && group != null)
             return db.getLessonsForGroupWithTeacher(date, group, teacher);
@@ -189,6 +245,12 @@ public class ScheduleRepository {
         else return null;
     }
 
+    /**
+     * Этот метод получает ссылки с сайта ПАСТ,
+     * по которым доступно расписание для корпуса на Первомайском проспекте.
+     *
+     * @return список ссылок
+     */
     public List<String> getLinksForScheduleFirstCorpus(){
         List<String> links = new ArrayList<>();
         try{
@@ -207,6 +269,12 @@ public class ScheduleRepository {
         }
     }
 
+    /**
+     * Этот метод получает ссылки с сайта ПАСТ,
+     * по которым доступно основное расписание для корпуса на Мурманской улице.
+     *
+     * @return список ссылок
+     */
     public String getLinkForScheduleSecondCorpusMain(){
         try{
             Document doc = Jsoup.connect(baseUri).get();
@@ -222,6 +290,9 @@ public class ScheduleRepository {
         }
     }
 
+    /**
+     * Этот класс используетс для отображения статуса обновления репозитория.
+     */
     public static class Status{
         public String text;
         public int progress;

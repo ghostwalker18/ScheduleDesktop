@@ -19,6 +19,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
 
+/**
+ * POJO-класс для описания единичной сущности расписания - урока.
+ * Содержит поля для даты, порядкового номера, номера(названия) кабинета,
+ * времени проведения, группы, преподавателя, предмета.
+ */
+
 @Entity
 @IdClass(Lesson.LessonPK.class)
 @Table(name="tblSchedule")
@@ -117,6 +123,9 @@ public class Lesson {
         this.teacher = teacher;
     }
 
+    /**
+     * Вспомогательный класс для задания первичного ключа для ORM
+     */
     public static class LessonPK implements Serializable {
         @Convert(converter = DateConverters.class)
         protected Calendar date;

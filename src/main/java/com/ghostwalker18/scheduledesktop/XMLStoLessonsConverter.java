@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.sun.istack.NotNull;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -21,7 +22,16 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.*;
 
+/**
+ * Этот класс содержит в себе статические методы для работы с файлами расписания ПАСТ.
+ */
 public class XMLStoLessonsConverter {
+    /**
+     * Этот метод используется для обработки файла расписания первого корпуса.
+     *
+     * @param excelFile эксель файл расписания для первого корпуса
+     * @return лист объектов класса Lesson
+     */
     public static List<Lesson> convertFirstCorpus(XSSFWorkbook excelFile){
         List<Lesson> lessons = new ArrayList<>();
         DateConverters dateConverters = new DateConverters();
@@ -83,6 +93,14 @@ public class XMLStoLessonsConverter {
         return lessons;
     }
 
+    /**
+     * Этот метод используется для получения содержимого ячейки в виде строки.
+     *
+     * @param sheet лист эксель
+     * @param row номер ряда ячейки
+     * @param column номер столбца ячейки
+     * @return содержимое ячейки в виде строки
+     */
     private static String getCellContentsAsString(XSSFSheet sheet, int row, int column){
         CellType cellType = sheet.getRow(row)
                 .getCell(column)

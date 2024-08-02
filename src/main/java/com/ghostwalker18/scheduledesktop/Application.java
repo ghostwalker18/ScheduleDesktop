@@ -14,20 +14,22 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.subjects.PublishSubject;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.prefs.Preferences;
 
+/**
+ * <h1>Schedule Desktop</h1>
+ * <p>
+ *      Программа представляет собой десктопную реализацию приложения расписания ПАСТ
+ * </p>
+ *
+ * @автор Ипатов Никита
+ * @версия 1.0
+ */
 public class Application {
     public static final String mondayTimesURL = "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
     public static final String otherTimesURL = "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";

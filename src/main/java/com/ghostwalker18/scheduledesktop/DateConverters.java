@@ -18,15 +18,31 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+/**
+ * Этот класс используется для ORM.
+ * Содержит методы для преобразования Calendar в String для БД и наоборот
+ */
 @Converter
 public class DateConverters implements AttributeConverter<Calendar, String> {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
+    /**
+     * Этот метод преобразует Calendar сущнисти в String для БД.
+     * @param attribute  the entity attribute value to be converted
+     * @return
+     */
     @Override
     public String convertToDatabaseColumn(Calendar attribute) {
         return attribute == null ? null : dateFormat.format(attribute.getTime());
     }
 
+    /**
+     * Этот метод преобразует String из БД в Calendar сущности.
+     * @param dbData  the data from the database column to be
+     *                converted
+     * @return
+     */
     @Override
     public Calendar convertToEntityAttribute(String dbData) {
         if(dbData == null){

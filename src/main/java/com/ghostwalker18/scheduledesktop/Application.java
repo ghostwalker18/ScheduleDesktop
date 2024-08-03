@@ -24,11 +24,11 @@ import java.util.prefs.Preferences;
 /**
  * <h1>Schedule Desktop</h1>
  * <p>
- *      Программа представляет собой десктопную реализацию приложения расписания ПАСТ
+ *      Программа представляет собой десктопную реализацию приложения расписания ПАСТ.
  * </p>
  *
- * @автор Ипатов Никита
- * @версия 1.0
+ * @author  Ипатов Никита
+ * @version  1.0
  */
 public class Application {
     public static final String mondayTimesURL = "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
@@ -38,6 +38,11 @@ public class Application {
     private final Preferences preferences = repository.getPreferences();
     private JFrame mainForm;
 
+    /**
+     * Этот метод используется для создания экземпляра приложения
+     * @return синглтон приложения
+     * @throws Exception
+     */
     public static Application getInstance() throws Exception{
         if(instance == null)
             instance = new Application();
@@ -48,7 +53,7 @@ public class Application {
         repository.update();
         repository.getStatus().subscribe(System.out::println);
         FlatLightLaf.setup();
-        AppDatabase database = AppDatabase.getInstance();
+        AppDatabaseHibernate database = AppDatabaseHibernate.getInstance();
         database.getGroups().subscribe(System.out::print);
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(

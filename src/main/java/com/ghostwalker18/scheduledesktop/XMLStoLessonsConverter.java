@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import com.sun.istack.NotNull;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -24,6 +23,8 @@ import java.util.*;
 
 /**
  * Этот класс содержит в себе статические методы для работы с файлами расписания ПАСТ.
+ *
+ * @author  Ипатов Никита
  */
 public class XMLStoLessonsConverter {
     /**

@@ -27,19 +27,25 @@ import org.hibernate.query.Query;
 import java.util.Calendar;
 import java.util.List;
 
-public class AppDatabase {
+/**
+ * Этот класс представляет собой реализацию базы данных приложения
+ * на основе Hibernate.
+ *
+ * @author  Ипатов Никита
+ */
+public class AppDatabaseHibernate {
 
-    private static AppDatabase instance = null;
+    private static AppDatabaseHibernate instance = null;
     private final SessionFactory sessionFactory;
 
 
-    public static AppDatabase getInstance(){
+    public static AppDatabaseHibernate getInstance(){
         if(instance == null)
-            instance = new AppDatabase();
+            instance = new AppDatabaseHibernate();
         return instance;
     }
 
-    private AppDatabase(){
+    private AppDatabaseHibernate(){
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure("hibernate.cfg.xml")
                 .build();

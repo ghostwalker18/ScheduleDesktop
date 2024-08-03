@@ -21,7 +21,9 @@ import java.util.Calendar;
 
 /**
  * Этот класс используется для ORM.
- * Содержит методы для преобразования Calendar в String для БД и наоборот
+ * Содержит методы для преобразования Calendar в String для БД и наоборот.
+ *
+ * @author  Ипатов Никита
  */
 @Converter
 public class DateConverters implements AttributeConverter<Calendar, String> {

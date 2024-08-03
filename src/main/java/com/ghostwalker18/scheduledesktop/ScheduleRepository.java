@@ -39,13 +39,15 @@ import java.util.prefs.Preferences;
 
 /**
  * Этот класс представляет собой репозиторий данных приложения.
+ *
+ * @author  Ипатов Никита
  */
 public class ScheduleRepository {
 
     private static ScheduleRepository repository = null;
     private  final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ScheduleNetworkAPI api;
-    private final AppDatabase db;
+    private final AppDatabaseHibernate db;
     private final String baseUri = "https://ptgh.onego.ru/9006/";
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     private final String mondayTimesPath = "mondayTimes.jpg";
@@ -67,7 +69,7 @@ public class ScheduleRepository {
     }
 
     private ScheduleRepository(){
-        db = AppDatabase.getInstance();
+        db = AppDatabaseHibernate.getInstance();
         api = new Retrofit.Builder()
                 .baseUrl(baseUri)
                 .callbackExecutor(Executors.newSingleThreadExecutor())

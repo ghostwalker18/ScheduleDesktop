@@ -18,18 +18,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 
+/**
+ * Этот класс используется для отслеживания изменения состояния расписания.
+ *
+ * @author  Ипатов Никита
+ */
 public class ScheduleState extends Observable {
     private String group;
     private String teacher;
     private int year;
     private int week;
     private Calendar calendar;
+
+    /**
+     * Конструктор состояния на основе текущей даты.
+     * @param currentDate текущая дата
+     */
     public ScheduleState(Date currentDate){
         calendar = new Calendar.Builder().setInstant(currentDate).build();
         year = calendar.get(Calendar.YEAR);
         week = calendar.get(Calendar.WEEK_OF_YEAR);
     }
 
+    /**
+     * Этот метод позволяет передвинуть состояние расписания на следующую неделю.
+     */
     public void goNextWeek(){
         calendar.add(Calendar.WEEK_OF_YEAR, 1);
         year = calendar.get(Calendar.YEAR);
@@ -38,6 +51,9 @@ public class ScheduleState extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Этот метод позволяет передвинуть состояние расписания на предыдущую неделю.
+     */
     public void goPreviousWeek(){
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         year = calendar.get(Calendar.YEAR);

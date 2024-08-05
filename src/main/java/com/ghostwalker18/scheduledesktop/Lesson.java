@@ -21,6 +21,7 @@ import java.util.Calendar;
 
 /**
  * POJO-класс для описания единичной сущности расписания - урока.
+ * Используется в ORM.
  * Содержит поля для даты, порядкового номера, номера(названия) кабинета,
  * времени проведения, группы, преподавателя, предмета.
  *
@@ -44,14 +45,11 @@ public class Lesson {
     private String times;
     @Id
     @Column(name="groupName")
-    @Nationalized
     private String groupName;
     @Id
     @Column(name="subjectName")
-    @Nationalized
     private String subject;
     @Column(name="teacherName")
-    @Nationalized
     private String teacher;
 
     public Lesson() {

@@ -51,10 +51,10 @@ public class Application {
 
     private Application() throws Exception{
         repository.update();
-        repository.getStatus().subscribe(System.out::println);
+        repository.getStatus().subscribe(e -> System.out.println(e.text));
+        repository.getGroups().subscribe(e->
+                System.out.println(e));
         FlatLightLaf.setup();
-        AppDatabaseHibernate database = AppDatabaseHibernate.getInstance();
-        database.getGroups().subscribe(System.out::print);
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

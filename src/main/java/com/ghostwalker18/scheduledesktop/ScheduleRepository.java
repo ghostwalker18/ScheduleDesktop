@@ -293,6 +293,30 @@ public class ScheduleRepository {
     }
 
     /**
+     * Этот метод получает ссылки с сайта ПАСТ,
+     * по которым доступны изменения расписания для корпуса на Мурманской улице.
+     *
+     * @return список ссылок
+     */
+    public List<String> getLinksForScheduleSecondCorpusAdditional(){
+        List<String> links = new ArrayList<>();
+        try{
+            Document doc = Jsoup.connect(baseUri).get();
+            Elements linkElements = doc.select(mainSelector).get(0)
+                    .select("tr").get(1)
+                    .select("td").get(0)
+                    .select("p > strong > span > a");
+            for(Element linkElement : linkElements){
+                links.add(linkElement.attr("href"));
+            }
+            return links;
+        }
+        catch(IOException r){
+            return links;
+        }
+    }
+
+    /**
      * Этот класс используетс для отображения статуса обновления репозитория.
      */
     public static class Status{

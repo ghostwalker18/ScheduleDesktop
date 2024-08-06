@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author  Ипатов Никита
  */
-public class AppDatabaseHibernate {
+public class AppDatabaseHibernate implements AppDatabase{
     private static AppDatabaseHibernate instance = null;
     private final SessionFactory sessionFactory;
 

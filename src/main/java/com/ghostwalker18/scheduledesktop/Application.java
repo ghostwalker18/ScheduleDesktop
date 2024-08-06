@@ -52,9 +52,10 @@ public class Application {
     private Application() throws Exception{
         repository.update();
         repository.getStatus().subscribe(e -> System.out.println(e.text));
-        repository.getGroups().subscribe(e->
+        repository.getTeachers().subscribe(e->
                 System.out.println(e));
         FlatLightLaf.setup();
+        //repository.update();
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

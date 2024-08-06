@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.sun.xml.bind.v2.TODO;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.hibernate.Session;
@@ -37,6 +38,24 @@ import java.util.List;
 public class AppDatabaseHibernate implements AppDatabase{
     private static AppDatabaseHibernate instance = null;
     private final SessionFactory sessionFactory;
+    private final PublishSubject<Boolean> onDataBaseUpdate = PublishSubject.create();
+
+    //TODO:optimize it (future hint: Reflexion API is a key)!!
+    private final PublishSubject<List<String>> getTeachersResult = PublishSubject.create();
+    private final PublishSubject<List<String>> getGroupsResult = PublishSubject.create();
+    private final PublishSubject<List<Lesson>> getLessonsForGroupWithTeacherResult = PublishSubject.create();
+    private final PublishSubject<List<Lesson>> getLessonsForGroupResult = PublishSubject.create();
+    private final PublishSubject<List<Lesson>> getLessonsForTeacherResult = PublishSubject.create();
+
+    private Calendar getLessonsForGroupWithTeacherDate = null;
+    private String getLessonsForGroupWithTeacherTeacher = null;
+    private String getLessonsForGroupWithTeacherGroup = null;
+
+    private Calendar getLessonsForGroupDate = null;
+    private String getLessonsForGroupGroup = null;
+
+    private Calendar getLessonsForTeacherDate = null;
+    private String getLessonsForTeacherTeacher = null;
 
     public static AppDatabaseHibernate getInstance(){
         if(instance == null)
@@ -59,6 +78,21 @@ public class AppDatabaseHibernate implements AppDatabase{
 
         sessionFactory = metadata.getSessionFactoryBuilder()
                 .build();
+
+        onDataBaseUpdate.subscribe(e->{
+            getTeachers();
+            getGroups();
+            if(getLessonsForGroupWithTeacherDate != null &&
+                    getLessonsForGroupWithTeacherGroup != null &&
+                    getLessonsForGroupWithTeacherTeacher != null)
+                getLessonsForGroupWithTeacher(getLessonsForGroupWithTeacherDate,
+                    getLessonsForGroupWithTeacherGroup,
+                    getLessonsForGroupWithTeacherTeacher);
+            if(getLessonsForTeacherDate != null && getLessonsForTeacherTeacher != null)
+                getLessonsForTeacher(getLessonsForTeacherDate, getLessonsForTeacherTeacher);
+            if(getLessonsForGroupDate != null && getLessonsForGroupGroup != null)
+                getLessonsForGroup(getLessonsForGroupDate, getLessonsForGroupGroup);
+        });
     }
 
     public void insertMany(List<Lesson> lessons){
@@ -72,6 +106,7 @@ public class AppDatabaseHibernate implements AppDatabase{
                 transaction.commit();
             }
         }).start();
+        onDataBaseUpdate.onNext(true);
     }
 
     public void update(Lesson lesson){
@@ -80,72 +115,78 @@ public class AppDatabaseHibernate implements AppDatabase{
                 session.update(lesson);
             }
         }).start();
+        onDataBaseUpdate.onNext(true);
     }
 
     public Observable<List<String>> getTeachers(){
         String hql = "select distinct teacher from Lesson order by teacher asc";
-        final PublishSubject<List<String>> teachers = PublishSubject.create();
         new Thread(() -> {
             try(Session session = sessionFactory.openSession()){
                 Query<String> query = session.createQuery(hql, String.class);
-                teachers.onNext(query.list());
+                getTeachersResult.onNext(query.list());
             }
         }).start();
-        return teachers;
+        return getTeachersResult;
     }
 
     public Observable<List<String>> getGroups(){
         String hql = "select distinct groupName from Lesson order by groupName asc";
-        final PublishSubject<List<String>> groups = PublishSubject.create();
         new Thread(() -> {
             try(Session session = sessionFactory.openSession()){
                 Query<String> query = session.createQuery(hql, String.class);
-                groups.onNext(query.list());
+                getGroupsResult.onNext(query.list());
             }
         }).start();
-        return groups;
+        return getGroupsResult;
     }
 
     public Observable<List<Lesson>> getLessonsForGroupWithTeacher(Calendar date, String group, String teacher){
+        getLessonsForGroupWithTeacherDate = date;
+        getLessonsForGroupWithTeacherGroup = group;
+        getLessonsForGroupWithTeacherTeacher = teacher;
+
         String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date";
-        final PublishSubject<List<Lesson>> lessons = PublishSubject.create();
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
                 query.setParameter("groupName", group);
                 query.setParameter("teacherName", teacher);
-                lessons.onNext(query.list());
+                getLessonsForGroupWithTeacherResult.onNext(query.list());
             }
         }).start();
-        return lessons;
+        return getLessonsForGroupWithTeacherResult;
     }
 
     public Observable<List<Lesson>> getLessonsForGroup(Calendar date, String group){
+        getLessonsForGroupDate = date;
+        getLessonsForGroupGroup = group;
+
         String hql = "from Lesson where teacher like :teacherName and date = :date";
-        final PublishSubject<List<Lesson>> lessons = PublishSubject.create();
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
                 query.setParameter("groupName", group);
-                lessons.onNext(query.list());
+                getLessonsForGroupResult.onNext(query.list());
             }
         }).start();
-        return lessons;
+        return getLessonsForGroupResult;
     }
 
     public Observable<List<Lesson>> getLessonsForTeacher(Calendar date, String teacher){
+        getLessonsForTeacherDate = date;
+        getLessonsForTeacherTeacher = teacher;
+
         String hql = "from Lesson where groupName = :groupName and date = :date";
-        final PublishSubject<List<Lesson>> lessons = PublishSubject.create();
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
                 query.setParameter("teacherName", teacher);
-                lessons.onNext(query.list());
+                getLessonsForTeacherResult.onNext(query.list());
             }
         }).start();
-        return lessons;
+        return getLessonsForTeacherResult;
     }
 }

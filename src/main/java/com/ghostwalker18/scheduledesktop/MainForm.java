@@ -17,12 +17,16 @@ package com.ghostwalker18.scheduledesktop;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,11 +35,12 @@ import java.util.Vector;
 /**
  * Этот класс представляет собой основной экран приложения.
  *
- * @author  Ипатов Никита
+ * @author Ипатов Никита
  */
 public class MainForm {
 
     private ScheduleState state;
+    private ScheduleRepository repository = ScheduleRepository.getRepository();
     private Theme theme = new DefaulTheme();
     private DatabaseWorker databaseWorker = DatabaseWorker.getInstance();
     private JComboBox groupComboBox;
@@ -60,9 +65,12 @@ public class MainForm {
     private JPanel times;
     private JButton shareButton;
     private JButton settingsButton;
+    private ImageView mondayTimes;
+    private ImageView otherTimes;
 
     private void createUIComponents() {
-        state = new ScheduleState(new Date(2023 - 1900, Calendar.JUNE, 8));
+        //state = new ScheduleState(new Date(2023 - 1900, Calendar.JUNE, 8));
+        state = new ScheduleState(new Date());
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Понедельник");
         state.addObserver(mondayButton);
         tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Вторник");
@@ -73,9 +81,18 @@ public class MainForm {
         state.addObserver(thursdayButton);
         fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Пятница");
         state.addObserver(fridayButton);
+        mondayTimes = new ImageView();
+        otherTimes = new ImageView();
+        repository.getMondayTimes().subscribe(image -> {
+            mondayTimes.setImage(image);
+        });
+        repository.getOtherTimes().subscribe(image -> {
+            otherTimes.setImage(image);
+        });
     }
 
     public MainForm() throws SQLException {
+
         createUIComponents();
         $$$setupUI$$$();
         UIManager.put("ToolTip.background", theme.getBackgroundColor());
@@ -107,6 +124,14 @@ public class MainForm {
             state.setTeacher(null);
         });
 
+        repository.getGroups().subscribe(groups -> {
+            if (groups != null) {
+                groupComboBox.setModel(new DefaultComboBoxModel(new Vector(groups)));
+            }
+            groupComboBox.insertItemAt("Не выбрано", 0);
+            groupComboBox.setSelectedIndex(0);
+        });
+        groupComboBox.setToolTipText("Например: \"A-11\"");
         groupComboBox.addActionListener(e -> {
             if (groupComboBox.getSelectedIndex() != 0) {
                 state.setGroup(groupComboBox.getSelectedItem().toString());
@@ -115,15 +140,16 @@ public class MainForm {
             }
 
         });
-        Vector<String> groupNames = databaseWorker.getGroupNames();
-        if (groupNames != null) {
-            groupComboBox.setModel(new DefaultComboBoxModel(databaseWorker.getGroupNames()));
-        }
-        ;
-        groupComboBox.insertItemAt("Не выбрано", 0);
-        groupComboBox.setSelectedIndex(0);
-        groupComboBox.setToolTipText("Например: \"A-11\"");
 
+        repository.getTeachers().subscribe(teachers -> {
+            if (teachers != null) {
+                teacherComboBox.setModel(new DefaultComboBoxModel(new Vector(teachers)));
+            }
+            ;
+            teacherComboBox.insertItemAt("Не выбрано", 0);
+            teacherComboBox.setSelectedIndex(0);
+        });
+        teacherComboBox.setToolTipText("Например: \"Иванов И.И\"");
         teacherComboBox.addActionListener(e -> {
             if (teacherComboBox.getSelectedIndex() != 0) {
                 state.setTeacher(teacherComboBox.getSelectedItem().toString());
@@ -131,14 +157,6 @@ public class MainForm {
                 state.setTeacher(null);
             }
         });
-        Vector<String> teacherNames = databaseWorker.getTeacherNames();
-        if (teacherNames != null) {
-            teacherComboBox.setModel(new DefaultComboBoxModel(databaseWorker.getTeacherNames()));
-        }
-        ;
-        teacherComboBox.insertItemAt("Не выбрано", 0);
-        teacherComboBox.setSelectedIndex(0);
-        teacherComboBox.setToolTipText("Например: \"Иванов И.И\"");
 
         backwardButton.addActionListener(e -> {
             state.goPreviousWeek();
@@ -243,8 +261,14 @@ public class MainForm {
         panel1.add(thursdayButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(fridayButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         times = new JPanel();
-        times.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        times.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         tabs.addTab("Звонки", times);
+        mondayTimes.setAlignmentX(0.0f);
+        mondayTimes.setAlignmentY(0.0f);
+        times.add(mondayTimes, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        otherTimes.setAlignmentX(0.0f);
+        otherTimes.setAlignmentY(0.0f);
+        times.add(otherTimes, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JToolBar toolBar1 = new JToolBar();
         mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
         final Spacer spacer1 = new Spacer();

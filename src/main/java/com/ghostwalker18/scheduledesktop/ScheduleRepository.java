@@ -16,6 +16,7 @@ package com.ghostwalker18.scheduledesktop;
 
 import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -51,8 +52,8 @@ public class ScheduleRepository {
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     private final String mondayTimesPath = "mondayTimes.jpg";
     private final String otherTimesPath = "otherTimes.jpg";
-    private final PublishSubject<BufferedImage> mondayTimes = PublishSubject.create();
-    private final PublishSubject<BufferedImage> otherTimes = PublishSubject.create();
+    private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
+    private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
     private final PublishSubject<Status> status = PublishSubject.create();
 
     /**

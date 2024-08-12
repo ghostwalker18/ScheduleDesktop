@@ -16,6 +16,7 @@ package com.ghostwalker18.scheduledesktop;
 
 import com.sun.xml.bind.v2.TODO;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,8 +27,9 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
-import java.util.Calendar;
-import java.util.List;
+
+import java.beans.beancontext.BeanContext;
+import java.util.*;
 
 /**
  * Этот класс представляет собой реализацию базы данных приложения
@@ -41,21 +43,8 @@ public class AppDatabaseHibernate implements AppDatabase{
     private final PublishSubject<Boolean> onDataBaseUpdate = PublishSubject.create();
 
     //TODO:optimize it (future hint: Reflexion API is a key)!!
-    private final PublishSubject<List<String>> getTeachersResult = PublishSubject.create();
-    private final PublishSubject<List<String>> getGroupsResult = PublishSubject.create();
-    private final PublishSubject<List<Lesson>> getLessonsForGroupWithTeacherResult = PublishSubject.create();
-    private final PublishSubject<List<Lesson>> getLessonsForGroupResult = PublishSubject.create();
-    private final PublishSubject<List<Lesson>> getLessonsForTeacherResult = PublishSubject.create();
-
-    private Calendar getLessonsForGroupWithTeacherDate = null;
-    private String getLessonsForGroupWithTeacherTeacher = null;
-    private String getLessonsForGroupWithTeacherGroup = null;
-
-    private Calendar getLessonsForGroupDate = null;
-    private String getLessonsForGroupGroup = null;
-
-    private Calendar getLessonsForTeacherDate = null;
-    private String getLessonsForTeacherTeacher = null;
+    private final BehaviorSubject<List<String>> getTeachersResult = BehaviorSubject.create();
+    private final BehaviorSubject<List<String>> getGroupsResult = BehaviorSubject.create();
 
     public static AppDatabaseHibernate getInstance(){
         if(instance == null)
@@ -82,16 +71,15 @@ public class AppDatabaseHibernate implements AppDatabase{
         onDataBaseUpdate.subscribe(e->{
             getTeachers();
             getGroups();
-            if(getLessonsForGroupWithTeacherDate != null &&
-                    getLessonsForGroupWithTeacherGroup != null &&
-                    getLessonsForGroupWithTeacherTeacher != null)
-                getLessonsForGroupWithTeacher(getLessonsForGroupWithTeacherDate,
-                    getLessonsForGroupWithTeacherGroup,
-                    getLessonsForGroupWithTeacherTeacher);
-            if(getLessonsForTeacherDate != null && getLessonsForTeacherTeacher != null)
-                getLessonsForTeacher(getLessonsForTeacherDate, getLessonsForTeacherTeacher);
-            if(getLessonsForGroupDate != null && getLessonsForGroupGroup != null)
-                getLessonsForGroup(getLessonsForGroupDate, getLessonsForGroupGroup);
+            for(GetLessonsForGroupQuery.GetLessonsForGroupArgs args : GetLessonsForGroupQuery.cachedResults.keySet()){
+                getLessonsForGroup(args.date, args.group);
+            }
+            for(GetLessonsForTeacherQuery.GetLessonsForTeacherArgs args : GetLessonsForTeacherQuery.cachedResults.keySet()){
+                getLessonsForTeacher(args.date, args.teacher);
+            }
+            for(GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs args : GetLessonsForGroupWithTeacherQuery.cachedResults.keySet()){
+                getLessonsForGroupWithTeacher(args.date, args.group, args.teacher);
+            }
         });
     }
 
@@ -141,9 +129,7 @@ public class AppDatabaseHibernate implements AppDatabase{
     }
 
     public Observable<List<Lesson>> getLessonsForGroupWithTeacher(Calendar date, String group, String teacher){
-        getLessonsForGroupWithTeacherDate = date;
-        getLessonsForGroupWithTeacherGroup = group;
-        getLessonsForGroupWithTeacherTeacher = teacher;
+        BehaviorSubject<List<Lesson>>  queryResult = GetLessonsForGroupWithTeacherQuery.cacheQuery(date, group, teacher);
 
         String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date";
         new Thread(()->{
@@ -152,41 +138,152 @@ public class AppDatabaseHibernate implements AppDatabase{
                 query.setParameter("date", date);
                 query.setParameter("groupName", group);
                 query.setParameter("teacherName", teacher);
-                getLessonsForGroupWithTeacherResult.onNext(query.list());
+                queryResult.onNext(query.list());
             }
         }).start();
-        return getLessonsForGroupWithTeacherResult;
+        return queryResult;
     }
 
     public Observable<List<Lesson>> getLessonsForGroup(Calendar date, String group){
-        getLessonsForGroupDate = date;
-        getLessonsForGroupGroup = group;
-
-        String hql = "from Lesson where teacher like :teacherName and date = :date";
-        new Thread(()->{
-            try(Session session = sessionFactory.openSession()){
-                Query<Lesson> query = session.createQuery(hql, Lesson.class);
-                query.setParameter("date", date);
-                query.setParameter("groupName", group);
-                getLessonsForGroupResult.onNext(query.list());
-            }
-        }).start();
-        return getLessonsForGroupResult;
-    }
-
-    public Observable<List<Lesson>> getLessonsForTeacher(Calendar date, String teacher){
-        getLessonsForTeacherDate = date;
-        getLessonsForTeacherTeacher = teacher;
+        BehaviorSubject<List<Lesson>>  queryResult = GetLessonsForGroupQuery.cacheQuery(date, group);
 
         String hql = "from Lesson where groupName = :groupName and date = :date";
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
-                query.setParameter("teacherName", teacher);
-                getLessonsForTeacherResult.onNext(query.list());
+                query.setParameter("groupName", group);
+                queryResult.onNext(query.list());
             }
         }).start();
-        return getLessonsForTeacherResult;
+        return queryResult;
+    }
+
+    public Observable<List<Lesson>> getLessonsForTeacher(Calendar date, String teacher){
+        BehaviorSubject<List<Lesson>> queryResult = GetLessonsForTeacherQuery.cacheQuery(date, teacher);
+
+        String hql = "from Lesson where teacher like :teacherName and date = :date";
+        new Thread(()->{
+            try(Session session = sessionFactory.openSession()){
+                Query<Lesson> query = session.createQuery(hql, Lesson.class);
+                query.setParameter("date", date);
+                query.setParameter("teacherName", teacher);
+                queryResult.onNext(query.list());
+            }
+        }).start();
+        return queryResult;
+    }
+
+    private static class GetLessonsForGroupQuery{
+        public static final Map<GetLessonsForGroupArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
+
+        private static class GetLessonsForGroupArgs{
+            public Calendar date;
+            public String group;
+
+            GetLessonsForGroupArgs(Calendar date, String group){
+                this.date = date;
+                this.group = group;
+            }
+
+            @Override
+            public boolean equals(Object o){
+                if (this == o)
+                    return true;
+                if (o == null || getClass() != o.getClass())
+                    return false;
+                GetLessonsForGroupArgs that = (GetLessonsForGroupArgs) o;
+                return that.date == this.date && that.group == this.group;
+            }
+
+            @Override
+            public int hashCode(){
+                return Objects.hash(date, group);
+            }
+        }
+
+        public static BehaviorSubject<List<Lesson>> cacheQuery(Calendar date, String group){
+            if(!cachedResults.containsKey(new GetLessonsForGroupArgs(date, group))){
+                cachedResults.put(new GetLessonsForGroupArgs(date, group), BehaviorSubject.create());
+            }
+            BehaviorSubject<List<Lesson>> result = cachedResults.get(new GetLessonsForGroupArgs(date, group));
+            return result;
+        };
+    }
+
+    private static class GetLessonsForTeacherQuery{
+        public static final Map<GetLessonsForTeacherArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
+
+        private static class GetLessonsForTeacherArgs{
+            public Calendar date;
+            public String teacher;
+
+            GetLessonsForTeacherArgs(Calendar date, String teacher){
+                this.date = date;
+                this.teacher = teacher;
+            }
+
+            @Override
+            public boolean equals(Object o){
+                if (this == o)
+                    return true;
+                if (o == null || getClass() != o.getClass())
+                    return false;
+                GetLessonsForTeacherArgs that = (GetLessonsForTeacherArgs) o;
+                return that.date == this.date && that.teacher == this.teacher;
+            }
+
+            @Override
+            public int hashCode(){
+                return Objects.hash(date, teacher);
+            }
+        }
+
+        public static BehaviorSubject<List<Lesson>> cacheQuery(Calendar date, String teacher){
+            if(!cachedResults.containsKey(new GetLessonsForTeacherArgs(date, teacher))){
+                cachedResults.put(new GetLessonsForTeacherArgs(date, teacher), BehaviorSubject.create());
+            }
+            BehaviorSubject<List<Lesson>> result = cachedResults.get(new GetLessonsForGroupQuery.GetLessonsForGroupArgs(date, teacher));
+            return result;
+        };
+    }
+
+    private static class GetLessonsForGroupWithTeacherQuery{
+        public static final Map<GetLessonsForGroupWithTeacherArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
+
+        private static class GetLessonsForGroupWithTeacherArgs{
+            public Calendar date;
+            public String group;
+            public String teacher;
+
+            GetLessonsForGroupWithTeacherArgs(Calendar date, String group, String teacher){
+                this.date = date;
+                this.group = group;
+                this.teacher = teacher;
+            }
+
+            @Override
+            public boolean equals(Object o){
+                if (this == o)
+                    return true;
+                if (o == null || getClass() != o.getClass())
+                    return false;
+                GetLessonsForGroupWithTeacherArgs that = (GetLessonsForGroupWithTeacherArgs) o;
+                return that.date == this.date && that.group == this.group && that.teacher == this.teacher;
+            }
+
+            @Override
+            public int hashCode(){
+                return Objects.hash(date, teacher);
+            }
+        }
+
+        public static BehaviorSubject<List<Lesson>> cacheQuery(Calendar date, String group, String teacher){
+            if(!cachedResults.containsKey(new GetLessonsForGroupWithTeacherArgs(date, group, teacher))){
+                cachedResults.put(new GetLessonsForGroupWithTeacherArgs(date, group, teacher), BehaviorSubject.create());
+            }
+            BehaviorSubject<List<Lesson>> result = cachedResults.get(new GetLessonsForGroupWithTeacherArgs(date, group, teacher));
+            return result;
+        };
     }
 }

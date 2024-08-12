@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.List;
 
 /**
  * Этот класс предсавляет собой кастомный элемент GUI,
@@ -43,15 +44,17 @@ public class WeekdayButton extends JPanel implements Observer {
 
     private JPanel tablePanel = new JPanel();
     private  JButton button = new JButton();
+    private ScheduleRepository repository = ScheduleRepository.getRepository();
 
     private final String[] tableColumnNames = new String[]{
             "Пара", "Время", "Предмет", "Преподаватель", "Кабинет"
     };
     private JTable table = new JTable();
     private String dayOfWeek;
-    private String teacher;
-    private String group;
+    private String teacher = null;
+    private String group = null;
     private Calendar date;
+    private io.reactivex.rxjava3.core.Observable<List<Lesson>> lessons;
     //private DatabaseWorker databaseWorker = DatabaseWorker.getInstance();
 
     public WeekdayButton(int year, int week, String dayOfWeek) {
@@ -70,7 +73,7 @@ public class WeekdayButton extends JPanel implements Observer {
         buttonContainer.add(new JPanel());
         add(buttonContainer);
 
-
+        lessons = repository.getSchedule(date, teacher, group);
         table.setModel(makeDataModel(date, group, teacher));
         table.setFocusable(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -103,6 +106,11 @@ public class WeekdayButton extends JPanel implements Observer {
                 }
             }
         });
+
+        /*lessons = repository.getSchedule(date, teacher, group);
+        lessons.subscribe(lessons -> {
+            table.setModel(makeDataModel(lessons));
+        });*/
     }
 
     private void setTableVisible(){
@@ -157,11 +165,34 @@ public class WeekdayButton extends JPanel implements Observer {
         return tableModel;
     }
 
+    private DefaultTableModel makeDataModel(List<Lesson> lessons){
+        DefaultTableModel tableModel = new DefaultTableModel(tableColumnNames, 0);
+        if(lessons != null){
+            for(Lesson lesson : lessons){
+                tableModel.addRow(new Object[]{
+                        lesson.getLessonNumber(),
+                        lesson.getTimes(),
+                        lesson.getSubject(),
+                        lesson.getTeacher(),
+                        lesson.getRoomNumber()});
+            }
+        }
+        return tableModel;
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         ScheduleState state = (ScheduleState)o;
         date = new Calendar.Builder().setWeekDate(state.getYear(),state.getWeek(), weekdaysNumbers.get(dayOfWeek)).build();
+        teacher = state.getTeacher();
+        group = state.getGroup();
         button.setText(generateTitle(date, this.dayOfWeek));
-        table.setModel(makeDataModel(this.date, state.getGroup(), state.getTeacher()));
+        lessons = repository.getSchedule(date, teacher, group);
+        if(lessons != null){
+            lessons.subscribe(lessonsList -> {
+                DefaultTableModel model = makeDataModel(lessonsList);
+                table.setModel(model);
+            });
+        }
     }
 }

@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import com.sun.xml.bind.v2.TODO;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -27,8 +26,6 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
-
-import java.beans.beancontext.BeanContext;
 import java.util.*;
 
 /**
@@ -90,7 +87,7 @@ public class AppDatabaseHibernate implements AppDatabase{
                 transaction.begin();
                 for(Lesson lesson : lessons){
                     session.merge(lesson);
-                };
+                }
                 transaction.commit();
             }
         }).start();
@@ -203,12 +200,10 @@ public class AppDatabaseHibernate implements AppDatabase{
         }
 
         public static BehaviorSubject<List<Lesson>> cacheQuery(Calendar date, String group){
-            if(!cachedResults.containsKey(new GetLessonsForGroupArgs(date, group))){
+            if(!cachedResults.containsKey(new GetLessonsForGroupArgs(date, group)))
                 cachedResults.put(new GetLessonsForGroupArgs(date, group), BehaviorSubject.create());
-            }
-            BehaviorSubject<List<Lesson>> result = cachedResults.get(new GetLessonsForGroupArgs(date, group));
-            return result;
-        };
+            return  cachedResults.get(new GetLessonsForGroupArgs(date, group));
+        }
     }
 
     private static class GetLessonsForTeacherQuery{
@@ -240,12 +235,10 @@ public class AppDatabaseHibernate implements AppDatabase{
         }
 
         public static BehaviorSubject<List<Lesson>> cacheQuery(Calendar date, String teacher){
-            if(!cachedResults.containsKey(new GetLessonsForTeacherArgs(date, teacher))){
+            if(!cachedResults.containsKey(new GetLessonsForTeacherArgs(date, teacher)))
                 cachedResults.put(new GetLessonsForTeacherArgs(date, teacher), BehaviorSubject.create());
-            }
-            BehaviorSubject<List<Lesson>> result = cachedResults.get(new GetLessonsForGroupQuery.GetLessonsForGroupArgs(date, teacher));
-            return result;
-        };
+            return cachedResults.get(new GetLessonsForGroupQuery.GetLessonsForGroupArgs(date, teacher));
+        }
     }
 
     private static class GetLessonsForGroupWithTeacherQuery{
@@ -279,11 +272,9 @@ public class AppDatabaseHibernate implements AppDatabase{
         }
 
         public static BehaviorSubject<List<Lesson>> cacheQuery(Calendar date, String group, String teacher){
-            if(!cachedResults.containsKey(new GetLessonsForGroupWithTeacherArgs(date, group, teacher))){
+            if(!cachedResults.containsKey(new GetLessonsForGroupWithTeacherArgs(date, group, teacher)))
                 cachedResults.put(new GetLessonsForGroupWithTeacherArgs(date, group, teacher), BehaviorSubject.create());
-            }
-            BehaviorSubject<List<Lesson>> result = cachedResults.get(new GetLessonsForGroupWithTeacherArgs(date, group, teacher));
-            return result;
-        };
+            return cachedResults.get(new GetLessonsForGroupWithTeacherArgs(date, group, teacher));
+        }
     }
 }

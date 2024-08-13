@@ -222,12 +222,14 @@ public class MainForm {
         tabs.setTabPlacement(1);
         mainPanel.add(tabs, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         schedule = new JPanel();
-        schedule.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        schedule.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        schedule.setMaximumSize(new Dimension(-1, -1));
+        schedule.setMinimumSize(new Dimension(-1, -1));
         tabs.addTab("Расписание", schedule);
         headerPanel = new JPanel();
         headerPanel.setLayout(new GridLayoutManager(1, 6, new Insets(0, 10, 0, 10), -1, -1));
         headerPanel.setBackground(new Color(-10051327));
-        schedule.add(headerPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
+        schedule.add(headerPanel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
         chooseGroupLabel = new JLabel();
         chooseGroupLabel.setBackground(new Color(-1));
         chooseGroupLabel.setForeground(new Color(-1));
@@ -260,7 +262,7 @@ public class MainForm {
         schedulePanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));
         schedulePanel.setBackground(new Color(-1));
         schedulePanel.setForeground(new Color(-1));
-        schedule.add(schedulePanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(24, 105), null, 0, false));
+        schedule.add(schedulePanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(24, 105), null, 0, false));
         backwardButton = new JButton();
         backwardButton.setBackground(new Color(-14115282));
         backwardButton.setForeground(new Color(-1));
@@ -284,6 +286,8 @@ public class MainForm {
         panel1.add(fridayButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         times = new JPanel();
         times.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        times.setMaximumSize(new Dimension(-1, -1));
+        times.setMinimumSize(new Dimension(-1, -1));
         tabs.addTab("Звонки", times);
         mondayTimes.setAlignmentX(0.0f);
         mondayTimes.setAlignmentY(0.0f);

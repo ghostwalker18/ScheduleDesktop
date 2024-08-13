@@ -43,19 +43,16 @@ public class Application {
      * @return синглтон приложения
      * @throws Exception
      */
-    public static Application getInstance() throws Exception{
+    public static Application getInstance(){
         if(instance == null)
             instance = new Application();
         return instance;
     }
 
-    private Application() throws Exception{
+    private Application(){
         repository.update();
         repository.getStatus().subscribe(e -> System.out.println(e.text));
-        repository.getTeachers().subscribe(e->
-                System.out.println(e));
         FlatLightLaf.setup();
-        //repository.update();
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),
@@ -81,7 +78,7 @@ public class Application {
         return repository;
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args){
         Application app = Application.getInstance();
     }
 }

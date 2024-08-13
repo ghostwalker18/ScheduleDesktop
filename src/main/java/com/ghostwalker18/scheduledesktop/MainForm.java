@@ -21,6 +21,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Date;
@@ -33,7 +34,7 @@ import java.util.Vector;
  */
 public class MainForm {
     private ScheduleState state;
-    private ScheduleRepository repository = ScheduleRepository.getRepository();
+    private final ScheduleRepository repository = ScheduleRepository.getRepository();
     private Theme theme = new DefaulTheme();
     private JComboBox groupComboBox;
     private JButton clearButton;
@@ -74,12 +75,10 @@ public class MainForm {
         state.addObserver(fridayButton);
         mondayTimes = new ImageView();
         otherTimes = new ImageView();
-        repository.getMondayTimes().subscribe(image -> {
-            mondayTimes.setImage(image);
-        });
-        repository.getOtherTimes().subscribe(image -> {
-            otherTimes.setImage(image);
-        });
+        repository.getMondayTimes().subscribe(image ->
+                mondayTimes.setImage(image));
+        repository.getOtherTimes().subscribe(image ->
+                otherTimes.setImage(image));
     }
 
     public MainForm() {
@@ -128,14 +127,12 @@ public class MainForm {
             } else {
                 state.setGroup(null);
             }
-
         });
 
         repository.getTeachers().subscribe(teachers -> {
             if (teachers != null) {
                 teacherComboBox.setModel(new DefaultComboBoxModel(new Vector(teachers)));
             }
-            ;
             teacherComboBox.insertItemAt("Не выбрано", 0);
             teacherComboBox.setSelectedIndex(0);
         });
@@ -148,31 +145,66 @@ public class MainForm {
             }
         });
 
-        backwardButton.addActionListener(e -> {
-            state.goPreviousWeek();
-        });
+        backwardButton.addActionListener(e ->
+                state.goPreviousWeek());
         backwardButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     state.goPreviousWeek();
+                }
             }
         });
         backwardButton.setToolTipText("Предыдущая неделя");
 
-        forwardButton.addActionListener(e -> {
-            state.goNextWeek();
-        });
+        forwardButton.addActionListener(e ->
+                state.goNextWeek());
         forwardButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     state.goNextWeek();
+                }
             }
         });
         forwardButton.setToolTipText("Следующая неделя");
+
+        shareButton.addActionListener(e -> {
+            String schedule = getSchedule();
+            Toolkit.getDefaultToolkit()
+                    .getSystemClipboard()
+                    .setContents(new StringSelection(schedule), null);
+        });
+        shareButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String schedule = getSchedule();
+                    Toolkit.getDefaultToolkit()
+                            .getSystemClipboard()
+                            .setContents(new StringSelection(schedule), null);
+                }
+            }
+        });
+        shareButton.setToolTipText("Скопировать расписание в буфер обмена");
+    }
+
+    public String getSchedule() {
+        String schedule = "";
+        if (mondayButton.isOpened())
+            schedule += mondayButton.getSchedule();
+        if (tuesdayButton.isOpened())
+            schedule += tuesdayButton.getSchedule();
+        if (wednesdayButton.isOpened())
+            schedule += wednesdayButton.getSchedule();
+        if (thursdayButton.isOpened())
+            schedule += thursdayButton.getSchedule();
+        if (fridayButton.isOpened())
+            schedule += fridayButton.getSchedule();
+        return schedule;
     }
 
     /**
@@ -277,4 +309,5 @@ public class MainForm {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
+
 }

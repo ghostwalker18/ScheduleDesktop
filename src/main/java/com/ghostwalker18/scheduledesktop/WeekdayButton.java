@@ -54,7 +54,7 @@ public class WeekdayButton extends JPanel implements Observer {
     private String teacher = null;
     private String group = null;
     private Calendar date;
-    private io.reactivex.rxjava3.core.Observable<List<Lesson>> lessons;
+    private List<Lesson> lessons;
 
     public WeekdayButton(int year, int week, String dayOfWeek) {
         super();
@@ -103,12 +103,10 @@ public class WeekdayButton extends JPanel implements Observer {
                 }
             }
         });
-
-        lessons = repository.getSchedule(date, teacher, group);
-        if(lessons != null){
-            lessons.subscribe(lessonsList ->
-                table.setModel(makeDataModel(lessonsList)));
-        }
+        repository.getSchedule(date, teacher, group).subscribe(lessonsList -> {
+            lessons = lessonsList;
+            table.setModel(makeDataModel(lessonsList));
+        });
     }
 
     private void setTableVisible(){
@@ -122,6 +120,12 @@ public class WeekdayButton extends JPanel implements Observer {
         }
     }
 
+    /**
+     * Этот метод генерирует заголовок для этого элемента
+     * @param date дата расписания
+     * @param dayOfWeek день недели
+     * @return заголовок
+     */
     private String generateTitle(Calendar date,  String dayOfWeek){
         //Month is a number in 0 - 11
         int month = date.get(Calendar.MONTH) + 1;
@@ -142,6 +146,7 @@ public class WeekdayButton extends JPanel implements Observer {
         }
         return label;
     }
+
     private boolean isDateToday(Calendar date){
         Calendar rightNow = Calendar.getInstance();
         return rightNow.get(Calendar.YEAR) == date.get(Calendar.YEAR)
@@ -164,6 +169,51 @@ public class WeekdayButton extends JPanel implements Observer {
         return tableModel;
     }
 
+    /**
+     * Этот метод позвоволяет получить расписание для этого элемента в виде
+     * форматированной строки.
+     *
+     * @return расписание на этот день
+     */
+    public String getSchedule(){
+        DateConverters converter = new DateConverters();
+
+        String schedule = "Дата" + ": ";
+        schedule = schedule + converter.convertToDatabaseColumn(date) + "\n";
+        schedule += "\n";
+
+        for(Lesson lesson : lessons){
+            schedule = schedule + "Пара" + ": ";
+            schedule = schedule + lesson.getLessonNumber() + "\n";
+
+            schedule = schedule + "Предмет" + ": ";
+            schedule = schedule +lesson.getSubject() + "\n";
+
+            if(!lesson.getTeacher().equals("")){
+                schedule = schedule + "Препод." + ": ";
+                schedule = schedule + lesson.getTeacher() + "\n";
+            }
+
+            if(!lesson.getRoomNumber().equals("")){
+                schedule = schedule + "Каб." + ": ";
+                schedule = schedule + lesson.getRoomNumber() + "\n";
+            }
+
+            schedule += "\n";
+        }
+        schedule += "\n";
+
+        return schedule;
+    }
+
+    /**
+     * Этот метод позволяет узнать, открыто ли расписание для промотра.
+     * @return
+     */
+    public boolean isOpened(){
+        return isOpened;
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         ScheduleState state = (ScheduleState)o;
@@ -174,9 +224,9 @@ public class WeekdayButton extends JPanel implements Observer {
         teacher = state.getTeacher();
         group = state.getGroup();
         button.setText(generateTitle(date, this.dayOfWeek));
-        lessons = repository.getSchedule(date, teacher, group);
-        if(lessons != null){
-            lessons.subscribe(lessonsList -> table.setModel(makeDataModel(lessonsList)));
-        }
+        repository.getSchedule(date, teacher, group).subscribe(lessonsList -> {
+            lessons = lessonsList;
+            table.setModel(makeDataModel(lessonsList));
+        });
     }
 }

@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
@@ -235,7 +236,6 @@ public class ScheduleRepository {
      * @param group группа
      * @return спискок занятий
      */
-    @Nullable
     public Observable<List<Lesson>> getSchedule(Calendar date, @Nullable String teacher, @Nullable String group){
         if (teacher != null && group != null)
             return db.getLessonsForGroupWithTeacher(date, group, teacher);
@@ -243,7 +243,7 @@ public class ScheduleRepository {
             return db.getLessonsForTeacher(date, teacher);
         else if (group != null)
             return db.getLessonsForGroup(date, group);
-        else return null;
+        else return BehaviorSubject.createDefault(new LinkedList<>());
     }
 
     /**

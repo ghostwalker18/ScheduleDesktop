@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import org.hibernate.annotations.Nationalized;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;

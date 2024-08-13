@@ -32,7 +32,7 @@ public class DateConverters implements AttributeConverter<Calendar, String> {
     /**
      * Этот метод преобразует Calendar сущнисти в String для БД.
      * @param attribute  the entity attribute value to be converted
-     * @return
+     * @return converted entity attribute
      */
     @Override
     public String convertToDatabaseColumn(Calendar attribute) {
@@ -43,7 +43,7 @@ public class DateConverters implements AttributeConverter<Calendar, String> {
      * Этот метод преобразует String из БД в Calendar сущности.
      * @param dbData  the data from the database column to be
      *                converted
-     * @return
+     * @return converted database data
      */
     @Override
     public Calendar convertToEntityAttribute(String dbData) {

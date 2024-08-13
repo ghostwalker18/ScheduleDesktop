@@ -29,8 +29,8 @@ import java.util.List;
  * @author Ипатов Никита
  */
 public class WeekdayButton extends JPanel implements Observer {
-    private static HashMap<String, Integer> weekdaysNumbers = new HashMap<>();
-    private static String toolTip = "Показать расписание на этот день";
+    private static final HashMap<String, Integer> weekdaysNumbers = new HashMap<>();
+    private static final String toolTip = "Показать расписание на этот день";
 
     static {
         weekdaysNumbers.put("Понедельник", Calendar.MONDAY);
@@ -39,23 +39,22 @@ public class WeekdayButton extends JPanel implements Observer {
         weekdaysNumbers.put("Четверг", Calendar.THURSDAY);
         weekdaysNumbers.put("Пятница", Calendar.FRIDAY);
     }
+
     private Theme theme = new DefaulTheme();
     private boolean isOpened = false;
-
-    private JPanel tablePanel = new JPanel();
-    private  JButton button = new JButton();
-    private ScheduleRepository repository = ScheduleRepository.getRepository();
+    private final JPanel tablePanel = new JPanel();
+    private  final JButton button = new JButton();
+    private final ScheduleRepository repository = ScheduleRepository.getRepository();
 
     private final String[] tableColumnNames = new String[]{
             "Пара", "Время", "Предмет", "Преподаватель", "Кабинет"
     };
-    private JTable table = new JTable();
-    private String dayOfWeek;
+    private final JTable table = new JTable();
+    private final String dayOfWeek;
     private String teacher = null;
     private String group = null;
     private Calendar date;
     private io.reactivex.rxjava3.core.Observable<List<Lesson>> lessons;
-    //private DatabaseWorker databaseWorker = DatabaseWorker.getInstance();
 
     public WeekdayButton(int year, int week, String dayOfWeek) {
         super();
@@ -63,7 +62,7 @@ public class WeekdayButton extends JPanel implements Observer {
         date = new Calendar.Builder().setWeekDate(year, week, weekdaysNumbers.get(dayOfWeek)).build();
         if(isDateToday(date)){
             isOpened = true;
-        };
+        }
         button.setToolTipText(toolTip);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         JPanel buttonContainer = new JPanel();
@@ -73,8 +72,6 @@ public class WeekdayButton extends JPanel implements Observer {
         buttonContainer.add(new JPanel());
         add(buttonContainer);
 
-        lessons = repository.getSchedule(date, teacher, group);
-        table.setModel(makeDataModel(date, group, teacher));
         table.setFocusable(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -107,10 +104,11 @@ public class WeekdayButton extends JPanel implements Observer {
             }
         });
 
-        /*lessons = repository.getSchedule(date, teacher, group);
-        lessons.subscribe(lessons -> {
-            table.setModel(makeDataModel(lessons));
-        });*/
+        lessons = repository.getSchedule(date, teacher, group);
+        if(lessons != null){
+            lessons.subscribe(lessonsList ->
+                table.setModel(makeDataModel(lessonsList)));
+        }
     }
 
     private void setTableVisible(){
@@ -146,23 +144,9 @@ public class WeekdayButton extends JPanel implements Observer {
     }
     private boolean isDateToday(Calendar date){
         Calendar rightNow = Calendar.getInstance();
-        if(rightNow.get(Calendar.YEAR) == date.get(Calendar.YEAR)
+        return rightNow.get(Calendar.YEAR) == date.get(Calendar.YEAR)
                 && rightNow.get(Calendar.MONTH) == date.get(Calendar.MONTH)
-                && rightNow.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH)){
-            return true;
-        }
-        return false;
-    }
-    private DefaultTableModel makeDataModel(Calendar date, String group, String teacher){
-        Vector<String[]> scheduleItems = null; //databaseWorker.getDaySchedule(date, group, teacher);
-
-        DefaultTableModel tableModel = new DefaultTableModel(tableColumnNames, 0);
-        if(scheduleItems != null){
-            for(Object[] row : scheduleItems){
-                tableModel.addRow(row);
-            }
-        }
-        return tableModel;
+                && rightNow.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH);
     }
 
     private DefaultTableModel makeDataModel(List<Lesson> lessons){
@@ -183,16 +167,16 @@ public class WeekdayButton extends JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         ScheduleState state = (ScheduleState)o;
-        date = new Calendar.Builder().setWeekDate(state.getYear(),state.getWeek(), weekdaysNumbers.get(dayOfWeek)).build();
+        date = new Calendar.Builder().setWeekDate(state.getYear(),
+                state.getWeek(),
+                weekdaysNumbers.get(dayOfWeek))
+                .build();
         teacher = state.getTeacher();
         group = state.getGroup();
         button.setText(generateTitle(date, this.dayOfWeek));
         lessons = repository.getSchedule(date, teacher, group);
         if(lessons != null){
-            lessons.subscribe(lessonsList -> {
-                DefaultTableModel model = makeDataModel(lessonsList);
-                table.setModel(model);
-            });
+            lessons.subscribe(lessonsList -> table.setModel(makeDataModel(lessonsList)));
         }
     }
 }

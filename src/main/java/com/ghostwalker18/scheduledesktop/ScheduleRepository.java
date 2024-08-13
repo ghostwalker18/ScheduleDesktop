@@ -158,7 +158,7 @@ public class ScheduleRepository {
                         catch (Exception e){}
                         finally {
                             response.body().close();
-                        };
+                        }
                     }
                 }
 
@@ -233,7 +233,7 @@ public class ScheduleRepository {
      * @param date день
      * @param teacher преподаватель
      * @param group группа
-     * @return
+     * @return спискок занятий
      */
     @Nullable
     public Observable<List<Lesson>> getSchedule(Calendar date, @Nullable String teacher, @Nullable String group){
@@ -283,8 +283,7 @@ public class ScheduleRepository {
                     .select("tr").get(1)
                     .select("td").get(0)
                     .select("p > a").get(0);
-            String link = linkElement.attr("href");
-            return link;
+            return linkElement.attr("href");
         }
         catch (IOException e){
             return null;

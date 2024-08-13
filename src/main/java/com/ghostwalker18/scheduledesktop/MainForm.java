@@ -17,18 +17,12 @@ package com.ghostwalker18.scheduledesktop;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
@@ -38,11 +32,9 @@ import java.util.Vector;
  * @author Ипатов Никита
  */
 public class MainForm {
-
     private ScheduleState state;
     private ScheduleRepository repository = ScheduleRepository.getRepository();
     private Theme theme = new DefaulTheme();
-    private DatabaseWorker databaseWorker = DatabaseWorker.getInstance();
     private JComboBox groupComboBox;
     private JButton clearButton;
     private JComboBox teacherComboBox;
@@ -69,7 +61,6 @@ public class MainForm {
     private ImageView otherTimes;
 
     private void createUIComponents() {
-        //state = new ScheduleState(new Date(2023 - 1900, Calendar.JUNE, 8));
         state = new ScheduleState(new Date());
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Понедельник");
         state.addObserver(mondayButton);
@@ -91,8 +82,7 @@ public class MainForm {
         });
     }
 
-    public MainForm() throws SQLException {
-
+    public MainForm() {
         createUIComponents();
         $$$setupUI$$$();
         UIManager.put("ToolTip.background", theme.getBackgroundColor());
@@ -287,5 +277,4 @@ public class MainForm {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
-
 }

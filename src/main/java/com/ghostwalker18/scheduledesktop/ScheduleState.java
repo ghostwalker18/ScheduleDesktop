@@ -28,7 +28,7 @@ public class ScheduleState extends Observable {
     private String teacher;
     private int year;
     private int week;
-    private Calendar calendar;
+    private final Calendar calendar;
 
     /**
      * Конструктор состояния на основе текущей даты.
@@ -74,7 +74,7 @@ public class ScheduleState extends Observable {
         this.group = group;
         setChanged();
         notifyObservers();
-    };
+    }
 
     public String getGroup(){
         return group;

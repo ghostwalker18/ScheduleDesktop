@@ -18,6 +18,7 @@ import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.ReplaySubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.Jsoup;
@@ -55,7 +56,7 @@ public class ScheduleRepository {
     private final String otherTimesPath = "otherTimes.jpg";
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
-    private final PublishSubject<Status> status = PublishSubject.create();
+    private final ReplaySubject<Status> status = ReplaySubject.create();
 
     /**
      * Этот метод используется для получения доступа к репозиторию.

@@ -36,12 +36,11 @@ public class Application {
     private static Application instance = null;
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
     private final Preferences preferences = repository.getPreferences();
-    private JFrame mainForm;
+    private final JFrame mainForm;
 
     /**
      * Этот метод используется для создания экземпляра приложения
      * @return синглтон приложения
-     * @throws Exception
      */
     public static Application getInstance(){
         if(instance == null)
@@ -50,9 +49,9 @@ public class Application {
     }
 
     private Application(){
-        repository.update();
-        repository.getStatus().subscribe(e -> System.out.println(e.text));
         FlatLightLaf.setup();
+        repository.update();
+
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

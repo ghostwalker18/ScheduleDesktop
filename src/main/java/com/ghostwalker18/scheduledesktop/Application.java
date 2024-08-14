@@ -19,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 /**
@@ -51,7 +52,8 @@ public class Application {
     private Application(){
         FlatLightLaf.setup();
         repository.update();
-
+        ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
+        String title = strings.getString("app_name");
         mainForm = new JFrame("Расписание");
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),

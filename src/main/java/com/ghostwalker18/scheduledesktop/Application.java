@@ -53,8 +53,7 @@ public class Application {
         FlatLightLaf.setup();
         repository.update();
         ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
-        String title = strings.getString("app_name");
-        mainForm = new JFrame("Расписание");
+        mainForm = new JFrame(strings.getString("app_name"));
         mainForm.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),
                 preferences.getInt("main_form_height", 500)));

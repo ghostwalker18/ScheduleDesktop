@@ -25,6 +25,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.Vector;
 
 /**
@@ -35,11 +36,13 @@ import java.util.Vector;
 public class MainForm {
     private ScheduleState state;
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings", new XMLBundleControl());
     private Theme theme = new DefaulTheme();
     private JComboBox groupComboBox;
-    private JButton clearButton;
+    private JButton clearGroupButton;
     private JComboBox teacherComboBox;
-    private JButton clearButton1;
+    private JButton clearTeacherButton;
     public JPanel mainPanel;
     private JPanel headerPanel;
     private JLabel chooseGroupLabel;
@@ -66,27 +69,24 @@ public class MainForm {
 
     private void createUIComponents() {
         state = new ScheduleState(new Date());
-        mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Понедельник");
+        mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
         state.addObserver(mondayButton);
-        tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Вторник");
+        tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("tuesday"));
         state.addObserver(tuesdayButton);
-        wednesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Среда");
+        wednesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("wednesday"));
         state.addObserver(wednesdayButton);
-        thursdayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Четверг");
+        thursdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("thursday"));
         state.addObserver(thursdayButton);
-        fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), "Пятница");
+        fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("friday"));
         state.addObserver(fridayButton);
         mondayTimes = new ImageView();
         otherTimes = new ImageView();
-        repository.getMondayTimes().subscribe(image ->
-                mondayTimes.setImage(image));
-        repository.getOtherTimes().subscribe(image ->
-                otherTimes.setImage(image));
     }
 
     public MainForm() {
         createUIComponents();
         $$$setupUI$$$();
+        setupLanguage();
         UIManager.put("ToolTip.background", theme.getBackgroundColor());
         UIManager.put("ToolTip.foreground", theme.getAccentColor());
         schedulePanel.setBackground(theme.getBackgroundColor());
@@ -106,12 +106,12 @@ public class MainForm {
             }
         });
 
-        clearButton.addActionListener(e -> {
+        clearGroupButton.addActionListener(e -> {
             groupComboBox.setSelectedIndex(0);
             state.setGroup(null);
         });
 
-        clearButton1.addActionListener(e -> {
+        clearTeacherButton.addActionListener(e -> {
             teacherComboBox.setSelectedIndex(0);
             state.setTeacher(null);
         });
@@ -120,10 +120,9 @@ public class MainForm {
             if (groups != null) {
                 groupComboBox.setModel(new DefaultComboBoxModel(new Vector(groups)));
             }
-            groupComboBox.insertItemAt("Не выбрано", 0);
+            groupComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
             groupComboBox.setSelectedIndex(0);
         });
-        groupComboBox.setToolTipText("Например: \"A-11\"");
         groupComboBox.addActionListener(e -> {
             if (groupComboBox.getSelectedIndex() != 0) {
                 state.setGroup(groupComboBox.getSelectedItem().toString());
@@ -136,10 +135,9 @@ public class MainForm {
             if (teachers != null) {
                 teacherComboBox.setModel(new DefaultComboBoxModel(new Vector(teachers)));
             }
-            teacherComboBox.insertItemAt("Не выбрано", 0);
+            teacherComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
             teacherComboBox.setSelectedIndex(0);
         });
-        teacherComboBox.setToolTipText("Например: \"Иванов И.И\"");
         teacherComboBox.addActionListener(e -> {
             if (teacherComboBox.getSelectedIndex() != 0) {
                 state.setTeacher(teacherComboBox.getSelectedItem().toString());
@@ -159,7 +157,6 @@ public class MainForm {
                 }
             }
         });
-        backwardButton.setToolTipText("Предыдущая неделя");
 
         forwardButton.addActionListener(e ->
                 state.goNextWeek());
@@ -172,7 +169,6 @@ public class MainForm {
                 }
             }
         });
-        forwardButton.setToolTipText("Следующая неделя");
 
         shareButton.addActionListener(e -> {
             String schedule = getSchedule();
@@ -192,12 +188,46 @@ public class MainForm {
                 }
             }
         });
-        shareButton.setToolTipText("Скопировать расписание в буфер обмена");
+
+        repository.getMondayTimes().subscribe(image ->
+                mondayTimes.setImage(image));
+
+        repository.getOtherTimes().subscribe(image ->
+                otherTimes.setImage(image));
 
         repository.getStatus().subscribe(status -> {
             updateStatus.setText(status.text);
             updateProgress.setValue(status.progress);
         });
+    }
+
+    private void setupLanguage() {
+        tabs.setTitleAt(0, strings.getString("days_tab"));
+        tabs.setTitleAt(1, strings.getString("times_tab"));
+
+        shareButton.setText(strings.getString("share"));
+        shareButton.setToolTipText(platformStrings.getString("share_tooltip"));
+
+        settingsButton.setText(strings.getString("settings"));
+        settingsButton.setToolTipText(platformStrings.getString("settings_tooltip"));
+
+        backwardButton.setText(strings.getString("back"));
+        backwardButton.setToolTipText(platformStrings.getString("backward_tooltip"));
+
+        forwardButton.setText(strings.getString("forward"));
+        forwardButton.setToolTipText(platformStrings.getString("forward_tooltip"));
+
+        chooseGroupLabel.setText(strings.getString("group_choice_text"));
+
+        groupComboBox.setToolTipText(platformStrings.getString("groups_tooltip"));
+
+        clearGroupButton.setText(platformStrings.getString("clear"));
+
+        chooseTeacherLabel.setText(strings.getString("teacher_choice_text"));
+
+        teacherComboBox.setToolTipText(platformStrings.getString("teachers_tooltip"));
+
+        clearTeacherButton.setText(platformStrings.getString("clear"));
     }
 
     public String getSchedule() {
@@ -248,11 +278,11 @@ public class MainForm {
         groupComboBox.setPopupVisible(false);
         groupComboBox.setToolTipText("");
         headerPanel.add(groupComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        clearButton = new JButton();
-        clearButton.setBackground(new Color(-1));
-        clearButton.setForeground(new Color(-16249741));
-        clearButton.setText("Очистить");
-        headerPanel.add(clearButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        clearGroupButton = new JButton();
+        clearGroupButton.setBackground(new Color(-1));
+        clearGroupButton.setForeground(new Color(-16249741));
+        clearGroupButton.setText("Очистить");
+        headerPanel.add(clearGroupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chooseTeacherLabel = new JLabel();
         chooseTeacherLabel.setForeground(new Color(-1));
         chooseTeacherLabel.setText("Выберите преподавателя:");
@@ -261,11 +291,11 @@ public class MainForm {
         teacherComboBox.setEditable(true);
         teacherComboBox.setToolTipText("");
         headerPanel.add(teacherComboBox, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        clearButton1 = new JButton();
-        clearButton1.setBackground(new Color(-1));
-        clearButton1.setForeground(new Color(-16249741));
-        clearButton1.setText("Очистить");
-        headerPanel.add(clearButton1, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        clearTeacherButton = new JButton();
+        clearTeacherButton.setBackground(new Color(-1));
+        clearTeacherButton.setForeground(new Color(-16249741));
+        clearTeacherButton.setText("Очистить");
+        headerPanel.add(clearTeacherButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         schedulePanel = new JPanel();
         schedulePanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));
         schedulePanel.setBackground(new Color(-1));
@@ -283,7 +313,7 @@ public class MainForm {
         schedulePanel.add(forwardButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(78, 244), null, 0, false));
         scheduleScroll = new JScrollPane();
         schedulePanel.add(scheduleScroll, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(34, 244), null, 0, false));
-        scheduleScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16249741)), "Расписание на неделю", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, null, new Color(-16249741)));
+        scheduleScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16249741)), null, TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, null, new Color(-16249741)));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, 10));
         scheduleScroll.setViewportView(panel1);

@@ -17,7 +17,6 @@ package com.ghostwalker18.scheduledesktop;
 import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
-import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -33,10 +32,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
 
@@ -48,6 +44,7 @@ import java.util.prefs.Preferences;
 public class ScheduleRepository {
     private static ScheduleRepository repository = null;
     private  final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
     private final ScheduleNetworkAPI api;
     private final AppDatabase db;
     private final String baseUri = "https://ptgh.onego.ru/9006/";
@@ -182,20 +179,24 @@ public class ScheduleRepository {
         new Thread(() -> {
             List<String> scheduleLinks = getLinksForScheduleFirstCorpus();
             if(scheduleLinks.size() == 0)
-                status.onNext(new Status("Ошибка при скачивании", 0));
+                status.onNext(new Status(strings.getString("schedule_download_error"), 0));
             for(String link : scheduleLinks){
-                status.onNext(new Status("Скачивание расписания", 10));
+                status.onNext(new Status(strings.getString("schedule_download_status"), 10));
                 api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(response.body() != null){
-                            status.onNext(new Status("Обработка расписания", 33));
+                            status.onNext(new Status(strings.getString("schedule_parsing_status"),
+                                    33));
                             try(XSSFWorkbook excelFile = new XSSFWorkbook(response.body().byteStream())){
                                 List<Lesson> lessons = XMLStoLessonsConverter.convertFirstCorpus(excelFile);
                                 db.insertMany(lessons);
-                                status.onNext(new Status("Расписание успешно обновлено", 100));
+                                status.onNext(new Status(strings.getString("processing_completed_status"),
+                                        100));
                             }
                             catch (IOException e){
+                                status.onNext(new Status(strings.getString("schedule_parsing_error"),
+                                        0));
                             }
                             response.body().close();
                         }
@@ -203,6 +204,7 @@ public class ScheduleRepository {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        status.onNext(new Status(strings.getString("schedule_download_error"), 0));
                     }
                 });
             }

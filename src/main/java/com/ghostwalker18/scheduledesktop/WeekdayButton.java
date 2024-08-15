@@ -31,13 +31,17 @@ import java.util.List;
 public class WeekdayButton extends JPanel implements Observer {
     private static final HashMap<String, Integer> weekdaysNumbers = new HashMap<>();
     private static final String toolTip = "Показать расписание на этот день";
+    private static final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
+    private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
 
     static {
-        weekdaysNumbers.put("Понедельник", Calendar.MONDAY);
-        weekdaysNumbers.put("Вторник", Calendar.TUESDAY);
-        weekdaysNumbers.put("Среда", Calendar.WEDNESDAY);
-        weekdaysNumbers.put("Четверг", Calendar.THURSDAY);
-        weekdaysNumbers.put("Пятница", Calendar.FRIDAY);
+        weekdaysNumbers.put(strings.getString("monday"), Calendar.MONDAY);
+        weekdaysNumbers.put(strings.getString("tuesday"), Calendar.TUESDAY);
+        weekdaysNumbers.put(strings.getString("wednesday"), Calendar.WEDNESDAY);
+        weekdaysNumbers.put(strings.getString("thursday"), Calendar.THURSDAY);
+        weekdaysNumbers.put(strings.getString("friday"), Calendar.FRIDAY);
     }
 
     private Theme theme = new DefaulTheme();
@@ -47,7 +51,8 @@ public class WeekdayButton extends JPanel implements Observer {
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
 
     private final String[] tableColumnNames = new String[]{
-            "Пара", "Время", "Предмет", "Преподаватель", "Кабинет"
+            strings.getString("number"), strings.getString("times"), strings.getString("subject"),
+            strings.getString("teacher"), strings.getString("room")
     };
     private final JTable table = new JTable();
     private final String dayOfWeek;
@@ -63,7 +68,7 @@ public class WeekdayButton extends JPanel implements Observer {
         if(isDateToday(date)){
             isOpened = true;
         }
-        button.setToolTipText(toolTip);
+        button.setToolTipText(platformStrings.getString("weekday_tooltip"));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new GridLayout(1,3));
@@ -142,7 +147,7 @@ public class WeekdayButton extends JPanel implements Observer {
         }
         String label = dayOfWeek + " (" + dayString  + "/" + monthString + ")";
         if(isDateToday(date)){
-            label += " - Сегодня";
+            label = label + " - " + strings.getString("today");
         }
         return label;
     }
@@ -178,24 +183,24 @@ public class WeekdayButton extends JPanel implements Observer {
     public String getSchedule(){
         DateConverters converter = new DateConverters();
 
-        String schedule = "Дата" + ": ";
+        String schedule = strings.getString("date") + ": ";
         schedule = schedule + converter.convertToDatabaseColumn(date) + "\n";
         schedule += "\n";
 
         for(Lesson lesson : lessons){
-            schedule = schedule + "Пара" + ": ";
+            schedule = schedule + strings.getString("number") + ": ";
             schedule = schedule + lesson.getLessonNumber() + "\n";
 
-            schedule = schedule + "Предмет" + ": ";
+            schedule = schedule + strings.getString("subject") + ": ";
             schedule = schedule +lesson.getSubject() + "\n";
 
             if(!lesson.getTeacher().equals("")){
-                schedule = schedule + "Препод." + ": ";
+                schedule = schedule + strings.getString("teacher") + ": ";
                 schedule = schedule + lesson.getTeacher() + "\n";
             }
 
             if(!lesson.getRoomNumber().equals("")){
-                schedule = schedule + "Каб." + ": ";
+                schedule = schedule + strings.getString("room") + ": ";
                 schedule = schedule + lesson.getRoomNumber() + "\n";
             }
 

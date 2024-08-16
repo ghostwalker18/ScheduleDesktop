@@ -24,6 +24,8 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -33,7 +35,7 @@ import java.util.Vector;
  *
  * @author Ипатов Никита
  */
-public class MainForm {
+public class MainForm implements WindowListener {
     private ScheduleState state;
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
@@ -87,8 +89,11 @@ public class MainForm {
         createUIComponents();
         $$$setupUI$$$();
         setupLanguage();
+        setupGroupSearch();
+        setupTeacherSearch();
         UIManager.put("ToolTip.background", theme.getBackgroundColor());
         UIManager.put("ToolTip.foreground", theme.getAccentColor());
+
         schedulePanel.setBackground(theme.getBackgroundColor());
         scheduleScroll.getVerticalScrollBar().setUnitIncrement(6);
         scheduleScroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
@@ -114,36 +119,6 @@ public class MainForm {
         clearTeacherButton.addActionListener(e -> {
             teacherComboBox.setSelectedIndex(0);
             state.setTeacher(null);
-        });
-
-        repository.getGroups().subscribe(groups -> {
-            if (groups != null) {
-                groupComboBox.setModel(new DefaultComboBoxModel(new Vector(groups)));
-            }
-            groupComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
-            groupComboBox.setSelectedIndex(0);
-        });
-        groupComboBox.addActionListener(e -> {
-            if (groupComboBox.getSelectedIndex() != 0) {
-                state.setGroup(groupComboBox.getSelectedItem().toString());
-            } else {
-                state.setGroup(null);
-            }
-        });
-
-        repository.getTeachers().subscribe(teachers -> {
-            if (teachers != null) {
-                teacherComboBox.setModel(new DefaultComboBoxModel(new Vector(teachers)));
-            }
-            teacherComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
-            teacherComboBox.setSelectedIndex(0);
-        });
-        teacherComboBox.addActionListener(e -> {
-            if (teacherComboBox.getSelectedIndex() != 0) {
-                state.setTeacher(teacherComboBox.getSelectedItem().toString());
-            } else {
-                state.setTeacher(null);
-            }
         });
 
         backwardButton.addActionListener(e ->
@@ -228,6 +203,47 @@ public class MainForm {
         teacherComboBox.setToolTipText(platformStrings.getString("teachers_tooltip"));
 
         clearTeacherButton.setText(platformStrings.getString("clear"));
+    }
+
+    private void setupGroupSearch() {
+        repository.getGroups().subscribe(groups -> {
+            if (groups != null) {
+                groupComboBox.setModel(new DefaultComboBoxModel(new Vector(groups)));
+            }
+            groupComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
+            groupComboBox.setSelectedIndex(0);
+            String savedGroup = repository.getSavedGroup();
+            for (int i = 0; i < groupComboBox.getItemCount(); i++) {
+                if (groupComboBox.getItemAt(i).equals(savedGroup)) {
+                    groupComboBox.setSelectedIndex(i);
+                    state.setGroup(savedGroup);
+                }
+            }
+        });
+        groupComboBox.addActionListener(e -> {
+            if (groupComboBox.getSelectedIndex() != 0) {
+                state.setGroup(groupComboBox.getSelectedItem().toString());
+            } else {
+                state.setGroup(null);
+            }
+        });
+    }
+
+    private void setupTeacherSearch() {
+        repository.getTeachers().subscribe(teachers -> {
+            if (teachers != null) {
+                teacherComboBox.setModel(new DefaultComboBoxModel(new Vector(teachers)));
+            }
+            teacherComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
+            teacherComboBox.setSelectedIndex(0);
+        });
+        teacherComboBox.addActionListener(e -> {
+            if (teacherComboBox.getSelectedIndex() != 0) {
+                state.setTeacher(teacherComboBox.getSelectedItem().toString());
+            } else {
+                state.setTeacher(null);
+            }
+        });
     }
 
     public String getSchedule() {
@@ -364,4 +380,37 @@ public class MainForm {
         return mainPanel;
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        try {
+            String savedGroup = state.getGroup();
+            repository.saveGroup(savedGroup);
+        } catch (Exception exception) {
+        }
+        ;
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+    }
 }

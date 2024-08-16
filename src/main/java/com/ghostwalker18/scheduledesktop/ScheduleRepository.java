@@ -45,6 +45,7 @@ public class ScheduleRepository {
     private static ScheduleRepository repository = null;
     private  final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings", new XMLBundleControl());
     private final ScheduleNetworkAPI api;
     private final AppDatabase db;
     private final String baseUri = "https://ptgh.onego.ru/9006/";
@@ -54,6 +55,19 @@ public class ScheduleRepository {
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
     private final ReplaySubject<Status> status = ReplaySubject.create();
+
+    /**
+     * Этот класс используетс для отображения статуса обновления репозитория.
+     */
+    public static class Status{
+        public String text;
+        public int progress;
+
+        public Status(String text, int progress){
+            this.text = text;
+            this.progress = progress;
+        }
+    }
 
     /**
      * Этот метод используется для получения доступа к репозиторию.
@@ -318,15 +332,18 @@ public class ScheduleRepository {
     }
 
     /**
-     * Этот класс используетс для отображения статуса обновления репозитория.
+     * Этот метод предназначен для сохранения последней выбранной группы перед закрытием приложения.
+     * @param group группа для сохранения
      */
-    public static class Status{
-        public String text;
-        public int progress;
+    public void saveGroup(String group){
+        preferences.put("savedGroup", group);
+    }
 
-        public Status(String text, int progress){
-            this.text = text;
-            this.progress = progress;
-        }
+    /**
+     * Этот метод возвращает сохраненную группу.
+     * @return группа
+     */
+    public String getSavedGroup(){
+        return preferences.get("savedGroup", platformStrings.getString("combox_placeholder"));
     }
 }

@@ -37,7 +37,7 @@ public class Application {
     private static Application instance = null;
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
     private final Preferences preferences = repository.getPreferences();
-    private final JFrame mainForm;
+    private final JFrame frame;
 
     /**
      * Этот метод используется для создания экземпляра приложения
@@ -53,25 +53,28 @@ public class Application {
         FlatLightLaf.setup();
         repository.update();
         ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
-        mainForm = new JFrame(strings.getString("app_name"));
-        mainForm.setPreferredSize(new Dimension(
+        frame = new JFrame(strings.getString("app_name"));
+        frame.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),
                 preferences.getInt("main_form_height", 500)));
-        mainForm.setIconImage(Toolkit.getDefaultToolkit()
+        frame.setIconImage(Toolkit.getDefaultToolkit()
                 .createImage(Application.class.getResource("/images/favicon.gif")));
-        mainForm.setContentPane(new MainForm().mainPanel);
-        mainForm.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        mainForm.addWindowListener(new WindowAdapter() {
+        MainForm mainForm = new MainForm();
+        frame.setContentPane(mainForm.mainPanel);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        //This shit is important: listeners are called in order they are added!!!
+        frame.addWindowListener(mainForm);
+        frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                preferences.putInt("main_form_width", mainForm.getWidth());
-                preferences.putInt("main_form_height", mainForm.getHeight());
-                mainForm.dispose();
+                preferences.putInt("main_form_width", frame.getWidth());
+                preferences.putInt("main_form_height", frame.getHeight());
+                frame.dispose();
                 System.exit(0);
             }
         });
-        mainForm.pack();
-        mainForm.setVisible(true);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public ScheduleRepository getRepository(){

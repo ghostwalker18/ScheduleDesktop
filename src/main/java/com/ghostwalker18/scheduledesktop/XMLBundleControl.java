@@ -7,6 +7,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
 
+/**
+ * Этот класс используется для работы с XML-based ResourceBundle.
+ */
 public class XMLBundleControl extends ResourceBundle.Control {
     @Override
     public List<String> getFormats(String baseName) {

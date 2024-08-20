@@ -1,5 +1,10 @@
 plugins {
     id 'java'
+    id 'application'
+}
+
+tasks.withType(AbstractCopyTask).all {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 group = 'com.ghostwalker18.scheduledesktop'
@@ -25,6 +30,23 @@ dependencies {
     implementation "com.fasterxml:aalto-xml:1.2.2"
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+
+application {
+    mainClass = 'com.ghostwalker18.scheduledesktop.Application'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class" : "com.ghostwalker18.scheduledesktop.Application"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect{
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
 
 test {

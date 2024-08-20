@@ -19,6 +19,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -31,12 +36,12 @@ import java.util.prefs.Preferences;
  * @author  Ипатов Никита
  * @version  1.0
  */
-public class Application {
+public class Application{
     public static final String mondayTimesURL = "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
     public static final String otherTimesURL = "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
     private static Application instance = null;
-    private final ScheduleRepository repository = ScheduleRepository.getRepository();
-    private final Preferences preferences = repository.getPreferences();
+    private final ScheduleRepository repository;
+    private final static Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final JFrame frame;
 
     /**
@@ -51,6 +56,9 @@ public class Application {
 
     private Application(){
         FlatLightLaf.setup();
+        Locale locale = new Locale(preferences.get("language", "ru"));
+        Locale.setDefault(locale);
+        repository = ScheduleRepository.getRepository();
         repository.update();
         ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
         frame = new JFrame(strings.getString("app_name"));
@@ -79,6 +87,37 @@ public class Application {
 
     public ScheduleRepository getRepository(){
         return repository;
+    }
+
+    public static void restartApplication(){
+        try{
+            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            final File currentJar = new File(Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            /* is it a jar file? */
+            if(!currentJar.getName().endsWith(".jar"))
+                return;
+
+            /* Build command: java -jar application.jar */
+            final ArrayList<String> command = new ArrayList<>();
+            command.add(javaBin);
+            command.add("-jar");
+            command.add(currentJar.getPath());
+
+            final ProcessBuilder builder = new ProcessBuilder(command);
+            builder.start();
+            System.exit(0);
+        }
+        catch (URISyntaxException e){
+            System.out.println(e);
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+    }
+
+    public static Preferences getPreferences(){
+        return preferences;
     }
 
     public static void main(String[] args){

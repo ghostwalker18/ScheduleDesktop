@@ -43,11 +43,11 @@ import java.util.prefs.Preferences;
  */
 public class ScheduleRepository {
     private static ScheduleRepository repository = null;
-    private  final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings", new XMLBundleControl());
     private final ScheduleNetworkAPI api;
     private final AppDatabase db;
+    private final Preferences preferences = Application.getPreferences();
     private final String baseUri = "https://ptgh.onego.ru/9006/";
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     private final String mondayTimesPath = "mondayTimes.jpg";
@@ -87,15 +87,6 @@ public class ScheduleRepository {
                 .callbackExecutor(Executors.newSingleThreadExecutor())
                 .build()
                 .create(ScheduleNetworkAPI.class);
-    }
-
-    /**
-     * Этот метод используется для получения настроек приложения.
-     *
-     * @return настройки приложения
-     */
-    public Preferences getPreferences(){
-        return preferences;
     }
 
     /**

@@ -164,6 +164,15 @@ public class MainForm implements WindowListener {
             }
         });
 
+        settingsButton.addActionListener(e -> {
+            JFrame frame = new JFrame(strings.getString("settings"));
+            frame.setPreferredSize(new Dimension(500, 300));
+            frame.setContentPane(new SettingsForm().mainPanel);
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
+        });
+
         repository.getMondayTimes().subscribe(image ->
                 mondayTimes.setImage(image));
 
@@ -391,7 +400,6 @@ public class MainForm implements WindowListener {
             repository.saveGroup(savedGroup);
         } catch (Exception exception) {
         }
-        ;
     }
 
     @Override

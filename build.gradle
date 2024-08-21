@@ -39,7 +39,8 @@ application {
 
 jar {
     manifest {
-        attributes "Main-Class" : "com.ghostwalker18.scheduledesktop.Application"
+        attributes("Main-Class" : "com.ghostwalker18.scheduledesktop.Application",
+                'Created-By' : 'Ipatov Nikita')
     }
 
     from {

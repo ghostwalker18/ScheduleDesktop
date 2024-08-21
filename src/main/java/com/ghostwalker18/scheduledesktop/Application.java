@@ -85,10 +85,10 @@ public class Application{
         frame.setVisible(true);
     }
 
-    public ScheduleRepository getRepository(){
-        return repository;
-    }
-
+    /**
+     * Этот метод используется для перезапуска приложения. Работает только для приложения,
+     * упакованного в jar.
+     */
     public static void restartApplication(){
         try{
             final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
@@ -116,10 +116,18 @@ public class Application{
         }
     }
 
+    /**
+     * Этот метод используется для получения настроек приложения.
+     * @return настройки приложения
+     */
     public static Preferences getPreferences(){
         return preferences;
     }
 
+    /**
+     * Точка входа в приложение.
+     * @param args аргументы командной строки
+     */
     public static void main(String[] args){
         Application app = Application.getInstance();
     }

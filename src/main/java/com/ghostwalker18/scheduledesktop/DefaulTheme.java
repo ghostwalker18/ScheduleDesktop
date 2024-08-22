@@ -17,7 +17,8 @@ package com.ghostwalker18.scheduledesktop;
 import javax.swing.*;
 import java.awt.*;
 
-public class DefaulTheme implements Theme{
+public class DefaulTheme
+        implements Theme{
     @Override
     public Color getPrimaryColor() {
         return new Color(102,161, 1);

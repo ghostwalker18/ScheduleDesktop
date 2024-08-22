@@ -14,9 +14,14 @@ import java.util.stream.Collectors;
  * @author Ипатов Никита
  */
 public class SettingsForm {
-    private static final ResourceBundle languages = ResourceBundle.getBundle("languages", new XMLBundleControl());
-    private static final ResourceBundle themes = ResourceBundle.getBundle("themes", new XMLBundleControl());
-    private static final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
+    private static final ResourceBundle languages = ResourceBundle.getBundle("languages",
+            new XMLBundleControl());
+    private static final ResourceBundle themes = ResourceBundle.getBundle("themes",
+            new XMLBundleControl());
+    private static final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
+    private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
     public static final HashMap<String, String> languagesCodes = new HashMap<>();
     public static final HashMap<String, String> themesCodes = new HashMap<>();
 
@@ -102,6 +107,7 @@ public class SettingsForm {
         themeLabel.setText(strings.getString("option_theme"));
         languageLabel.setText(strings.getString("option_language"));
         doNotUpdateTimesL.setText(strings.getString("option_do_not_update_times"));
+        saveButton.setToolTipText(platformStrings.getString("save_button_tooltip"));
     }
 
     /**

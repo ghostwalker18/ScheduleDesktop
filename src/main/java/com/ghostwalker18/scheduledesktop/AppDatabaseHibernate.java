@@ -34,7 +34,8 @@ import java.util.*;
  *
  * @author  Ипатов Никита
  */
-public class AppDatabaseHibernate implements AppDatabase{
+public class AppDatabaseHibernate
+        implements AppDatabase{
     private static AppDatabaseHibernate instance = null;
     private final SessionFactory sessionFactory;
     private final PublishSubject<Boolean> onDataBaseUpdate = PublishSubject.create();
@@ -171,6 +172,10 @@ public class AppDatabaseHibernate implements AppDatabase{
         return queryResult;
     }
 
+    //TODO:optimize it (future hint: Reflexion API is a key)!!
+    /**
+     * Этот класс используется для кэширования запросов GetLessonsForGroup
+     */
     private static class GetLessonsForGroupQuery{
         public static final Map<GetLessonsForGroupArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
 
@@ -206,6 +211,9 @@ public class AppDatabaseHibernate implements AppDatabase{
         }
     }
 
+    /**
+     * Этот класс используется для кэширования запросов GetLessonsForTeacher
+     */
     private static class GetLessonsForTeacherQuery{
         public static final Map<GetLessonsForTeacherArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
 
@@ -237,10 +245,13 @@ public class AppDatabaseHibernate implements AppDatabase{
         public static BehaviorSubject<List<Lesson>> cacheQuery(Calendar date, String teacher){
             if(!cachedResults.containsKey(new GetLessonsForTeacherArgs(date, teacher)))
                 cachedResults.put(new GetLessonsForTeacherArgs(date, teacher), BehaviorSubject.create());
-            return cachedResults.get(new GetLessonsForGroupQuery.GetLessonsForGroupArgs(date, teacher));
+            return cachedResults.get(new GetLessonsForTeacherQuery.GetLessonsForTeacherArgs(date, teacher));
         }
     }
 
+    /**
+     * Этот класс используется для кэширования запросов GetLessonsForGroupWithTeacher
+     */
     private static class GetLessonsForGroupWithTeacherQuery{
         public static final Map<GetLessonsForGroupWithTeacherArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
 

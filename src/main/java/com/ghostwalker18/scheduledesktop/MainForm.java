@@ -35,7 +35,8 @@ import java.util.Vector;
  *
  * @author Ипатов Никита
  */
-public class MainForm implements WindowListener {
+public class MainForm
+        implements WindowListener {
     private ScheduleState state;
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
@@ -69,6 +70,9 @@ public class MainForm implements WindowListener {
     private JPanel statusPanel;
     private JLabel updateStatus;
 
+    /**
+     * Этот метод используется для создания кастомных UI компоненетов.
+     */
     private void createUIComponents() {
         state = new ScheduleState(new Date());
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
@@ -214,6 +218,9 @@ public class MainForm implements WindowListener {
         clearTeacherButton.setText(platformStrings.getString("clear"));
     }
 
+    /**
+     * Этот метод используется для настройки поля выбора группы.
+     */
     private void setupGroupSearch() {
         repository.getGroups().subscribe(groups -> {
             if (groups != null) {
@@ -226,6 +233,7 @@ public class MainForm implements WindowListener {
                 if (groupComboBox.getItemAt(i).equals(savedGroup)) {
                     groupComboBox.setSelectedIndex(i);
                     state.setGroup(savedGroup);
+                    break;
                 }
             }
         });
@@ -238,6 +246,9 @@ public class MainForm implements WindowListener {
         });
     }
 
+    /**
+     * Этот метод используется для настройки поля выбора преподавателя.
+     */
     private void setupTeacherSearch() {
         repository.getTeachers().subscribe(teachers -> {
             if (teachers != null) {
@@ -255,6 +266,10 @@ public class MainForm implements WindowListener {
         });
     }
 
+    /**
+     * Этот метод используется для получения расписания для всех открытых дней.
+     * @return расписание в виде строки
+     */
     public String getSchedule() {
         String schedule = "";
         if (mondayButton.isOpened())
@@ -394,13 +409,16 @@ public class MainForm implements WindowListener {
     public void windowOpened(WindowEvent e) {
     }
 
+    /**
+     * Этот метод используется для реакции на событие закрытия окна. Сохранаяет текущею выбранную группу.
+     * @param e the event to be processed
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         try {
             String savedGroup = state.getGroup();
             repository.saveGroup(savedGroup);
-        } catch (Exception exception) {
-        }
+        } catch (Exception exception) {}
     }
 
     @Override

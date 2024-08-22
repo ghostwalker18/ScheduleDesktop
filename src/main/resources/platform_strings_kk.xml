@@ -15,6 +15,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <entry key="clear">Тазалау</entry>
+    <entry key="downloading">Жүктеу...</entry>
     <entry key="combox_placeholder">Таңдалмаған</entry>
     <entry key="share_tooltip">Кестені алмасу буферіне көшіру</entry>
     <entry key="settings_tooltip">Қолданба параметрлері</entry>
@@ -23,4 +24,5 @@
     <entry key="teachers_tooltip">Мысалы: "Иванов И.И"</entry>
     <entry key="groups_tooltip">Мысалы: "A-11"</entry>
     <entry key="weekday_tooltip">Осы күнге арналған кестені көрсету</entry>
+    <entry key="save_button_tooltip">Параметрлерді сақтайды және қолданбаны қайта іске қосады</entry>
 </properties>

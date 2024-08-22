@@ -15,6 +15,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <entry key="clear">Очистити</entry>
+    <entry key="downloading">Завантаження...</entry>
     <entry key="combox_placeholder">Не вибрано</entry>
     <entry key="share_tooltip">Копіювати розклад у буфер обміну</entry>
     <entry key="settings_tooltip">Налаштування програми</entry>
@@ -23,4 +24,5 @@
     <entry key="teachers_tooltip">Наприклад: "Иванов И.И"</entry>
     <entry key="groups_tooltip">Наприклад: "A-11"</entry>
     <entry key="weekday_tooltip">Показати розклад на цей день</entry>
+    <entry key="save_button_tooltip">Зберігає налаштування та перезапускає програму для застосування</entry>
 </properties>

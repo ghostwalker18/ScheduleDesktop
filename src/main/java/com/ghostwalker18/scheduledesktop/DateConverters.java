@@ -26,7 +26,8 @@ import java.util.Calendar;
  * @author  Ипатов Никита
  */
 @Converter
-public class DateConverters implements AttributeConverter<Calendar, String> {
+public class DateConverters
+        implements AttributeConverter<Calendar, String> {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
     /**

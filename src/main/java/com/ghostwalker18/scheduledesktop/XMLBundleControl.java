@@ -10,7 +10,8 @@ import java.util.*;
 /**
  * Этот класс используется для работы с XML-based ResourceBundle.
  */
-public class XMLBundleControl extends ResourceBundle.Control {
+public class XMLBundleControl
+        extends ResourceBundle.Control {
     @Override
     public List<String> getFormats(String baseName) {
         if (baseName == null)

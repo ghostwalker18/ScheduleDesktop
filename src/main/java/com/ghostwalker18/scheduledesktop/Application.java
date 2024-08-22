@@ -109,10 +109,10 @@ public class Application{
             System.exit(0);
         }
         catch (URISyntaxException e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
         catch (IOException e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 

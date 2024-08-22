@@ -14,13 +14,15 @@
   -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="clear">Очистить</entry>
-<entry key="combox_placeholder">Не выбрано</entry>
-<entry key="share_tooltip">Скопировать расписание в буфер обмена</entry>
-<entry key="settings_tooltip">Настройки приложения</entry>
-<entry key="backward_tooltip">Предыдущая неделя</entry>
-<entry key="forward_tooltip">Следующая неделя</entry>
-<entry key="teachers_tooltip">Например: "Иванов И.И"</entry>
-<entry key="groups_tooltip">Например: "A-11"</entry>
-<entry key="weekday_tooltip">Показать расписание на этот день</entry>
+    <entry key="clear">Очистить</entry>
+    <entry key="downloading">Загрузка...</entry>
+    <entry key="combox_placeholder">Не выбрано</entry>
+    <entry key="share_tooltip">Скопировать расписание в буфер обмена</entry>
+    <entry key="settings_tooltip">Настройки приложения</entry>
+    <entry key="backward_tooltip">Предыдущая неделя</entry>
+    <entry key="forward_tooltip">Следующая неделя</entry>
+    <entry key="teachers_tooltip">Например: "Иванов И.И"</entry>
+    <entry key="groups_tooltip">Например: "A-11"</entry>
+    <entry key="weekday_tooltip">Показать расписание на этот день</entry>
+    <entry key="save_button_tooltip">Сохраняет настройки и перезапускает приложение для применения</entry>
 </properties>

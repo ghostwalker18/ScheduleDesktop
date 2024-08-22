@@ -28,9 +28,10 @@ import java.util.List;
  *
  * @author Ипатов Никита
  */
-public class WeekdayButton extends JPanel implements Observer {
+public class WeekdayButton
+        extends JPanel
+        implements Observer {
     private static final HashMap<String, Integer> weekdaysNumbers = new HashMap<>();
-    private static final String toolTip = "Показать расписание на этот день";
     private static final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",

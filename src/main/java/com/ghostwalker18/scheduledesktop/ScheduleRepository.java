@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -42,9 +43,13 @@ import java.util.prefs.Preferences;
  * @author  Ипатов Никита
  */
 public class ScheduleRepository {
+    public static final String mondayTimesURL = "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
+    public static final String otherTimesURL = "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
     private static ScheduleRepository repository = null;
-    private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
-    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings", new XMLBundleControl());
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
     private final ScheduleNetworkAPI api;
     private final AppDatabase db;
     private final Preferences preferences = Application.getPreferences();
@@ -128,7 +133,9 @@ public class ScheduleRepository {
         //updating times files
         File mondayTimesFile = new File(mondayTimesPath);
         File otherTimesFile = new File(otherTimesPath);
-        if(!preferences.getBoolean("doNotUpdateTimes", true) || !mondayTimesFile.exists() || !otherTimesFile.exists()){
+        if(!preferences.getBoolean("doNotUpdateTimes", true)
+                || !mondayTimesFile.exists()
+                || !otherTimesFile.exists()){
             Call<ResponseBody> mondayTimesResponse = api.getMondayTimes();
             mondayTimesResponse.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -244,6 +251,7 @@ public class ScheduleRepository {
      * @param group группа
      * @return спискок занятий
      */
+    @NotNull
     public Observable<List<Lesson>> getSchedule(Calendar date, @Nullable String teacher, @Nullable String group){
         if (teacher != null && group != null)
             return db.getLessonsForGroupWithTeacher(date, group, teacher);
@@ -260,6 +268,7 @@ public class ScheduleRepository {
      *
      * @return список ссылок
      */
+    @NotNull
     public List<String> getLinksForScheduleFirstCorpus(){
         List<String> links = new ArrayList<>();
         try{

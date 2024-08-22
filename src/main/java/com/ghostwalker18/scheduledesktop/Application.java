@@ -14,7 +14,8 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -37,8 +38,6 @@ import java.util.prefs.Preferences;
  * @version  1.0
  */
 public class Application{
-    public static final String mondayTimesURL = "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
-    public static final String otherTimesURL = "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
     private static Application instance = null;
     private final ScheduleRepository repository;
     private final static Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
@@ -55,7 +54,7 @@ public class Application{
     }
 
     private Application(){
-        FlatLightLaf.setup();
+        setupTheme();
         Locale locale = new Locale(preferences.get("language", "ru"));
         Locale.setDefault(locale);
         repository = ScheduleRepository.getRepository();
@@ -83,6 +82,22 @@ public class Application{
         });
         frame.pack();
         frame.setVisible(true);
+    }
+
+    /**
+     * Этот метод используется для настройки темы приложения. Должен вызываться
+     * до создания каких-либо компонентов UI.
+     */
+    private void setupTheme(){
+        FlatLaf.registerCustomDefaultsSource("themes");
+        switch(preferences.get("theme", "light")){
+            case "light":
+                ScheduleDesktopLightTheme.setup();
+                break;
+            case "dark":
+                ScheduleDesktopDarkTheme.setup();
+                break;
+        }
     }
 
     /**

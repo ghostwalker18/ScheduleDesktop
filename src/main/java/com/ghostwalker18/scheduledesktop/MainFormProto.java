@@ -18,6 +18,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
@@ -33,7 +34,7 @@ import java.util.Vector;
  *
  * @author Ипатов Никита
  */
-public class MainForm
+public class MainFormProto
         implements WindowListener {
     private ScheduleState state;
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
@@ -86,7 +87,7 @@ public class MainForm
         otherTimes = new ImageView();
     }
 
-    public MainForm() {
+    public MainFormProto() {
         createUIComponents();
         $$$setupUI$$$();
         setupLanguage();
@@ -151,7 +152,7 @@ public class MainForm
         settingsButton.addActionListener(e -> {
             JFrame frame = new JFrame(strings.getString("settings"));
             frame.setPreferredSize(new Dimension(500, 300));
-            frame.setContentPane(new SettingsForm().mainPanel);
+            frame.setContentPane(new SettingsFormProto().mainPanel);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);
@@ -286,8 +287,11 @@ public class MainForm
         tabs.addTab("Расписание", schedule);
         headerPanel = new JPanel();
         headerPanel.setLayout(new GridLayoutManager(1, 6, new Insets(0, 10, 0, 10), -1, -1));
+        headerPanel.setBackground(new Color(-10051327));
         schedule.add(headerPanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
         chooseGroupLabel = new JLabel();
+        chooseGroupLabel.setBackground(new Color(-1));
+        chooseGroupLabel.setForeground(new Color(-1));
         chooseGroupLabel.setText("Выберите группу");
         headerPanel.add(chooseGroupLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         groupComboBox = new JComboBox();
@@ -296,29 +300,42 @@ public class MainForm
         groupComboBox.setToolTipText("");
         headerPanel.add(groupComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearGroupButton = new JButton();
+        clearGroupButton.setBackground(new Color(-1));
         clearGroupButton.setEnabled(true);
+        clearGroupButton.setForeground(new Color(-16249741));
         clearGroupButton.setText("Очистить");
         headerPanel.add(clearGroupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chooseTeacherLabel = new JLabel();
+        chooseTeacherLabel.setForeground(new Color(-1));
         chooseTeacherLabel.setText("Выберите преподавателя:");
         headerPanel.add(chooseTeacherLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         teacherComboBox = new JComboBox();
         teacherComboBox.setEditable(true);
+        teacherComboBox.setToolTipText("");
         headerPanel.add(teacherComboBox, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearTeacherButton = new JButton();
+        clearTeacherButton.setBackground(new Color(-1));
+        clearTeacherButton.setForeground(new Color(-16249741));
         clearTeacherButton.setText("Очистить");
         headerPanel.add(clearTeacherButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         schedulePanel = new JPanel();
         schedulePanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));
+        schedulePanel.setBackground(new Color(-1));
+        schedulePanel.setForeground(new Color(-1));
         schedule.add(schedulePanel, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(24, 105), null, 0, false));
         backwardButton = new JButton();
+        backwardButton.setBackground(new Color(-2236963));
+        backwardButton.setForeground(new Color(-15592942));
         backwardButton.setText("Назад");
         schedulePanel.add(backwardButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         forwardButton = new JButton();
+        forwardButton.setBackground(new Color(-2236963));
+        forwardButton.setForeground(new Color(-15592942));
         forwardButton.setText("Вперед");
         schedulePanel.add(forwardButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         scheduleScroll = new JScrollPane();
         schedulePanel.add(scheduleScroll, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(34, 244), null, 0, false));
+        scheduleScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16249741)), null, TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, null, new Color(-16249741)));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, 10));
         scheduleScroll.setViewportView(panel1);

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author Ипатов Никита
  */
-public class SettingsForm {
+public class SettingsFormProto {
     private static final ResourceBundle languages = ResourceBundle.getBundle("languages",
             new XMLBundleControl());
     private static final ResourceBundle themes = ResourceBundle.getBundle("themes",
@@ -61,7 +61,7 @@ public class SettingsForm {
     private JCheckBox doNotUpdateTimesCB;
     private JLabel doNotUpdateTimesL;
 
-    public SettingsForm() {
+    public SettingsFormProto() {
         $$$setupUI$$$();
         setupLanguage();
 
@@ -145,7 +145,9 @@ public class SettingsForm {
         gbc.insets = new Insets(0, 0, 0, 10);
         mainPanel.add(languageComboBox, gbc);
         saveButton = new JButton();
+        saveButton.setBackground(new Color(-10051327));
         saveButton.setEnabled(true);
+        saveButton.setForeground(new Color(-1));
         saveButton.setHideActionText(false);
         saveButton.setText("Сохранить");
         gbc = new GridBagConstraints();
@@ -193,6 +195,7 @@ public class SettingsForm {
         gbc.gridy = 2;
         mainPanel.add(doNotUpdateTimesL, gbc);
         doNotUpdateTimesCB = new JCheckBox();
+        doNotUpdateTimesCB.setForeground(new Color(-16249741));
         doNotUpdateTimesCB.setText("");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;

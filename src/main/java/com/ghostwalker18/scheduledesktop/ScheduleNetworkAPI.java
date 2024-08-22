@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import jdk.jfr.internal.Repository;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -32,7 +33,7 @@ public interface ScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(Application.mondayTimesURL)
+    @GET(ScheduleRepository.mondayTimesURL)
     Call<ResponseBody> getMondayTimes();
 
     /**
@@ -40,7 +41,7 @@ public interface ScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(Application.otherTimesURL)
+    @GET(ScheduleRepository.otherTimesURL)
     Call<ResponseBody> getOtherTimes();
 
     /**

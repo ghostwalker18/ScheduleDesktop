@@ -45,7 +45,6 @@ public class WeekdayButton
         weekdaysNumbers.put(strings.getString("friday"), Calendar.FRIDAY);
     }
 
-    private Theme theme = new DefaulTheme();
     private boolean isOpened = false;
     private final JPanel tablePanel = new JPanel();
     private  final JButton button = new JButton();
@@ -84,16 +83,11 @@ public class WeekdayButton
         table.setDefaultRenderer(Object.class, centerRenderer);
 
         JTableHeader tableHeader = table.getTableHeader();
-        tableHeader.setBackground(theme.getSecondaryColor());
-        tableHeader.setForeground(theme.getTextColor());
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
         tablePanel.add(tableHeader);
         tablePanel.add(table);
         tablePanel.setVisible(isOpened);
         add(tablePanel);
-
-        button.setBackground(theme.getPrimaryColor());
-        button.setForeground(theme.getTextColor());
 
         button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-down.gif")));
 

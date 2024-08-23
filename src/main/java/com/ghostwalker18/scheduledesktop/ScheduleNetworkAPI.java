@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import jdk.jfr.internal.Repository;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;

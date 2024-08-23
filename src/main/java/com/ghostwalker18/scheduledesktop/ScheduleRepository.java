@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -57,6 +58,7 @@ public class ScheduleRepository {
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     private final String mondayTimesPath = "mondayTimes.jpg";
     private final String otherTimesPath = "otherTimes.jpg";
+    private final List<Pair<String, byte[]>> scheduleFiles = new LinkedList<>();
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
     private final ReplaySubject<Status> status = ReplaySubject.create();
@@ -201,6 +203,9 @@ public class ScheduleRepository {
                             status.onNext(new Status(strings.getString("schedule_parsing_status"),
                                     33));
                             try(XSSFWorkbook excelFile = new XSSFWorkbook(response.body().byteStream())){
+                                byte[] bytes = response.body().bytes();
+                                scheduleFiles.add(new Pair<>(link, bytes));
+
                                 List<Lesson> lessons = XMLStoLessonsConverter.convertFirstCorpus(excelFile);
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
@@ -288,8 +293,8 @@ public class ScheduleRepository {
     }
 
     /**
-     * Этот метод получает ссылки с сайта ПАСТ,
-     * по которым доступно основное расписание для корпуса на Мурманской улице.
+     * Этот метод получает ссылку с сайта ПАСТ,
+     * по которой доступно основное расписание для корпуса на Мурманской улице.
      *
      * @return список ссылок
      */
@@ -329,6 +334,14 @@ public class ScheduleRepository {
         catch(IOException r){
             return links;
         }
+    }
+
+    /**
+     * Этот метод возвращает пары название файла / содержимое файла для всех скачанных файлов расписания.
+     * @return
+     */
+    public List<Pair<String, byte[]>> getScheduleFiles(){
+        return scheduleFiles;
     }
 
     /**

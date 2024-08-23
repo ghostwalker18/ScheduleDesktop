@@ -66,7 +66,7 @@ public class AppDatabaseHibernate
         sessionFactory = metadata.getSessionFactoryBuilder()
                 .build();
 
-        onDataBaseUpdate.subscribe(e->{
+        onDataBaseUpdate.subscribe(e -> {
             getTeachers();
             getGroups();
             for(GetLessonsForGroupQuery.GetLessonsForGroupArgs args : GetLessonsForGroupQuery.cachedResults.keySet()){
@@ -195,7 +195,7 @@ public class AppDatabaseHibernate
                 if (o == null || getClass() != o.getClass())
                     return false;
                 GetLessonsForGroupArgs that = (GetLessonsForGroupArgs) o;
-                return that.date == this.date && that.group == this.group;
+                return that.date == this.date && that.group.equals(this.group);
             }
 
             @Override
@@ -233,7 +233,7 @@ public class AppDatabaseHibernate
                 if (o == null || getClass() != o.getClass())
                     return false;
                 GetLessonsForTeacherArgs that = (GetLessonsForTeacherArgs) o;
-                return that.date == this.date && that.teacher == this.teacher;
+                return that.date == this.date && that.teacher.equals(this.teacher);
             }
 
             @Override
@@ -253,7 +253,8 @@ public class AppDatabaseHibernate
      * Этот класс используется для кэширования запросов GetLessonsForGroupWithTeacher
      */
     private static class GetLessonsForGroupWithTeacherQuery{
-        public static final Map<GetLessonsForGroupWithTeacherArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
+        public static final Map<GetLessonsForGroupWithTeacherArgs,
+                BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
 
         private static class GetLessonsForGroupWithTeacherArgs{
             public Calendar date;
@@ -273,7 +274,7 @@ public class AppDatabaseHibernate
                 if (o == null || getClass() != o.getClass())
                     return false;
                 GetLessonsForGroupWithTeacherArgs that = (GetLessonsForGroupWithTeacherArgs) o;
-                return that.date == this.date && that.group == this.group && that.teacher == this.teacher;
+                return that.date == this.date && that.group.equals(this.group) && that.teacher.equals(this.teacher);
             }
 
             @Override

@@ -278,10 +278,16 @@
           <hspacer id="45f39">
             <constraints/>
           </hspacer>
+          <component id="dbba9" class="javax.swing.JButton" binding="скачатьРасписаниеButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="Скачать расписание"/>
+            </properties>
+          </component>
           <component id="fd270" class="javax.swing.JButton" binding="shareButton">
             <constraints/>
             <properties>
-              <text value="Скопировать"/>
+              <text value="Поделиться"/>
             </properties>
           </component>
           <component id="96763" class="javax.swing.JButton" binding="settingsButton">

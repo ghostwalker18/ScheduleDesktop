@@ -178,37 +178,37 @@ public class WeekdayButton
     public String getSchedule(){
         DateConverters converter = new DateConverters();
 
-        String schedule = strings.getString("date") + ": ";
-        schedule = schedule + converter.convertToDatabaseColumn(date) + "\n";
-        schedule += "\n";
+        StringBuilder schedule = new StringBuilder(strings.getString("date") + ": ");
+        schedule.append(converter.convertToDatabaseColumn(date)).append("\n");
+        schedule.append("\n");
 
         for(Lesson lesson : lessons){
-            schedule = schedule + strings.getString("number") + ": ";
-            schedule = schedule + lesson.getLessonNumber() + "\n";
+            schedule.append(strings.getString("number")).append(": ");
+            schedule.append(lesson.getLessonNumber()).append("\n");
 
-            schedule = schedule + strings.getString("subject") + ": ";
-            schedule = schedule +lesson.getSubject() + "\n";
+            schedule.append(strings.getString("subject")).append(": ");
+            schedule.append(lesson.getSubject()).append("\n");
 
             if(!lesson.getTeacher().equals("")){
-                schedule = schedule + strings.getString("teacher") + ": ";
-                schedule = schedule + lesson.getTeacher() + "\n";
+                schedule.append(strings.getString("teacher")).append(": ");
+                schedule.append(lesson.getTeacher()).append("\n");
             }
 
             if(!lesson.getRoomNumber().equals("")){
-                schedule = schedule + strings.getString("room") + ": ";
-                schedule = schedule + lesson.getRoomNumber() + "\n";
+                schedule.append(strings.getString("room")).append(": ");
+                schedule.append(lesson.getRoomNumber()).append("\n");
             }
 
-            schedule += "\n";
+            schedule.append("\n");
         }
-        schedule += "\n";
+        schedule.append("\n");
 
-        return schedule;
+        return schedule.toString();
     }
 
     /**
      * Этот метод позволяет узнать, открыто ли расписание для промотра.
-     * @return
+     * @return открыто ли расписание
      */
     public boolean isOpened(){
         return isOpened;

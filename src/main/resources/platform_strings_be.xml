@@ -19,10 +19,22 @@
     <entry key="combox_placeholder">Не выбрана</entry>
     <entry key="share_tooltip">Скапіяваць расклад ў буфер абмену</entry>
     <entry key="settings_tooltip">Налады прыкладання</entry>
+    <entry key="download_tooltip">Спампаваць Excel - файл раскладу ў абранае месца</entry>
     <entry key="backward_tooltip">Папярэдні тыдзень</entry>
     <entry key="forward_tooltip">Наступны тыдзень</entry>
     <entry key="teachers_tooltip">Напрыклад: "Иванов И.И"</entry>
     <entry key="groups_tooltip">Напрыклад: "A-11"</entry>
     <entry key="weekday_tooltip">Паказаць расклад на гэты дзень</entry>
     <entry key="save_button_tooltip">Захоўвае налады і перазапускае прыкладанне для прымянення</entry>
+    <entry key="download_file_dialog">Захаваць расклад у</entry>
+    <entry key="lookInLabelText">Пошук у</entry>
+    <entry key="filesOfTypeLabelText">Пашырэнне</entry>
+    <entry key="upFolderToolTipText">Наверх</entry>
+    <entry key="homeFolderToolTipText">Дадому</entry>
+    <entry key="newFolderToolTipText">Новая тэчка</entry>
+    <entry key="listViewButtonToolTipText">Спіс</entry>
+    <entry key="detailsViewButtonToolTipText">Дэталі</entry>
+    <entry key="folderNameLabelText">Тэчка</entry>
+    <entry key="saveButtonText">Захаваць</entry>
+    <entry key="cancelButtonText">Адмена</entry>
 </properties>

@@ -17,6 +17,8 @@ package com.ghostwalker18.scheduledesktop;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import org.javatuples.Pair;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -24,7 +26,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -35,15 +39,17 @@ import java.util.Vector;
  */
 public class MainForm
         implements WindowListener {
-    private ScheduleState state;
+    private final ScheduleState state = new ScheduleState(new Date());
     private final ScheduleRepository repository = ScheduleRepository.getRepository();
-    private final ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
-    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings", new XMLBundleControl());
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
+    public JPanel mainPanel;
     private JComboBox groupComboBox;
     private JButton clearGroupButton;
     private JComboBox teacherComboBox;
     private JButton clearTeacherButton;
-    public JPanel mainPanel;
     private JPanel headerPanel;
     private JLabel chooseGroupLabel;
     private JLabel chooseTeacherLabel;
@@ -61,6 +67,7 @@ public class MainForm
     private JPanel times;
     private JButton shareButton;
     private JButton settingsButton;
+    private JButton downloadScheduleButton;
     private ImageView mondayTimes;
     private ImageView otherTimes;
     private JProgressBar updateProgress;
@@ -71,7 +78,6 @@ public class MainForm
      * Этот метод используется для создания кастомных UI компоненетов.
      */
     private void createUIComponents() {
-        state = new ScheduleState(new Date());
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
         state.addObserver(mondayButton);
         tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("tuesday"));
@@ -157,6 +163,10 @@ public class MainForm
             frame.setVisible(true);
         });
 
+        downloadScheduleButton.addActionListener(e -> {
+            downloadSchedule();
+        });
+
         repository.getMondayTimes().subscribe(image ->
                 mondayTimes.setImage(image));
 
@@ -167,8 +177,13 @@ public class MainForm
             updateStatus.setText(status.text);
             updateProgress.setValue(status.progress);
         });
+
+        groupComboBox.requestFocusInWindow();
     }
 
+    /**
+     * Этот метод используется для настройки всех надписей на экране, используя строковые ресурсы.
+     */
     private void setupLanguage() {
         tabs.setTitleAt(0, strings.getString("days_tab"));
         tabs.setTitleAt(1, strings.getString("times_tab"));
@@ -178,6 +193,9 @@ public class MainForm
 
         settingsButton.setText(strings.getString("settings"));
         settingsButton.setToolTipText(platformStrings.getString("settings_tooltip"));
+
+        downloadScheduleButton.setText(strings.getString("download_schedule"));
+        downloadScheduleButton.setToolTipText(platformStrings.getString("download_tooltip"));
 
         backwardButton.setText(strings.getString("back"));
         backwardButton.setToolTipText(platformStrings.getString("backward_tooltip"));
@@ -196,6 +214,8 @@ public class MainForm
         teacherComboBox.setToolTipText(platformStrings.getString("teachers_tooltip"));
 
         clearTeacherButton.setText(platformStrings.getString("clear"));
+
+        updateStatus.setText(platformStrings.getString("downloading"));
     }
 
     /**
@@ -250,7 +270,7 @@ public class MainForm
      * Этот метод используется для получения расписания для всех открытых дней.
      * @return расписание в виде строки
      */
-    public String getSchedule() {
+    private String getSchedule() {
         String schedule = "";
         if (mondayButton.isOpened())
             schedule += mondayButton.getSchedule();
@@ -265,10 +285,22 @@ public class MainForm
         return schedule;
     }
 
+    private void downloadSchedule(){
+        java.util.List<String> links = ScheduleRepository.getRepository().getLinksForScheduleFirstCorpus();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setDialogTitle(platformStrings.getString("download_file_dialog"));
+        int result = fileChooser.showDialog(this.mainPanel, "OK");
+        if(result == JFileChooser.APPROVE_OPTION){
+            File directory = fileChooser.getCurrentDirectory();
+            for(Pair<String, byte[]> fileRaw : repository.getScheduleFiles()){
+
+            }
+        }
+    }
+
     /**
      * Method generated by IntelliJ IDEA GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
      *
      * @noinspection ALL
      */
@@ -288,7 +320,6 @@ public class MainForm
         headerPanel.setLayout(new GridLayoutManager(1, 6, new Insets(0, 10, 0, 10), -1, -1));
         schedule.add(headerPanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
         chooseGroupLabel = new JLabel();
-        chooseGroupLabel.setText("Выберите группу");
         headerPanel.add(chooseGroupLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         groupComboBox = new JComboBox();
         groupComboBox.setEditable(true);
@@ -297,25 +328,20 @@ public class MainForm
         headerPanel.add(groupComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearGroupButton = new JButton();
         clearGroupButton.setEnabled(true);
-        clearGroupButton.setText("Очистить");
         headerPanel.add(clearGroupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chooseTeacherLabel = new JLabel();
-        chooseTeacherLabel.setText("Выберите преподавателя:");
         headerPanel.add(chooseTeacherLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         teacherComboBox = new JComboBox();
         teacherComboBox.setEditable(true);
         headerPanel.add(teacherComboBox, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearTeacherButton = new JButton();
-        clearTeacherButton.setText("Очистить");
         headerPanel.add(clearTeacherButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         schedulePanel = new JPanel();
         schedulePanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));
         schedule.add(schedulePanel, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(24, 105), null, 0, false));
         backwardButton = new JButton();
-        backwardButton.setText("Назад");
         schedulePanel.add(backwardButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         forwardButton = new JButton();
-        forwardButton.setText("Вперед");
         schedulePanel.add(forwardButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         scheduleScroll = new JScrollPane();
         schedulePanel.add(scheduleScroll, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(34, 244), null, 0, false));
@@ -335,7 +361,6 @@ public class MainForm
         final Spacer spacer2 = new Spacer();
         statusPanel.add(spacer2, new GridConstraints(0, 2, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         updateStatus = new JLabel();
-        updateStatus.setText("Статус обновления");
         statusPanel.add(updateStatus, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, null, new Dimension(-1, 30), null, 0, false));
         updateProgress = new JProgressBar();
         statusPanel.add(updateProgress, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -354,24 +379,16 @@ public class MainForm
         mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
         final Spacer spacer3 = new Spacer();
         toolBar1.add(spacer3);
+        downloadScheduleButton = new JButton();
+        toolBar1.add(downloadScheduleButton);
         shareButton = new JButton();
-        shareButton.setText("Скопировать");
         toolBar1.add(shareButton);
         settingsButton = new JButton();
-        settingsButton.setText("Настройки");
         toolBar1.add(settingsButton);
     }
 
-    /**
-     * @noinspection ALL
-     */
-    public JComponent $$$getRootComponent$$$() {
-        return mainPanel;
-    }
-
     @Override
-    public void windowOpened(WindowEvent e) {
-    }
+    public void windowOpened(WindowEvent e) {}
 
     /**
      * Этот метод используется для реакции на событие закрытия окна. Сохранаяет текущею выбранную группу.
@@ -386,22 +403,17 @@ public class MainForm
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
-    }
+    public void windowClosed(WindowEvent e) {}
 
     @Override
-    public void windowIconified(WindowEvent e) {
-    }
+    public void windowIconified(WindowEvent e) {}
 
     @Override
-    public void windowDeiconified(WindowEvent e) {
-    }
+    public void windowDeiconified(WindowEvent e) {}
 
     @Override
-    public void windowActivated(WindowEvent e) {
-    }
+    public void windowActivated(WindowEvent e) {}
 
     @Override
-    public void windowDeactivated(WindowEvent e) {
-    }
+    public void windowDeactivated(WindowEvent e) {}
 }

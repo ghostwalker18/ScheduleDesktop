@@ -40,6 +40,8 @@ import java.util.prefs.Preferences;
 public class Application{
     private static Application instance = null;
     private final ScheduleRepository repository;
+    private ResourceBundle strings;
+    private ResourceBundle platformStrings;
     private final static Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final JFrame frame;
 
@@ -55,11 +57,7 @@ public class Application{
 
     private Application(){
         setupTheme();
-        Locale locale = new Locale(preferences.get("language", "ru"));
-        Locale.setDefault(locale);
-        repository = ScheduleRepository.getRepository();
-        repository.update();
-        ResourceBundle strings = ResourceBundle.getBundle("strings", new XMLBundleControl());
+        setupLanguage();
         frame = new JFrame(strings.getString("app_name"));
         frame.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),
@@ -82,6 +80,8 @@ public class Application{
         });
         frame.pack();
         frame.setVisible(true);
+        repository = ScheduleRepository.getRepository();
+        repository.update();
     }
 
     /**
@@ -98,6 +98,39 @@ public class Application{
                 ScheduleDesktopDarkTheme.setup();
                 break;
         }
+    }
+
+    /**
+     * Этот метод используется для задания языковых настроек приложения.
+     */
+    private void setupLanguage(){
+        Locale locale = new Locale(preferences.get("language", "ru"));
+        Locale.setDefault(locale);
+        strings = ResourceBundle.getBundle("strings",
+                new XMLBundleControl());
+        platformStrings = ResourceBundle.getBundle("platform_strings",
+                new XMLBundleControl());
+        //localization of file chooser
+        UIManager.put("FileChooser.lookInLabelText",
+                        platformStrings.getString("lookInLabelText"));
+        UIManager.put("FileChooser.filesOfTypeLabelText",
+                        platformStrings.getString("filesOfTypeLabelText"));
+        UIManager.put("FileChooser.folderNameLabelText",
+                platformStrings.getString("folderNameLabelText"));
+        UIManager.put("FileChooser.upFolderToolTipText",
+                        platformStrings.getString("upFolderToolTipText"));
+        UIManager.put("FileChooser.homeFolderToolTipText",
+                platformStrings.getString("homeFolderToolTipText"));
+        UIManager.put("FileChooser.newFolderToolTipText",
+                platformStrings.getString("newFolderToolTipText"));
+        UIManager.put("FileChooser.listViewButtonToolTipText",
+                platformStrings.getString("listViewButtonToolTipText"));
+        UIManager.put("FileChooser.detailsViewButtonToolTipText",
+                platformStrings.getString("detailsViewButtonToolTipText"));
+        UIManager.put("FileChooser.saveButtonText",
+                platformStrings.getString("saveButtonText"));
+        UIManager.put("FileChooser.cancelButtonText",
+                platformStrings.getString("cancelButtonText"));
     }
 
     /**
@@ -123,10 +156,7 @@ public class Application{
             builder.start();
             System.exit(0);
         }
-        catch (URISyntaxException e){
-            System.out.println(e.getMessage());
-        }
-        catch (IOException e){
+        catch (URISyntaxException | IOException e){
             System.out.println(e.getMessage());
         }
     }

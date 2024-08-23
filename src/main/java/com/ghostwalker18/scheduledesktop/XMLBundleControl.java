@@ -60,7 +60,7 @@ public class XMLBundleControl
     }
 
     private static class XMLResourceBundle extends ResourceBundle {
-        private Properties props;
+        private final Properties props;
 
         XMLResourceBundle(InputStream stream) throws IOException {
             props = new Properties();

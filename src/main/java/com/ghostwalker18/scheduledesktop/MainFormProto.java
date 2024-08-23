@@ -67,6 +67,7 @@ public class MainFormProto
     private JProgressBar updateProgress;
     private JPanel statusPanel;
     private JLabel updateStatus;
+    private JButton скачатьРасписаниеButton;
 
     /**
      * Этот метод используется для создания кастомных UI компоненетов.
@@ -249,6 +250,7 @@ public class MainFormProto
 
     /**
      * Этот метод используется для получения расписания для всех открытых дней.
+     *
      * @return расписание в виде строки
      */
     public String getSchedule() {
@@ -371,8 +373,11 @@ public class MainFormProto
         mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
         final Spacer spacer3 = new Spacer();
         toolBar1.add(spacer3);
+        скачатьРасписаниеButton = new JButton();
+        скачатьРасписаниеButton.setText("Скачать расписание");
+        toolBar1.add(скачатьРасписаниеButton);
         shareButton = new JButton();
-        shareButton.setText("Скопировать");
+        shareButton.setText("Поделиться");
         toolBar1.add(shareButton);
         settingsButton = new JButton();
         settingsButton.setText("Настройки");
@@ -392,6 +397,7 @@ public class MainFormProto
 
     /**
      * Этот метод используется для реакции на событие закрытия окна. Сохранаяет текущею выбранную группу.
+     *
      * @param e the event to be processed
      */
     @Override
@@ -399,7 +405,8 @@ public class MainFormProto
         try {
             String savedGroup = state.getGroup();
             repository.saveGroup(savedGroup);
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Override

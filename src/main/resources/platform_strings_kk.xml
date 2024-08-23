@@ -19,10 +19,22 @@
     <entry key="combox_placeholder">Таңдалмаған</entry>
     <entry key="share_tooltip">Кестені алмасу буферіне көшіру</entry>
     <entry key="settings_tooltip">Қолданба параметрлері</entry>
+    <entry key="download_tooltip">Таңдалған орынға Excel кесте файлын жүктеп алыңыз</entry>
     <entry key="backward_tooltip">Алдыңғы апта</entry>
     <entry key="forward_tooltip">Келесі апта</entry>
     <entry key="teachers_tooltip">Мысалы: "Иванов И.И"</entry>
     <entry key="groups_tooltip">Мысалы: "A-11"</entry>
     <entry key="weekday_tooltip">Осы күнге арналған кестені көрсету</entry>
     <entry key="save_button_tooltip">Параметрлерді сақтайды және қолданбаны қайта іске қосады</entry>
+    <entry key="download_file_dialog">Кестені сақтаңыз</entry>
+    <entry key="lookInLabelText">Іздеу</entry>
+    <entry key="filesOfTypeLabelText">Кеңейту</entry>
+    <entry key="upFolderToolTipText">Жоғары</entry>
+    <entry key="homeFolderToolTipText">Үй</entry>
+    <entry key="newFolderToolTipText">Жаңа қалта</entry>
+    <entry key="listViewButtonToolTipText">Тізім</entry>
+    <entry key="detailsViewButtonToolTipText">Толығырақ</entry>
+    <entry key="folderNameLabelText">Қалта</entry>
+    <entry key="saveButtonText">Сақтау</entry>
+    <entry key="cancelButtonText">Бас тарту</entry>
 </properties>

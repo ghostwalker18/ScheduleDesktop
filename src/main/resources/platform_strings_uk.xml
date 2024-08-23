@@ -19,10 +19,22 @@
     <entry key="combox_placeholder">Не вибрано</entry>
     <entry key="share_tooltip">Копіювати розклад у буфер обміну</entry>
     <entry key="settings_tooltip">Налаштування програми</entry>
+    <entry key="download_tooltip">Завантажити Excel - файл розкладу в вибране місце</entry>
     <entry key="backward_tooltip">Попередній тиждень</entry>
     <entry key="forward_tooltip">Наступний тиждень</entry>
     <entry key="teachers_tooltip">Наприклад: "Иванов И.И"</entry>
     <entry key="groups_tooltip">Наприклад: "A-11"</entry>
     <entry key="weekday_tooltip">Показати розклад на цей день</entry>
     <entry key="save_button_tooltip">Зберігає налаштування та перезапускає програму для застосування</entry>
+    <entry key="download_file_dialog">Зберегти розклад в</entry>
+    <entry key="lookInLabelText">Пошук в</entry>
+    <entry key="filesOfTypeLabelText">Розширення</entry>
+    <entry key="upFolderToolTipText">Наверх</entry>
+    <entry key="homeFolderToolTipText">Додому</entry>
+    <entry key="newFolderToolTipText">Нова папка</entry>
+    <entry key="listViewButtonToolTipText">Список</entry>
+    <entry key="detailsViewButtonToolTipText">Деталі</entry>
+    <entry key="folderNameLabelText">Папка</entry>
+    <entry key="saveButtonText">Зберігши</entry>
+    <entry key="cancelButtonText">Скасування</entry>
 </properties>

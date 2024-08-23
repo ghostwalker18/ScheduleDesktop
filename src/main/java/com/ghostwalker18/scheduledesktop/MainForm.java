@@ -17,6 +17,7 @@ package com.ghostwalker18.scheduledesktop;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
 
 import javax.swing.*;
@@ -27,6 +28,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -286,16 +289,24 @@ public class MainForm
     }
 
     private void downloadSchedule(){
-        java.util.List<String> links = ScheduleRepository.getRepository().getLinksForScheduleFirstCorpus();
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setDialogTitle(platformStrings.getString("download_file_dialog"));
         int result = fileChooser.showDialog(this.mainPanel, "OK");
         if(result == JFileChooser.APPROVE_OPTION){
-            File directory = fileChooser.getCurrentDirectory();
-            for(Pair<String, byte[]> fileRaw : repository.getScheduleFiles()){
-
-            }
+            new Thread(() -> {
+                //Chosen directory is also a file, heh
+                String directory = fileChooser.getSelectedFile().getAbsolutePath();
+                for(Pair<String, XSSFWorkbook> fileRaw : repository.getScheduleFiles()){
+                    File outputFile = new File(directory + File.separator + fileRaw.getValue0());
+                    try(FileOutputStream outputStream = new FileOutputStream(outputFile)){
+                        fileRaw.getValue1().write(outputStream);
+                    }
+                    catch (IOException e){
+                        System.err.println(e.getMessage());
+                    }
+                }
+            }).start();
         }
     }
 

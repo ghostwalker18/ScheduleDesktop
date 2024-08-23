@@ -34,6 +34,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
@@ -58,7 +59,7 @@ public class ScheduleRepository {
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     private final String mondayTimesPath = "mondayTimes.jpg";
     private final String otherTimesPath = "otherTimes.jpg";
-    private final List<Pair<String, byte[]>> scheduleFiles = new LinkedList<>();
+    private final List<Pair<String, XSSFWorkbook>> scheduleFiles = new LinkedList<>();
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
     private final ReplaySubject<Status> status = ReplaySubject.create();
@@ -202,10 +203,9 @@ public class ScheduleRepository {
                         if(response.body() != null){
                             status.onNext(new Status(strings.getString("schedule_parsing_status"),
                                     33));
-                            try(XSSFWorkbook excelFile = new XSSFWorkbook(response.body().byteStream())){
-                                byte[] bytes = response.body().bytes();
-                                scheduleFiles.add(new Pair<>(link, bytes));
-
+                            try(InputStream stream = response.body().byteStream()){
+                                XSSFWorkbook excelFile = new XSSFWorkbook(stream);
+                                scheduleFiles.add(new Pair<>(getNameFromLink(link), excelFile));
                                 List<Lesson> lessons = XMLStoLessonsConverter.convertFirstCorpus(excelFile);
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
@@ -340,7 +340,7 @@ public class ScheduleRepository {
      * Этот метод возвращает пары название файла / содержимое файла для всех скачанных файлов расписания.
      * @return
      */
-    public List<Pair<String, byte[]>> getScheduleFiles(){
+    public List<Pair<String, XSSFWorkbook>> getScheduleFiles(){
         return scheduleFiles;
     }
 
@@ -358,5 +358,15 @@ public class ScheduleRepository {
      */
     public String getSavedGroup(){
         return preferences.get("savedGroup", platformStrings.getString("combox_placeholder"));
+    }
+
+    /**
+     * Этот метод позволяет получить имя скачиваемого файла из ссылки на него.
+     * @param link ссылка на файл
+     * @return имя файла
+     */
+    private String getNameFromLink(String link){
+        String[] parts = link.split("/");
+        return parts[parts.length - 1];
     }
 }

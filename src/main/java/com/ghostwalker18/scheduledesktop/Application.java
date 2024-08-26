@@ -63,7 +63,7 @@ public class Application{
                 preferences.getInt("main_form_width", 800),
                 preferences.getInt("main_form_height", 500)));
         frame.setIconImage(Toolkit.getDefaultToolkit()
-                .createImage(Application.class.getResource("/images/favicon.gif")));
+                .createImage(Application.class.getResource("/images/favicon.png")));
         MainForm mainForm = new MainForm();
         frame.setContentPane(mainForm.mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

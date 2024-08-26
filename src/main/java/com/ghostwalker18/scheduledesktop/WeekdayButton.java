@@ -89,7 +89,7 @@ public class WeekdayButton
         tablePanel.setVisible(isOpened);
         add(tablePanel);
 
-        button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-down.gif")));
+        button.setIcon(new ImageIcon(getClass().getResource("/images/baseline_arrow_drop_down_black_36dp.png")));
 
         button.setText(generateTitle(date, this.dayOfWeek));
         button.addActionListener(e -> setTableVisible());
@@ -113,10 +113,12 @@ public class WeekdayButton
         isOpened = !isOpened;
         tablePanel.setVisible(isOpened);
         if(isOpened){
-            button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-up.gif")));
+            button.setIcon(new ImageIcon(getClass()
+                    .getResource("/images/baseline_arrow_drop_up_black_36dp.png")));
         }
         else{
-            button.setIcon(new ImageIcon(getClass().getResource("/images/chevron-down.gif")));
+            button.setIcon(new ImageIcon(getClass()
+                    .getResource("/images/baseline_arrow_drop_down_black_36dp.png")));
         }
     }
 

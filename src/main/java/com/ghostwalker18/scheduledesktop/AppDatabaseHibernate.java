@@ -66,6 +66,8 @@ public class AppDatabaseHibernate
         sessionFactory = metadata.getSessionFactoryBuilder()
                 .build();
 
+        //Trigger for database update
+        //If was modified: redo all cashed queries
         onDataBaseUpdate.subscribe(e -> {
             getTeachers();
             getGroups();

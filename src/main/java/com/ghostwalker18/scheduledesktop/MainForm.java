@@ -19,7 +19,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -159,6 +157,8 @@ public class MainForm
 
         settingsButton.addActionListener(e -> {
             JFrame frame = new JFrame(strings.getString("settings"));
+            frame.setIconImage(Toolkit.getDefaultToolkit()
+                    .createImage(Application.class.getResource("/images/baseline_settings_black_36dp.png")));
             frame.setPreferredSize(new Dimension(500, 300));
             frame.setContentPane(new SettingsForm().mainPanel);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -391,10 +391,16 @@ public class MainForm
         final Spacer spacer3 = new Spacer();
         toolBar1.add(spacer3);
         downloadScheduleButton = new JButton();
+        downloadScheduleButton.setIcon(new ImageIcon(getClass()
+                .getResource("/images/baseline_file_download_black_36dp.png")));
         toolBar1.add(downloadScheduleButton);
         shareButton = new JButton();
+        shareButton.setIcon(new ImageIcon(getClass()
+                .getResource("/images/baseline_share_black_36dp.png")));
         toolBar1.add(shareButton);
         settingsButton = new JButton();
+        settingsButton.setIcon(new ImageIcon(getClass()
+                .getResource("/images/baseline_settings_black_36dp.png")));
         toolBar1.add(settingsButton);
     }
 

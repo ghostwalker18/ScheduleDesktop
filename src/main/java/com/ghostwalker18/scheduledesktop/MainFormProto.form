@@ -281,6 +281,7 @@
           <component id="dbba9" class="javax.swing.JButton" binding="скачатьРасписаниеButton" default-binding="true">
             <constraints/>
             <properties>
+              <icon value="images/baseline_download_48.png"/>
               <text value="Скачать расписание"/>
             </properties>
           </component>

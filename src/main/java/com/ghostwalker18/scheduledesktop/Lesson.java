@@ -17,6 +17,7 @@ package com.ghostwalker18.scheduledesktop;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * POJO-класс для описания единичной сущности расписания - урока.
@@ -32,22 +33,17 @@ import java.util.Calendar;
 @Table(name="tblSchedule")
 public class Lesson {
     @Id
-    @Convert(converter = DateConverters.class)
-    @Column(name="date")
     private Calendar date;
     @Id
-    @Column(name="lessonNumber")
     private String lessonNumber;
+    @Id
+    private String groupName;
+    @Id
+    private String subject;
     @Column(name="roomNumber")
     private String roomNumber;
     @Column(name="lessonTimes")
     private String times;
-    @Id
-    @Column(name="groupName")
-    private String groupName;
-    @Id
-    @Column(name="subjectName")
-    private String subject;
     @Column(name="teacherName")
     private String teacher;
 
@@ -125,11 +121,16 @@ public class Lesson {
     /**
      * Вспомогательный класс для задания первичного ключа для ORM.
      */
-    public static class LessonPK implements Serializable {
+    public static class LessonPK
+            implements Serializable {
         @Convert(converter = DateConverters.class)
+        @Column(name="lessonDate")
         protected Calendar date;
+        @Column(name="lessonNumber")
         protected String lessonNumber;
+        @Column(name="groupName")
         protected String groupName;
+        @Column(name="subjectName")
         protected String subject;
 
         public LessonPK(){};
@@ -171,6 +172,24 @@ public class Lesson {
 
         public void setDate(Calendar date) {
             this.date = date;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if(this == o)
+                return true;
+            if(o == null || o.getClass() != this.getClass())
+                return false;
+            LessonPK that = (LessonPK) o;
+            return this.date == that.date
+                    && this.lessonNumber == that.lessonNumber
+                    && this.subject == that.subject
+                    && this.groupName == that.groupName;
+        }
+
+        @Override
+        public int hashCode(){
+            return Objects.hash(date, lessonNumber, subject, groupName);
         }
     }
 }

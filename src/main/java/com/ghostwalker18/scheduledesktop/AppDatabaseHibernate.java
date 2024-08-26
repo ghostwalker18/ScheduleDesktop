@@ -90,18 +90,22 @@ public class AppDatabaseHibernate
                     session.merge(lesson);
                 }
                 transaction.commit();
+                onDataBaseUpdate.onNext(true);
             }
         }).start();
-        onDataBaseUpdate.onNext(true);
     }
 
     public void update(Lesson lesson){
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
+                Transaction transaction = session.getTransaction();
+                transaction.begin();
                 session.update(lesson);
+                transaction.commit();
+                onDataBaseUpdate.onNext(true);
             }
         }).start();
-        onDataBaseUpdate.onNext(true);
+
     }
 
     public Observable<List<String>> getTeachers(){

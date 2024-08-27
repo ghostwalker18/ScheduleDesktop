@@ -54,7 +54,8 @@ public class WeekdayButton
             strings.getString("number"), strings.getString("times"), strings.getString("subject"),
             strings.getString("teacher"), strings.getString("room")
     };
-    private final JTable table = new JTable();
+    private final MultilineTableCellRenderer renderer = new MultilineTableCellRenderer();
+    private final JTable table = new JTable(0,5);
     private final String dayOfWeek;
     private String teacher = null;
     private String group = null;
@@ -89,8 +90,8 @@ public class WeekdayButton
         tablePanel.setVisible(isOpened);
         add(tablePanel);
 
-        button.setIcon(new ImageIcon(getClass().getResource("/images/baseline_arrow_drop_down_black_36dp.png")));
-
+        button.setIcon(new ImageIcon(getClass()
+                .getResource("/images/baseline_arrow_drop_down_black_36dp.png")));
         button.setText(generateTitle(date, this.dayOfWeek));
         button.addActionListener(e -> setTableVisible());
 
@@ -103,12 +104,17 @@ public class WeekdayButton
                 }
             }
         });
+
         repository.getSchedule(date, teacher, group).subscribe(lessonsList -> {
             lessons = lessonsList;
             table.setModel(makeDataModel(lessonsList));
+            table.getColumnModel().getColumn(2).setCellRenderer(renderer);
         });
     }
 
+    /**
+     * Этот метод используется для отображения и скрытия таблицы расписания.
+     */
     private void setTableVisible(){
         isOpened = !isOpened;
         tablePanel.setVisible(isOpened);
@@ -149,6 +155,11 @@ public class WeekdayButton
         return label;
     }
 
+    /**
+     * Этот метод проверяет является ли заданная дата сегодняшним днем.
+     * @param date заданная дата
+     * @return сегодня ли
+     */
     private boolean isDateToday(Calendar date){
         Calendar rightNow = Calendar.getInstance();
         return rightNow.get(Calendar.YEAR) == date.get(Calendar.YEAR)
@@ -156,6 +167,11 @@ public class WeekdayButton
                 && rightNow.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH);
     }
 
+    /**
+     * Этот метод преобразует занятия в таблицу.
+     * @param lessons занятия
+     * @return модель таблицы
+     */
     private DefaultTableModel makeDataModel(List<Lesson> lessons){
         DefaultTableModel tableModel = new DefaultTableModel(tableColumnNames, 0);
         if(lessons != null){
@@ -216,6 +232,12 @@ public class WeekdayButton
         return isOpened;
     }
 
+    /**
+     * Этот метод позволяет реагировать на изменения состояния расписания.
+     * @param o     the observable object.
+     * @param arg   an argument passed to the {@code notifyObservers}
+     *                 method.
+     */
     @Override
     public void update(Observable o, Object arg) {
         ScheduleState state = (ScheduleState)o;
@@ -229,6 +251,7 @@ public class WeekdayButton
         repository.getSchedule(date, teacher, group).subscribe(lessonsList -> {
             lessons = lessonsList;
             table.setModel(makeDataModel(lessonsList));
+            table.getColumnModel().getColumn(2).setCellRenderer(renderer);
         });
     }
 }

@@ -74,6 +74,7 @@ public class MainForm
     private JProgressBar updateProgress;
     private JPanel statusPanel;
     private JLabel updateStatus;
+    private JButton refreshButton;
 
     /**
      * Этот метод используется для создания кастомных UI компоненетов.
@@ -168,6 +169,10 @@ public class MainForm
 
         downloadScheduleButton.addActionListener(e -> {
             downloadSchedule();
+        });
+
+        refreshButton.addActionListener( e -> {
+            repository.update();
         });
 
         repository.getMondayTimes().subscribe(image ->
@@ -292,7 +297,7 @@ public class MainForm
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setDialogTitle(platformStrings.getString("download_file_dialog"));
-        int result = fileChooser.showDialog(this.mainPanel, "OK");
+        int result = fileChooser.showDialog(this.mainPanel, platformStrings.getString("saveButtonText"));
         if(result == JFileChooser.APPROVE_OPTION){
             new Thread(() -> {
                 //Chosen directory is also a file, heh
@@ -365,7 +370,7 @@ public class MainForm
         panel1.add(thursdayButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(fridayButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         statusPanel = new JPanel();
-        statusPanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        statusPanel.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
         schedule.add(statusPanel, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, new Dimension(-1, 50), new Dimension(-1, 80), null, 0, false));
         final Spacer spacer1 = new Spacer();
         statusPanel.add(spacer1, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -375,6 +380,13 @@ public class MainForm
         statusPanel.add(updateStatus, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, null, new Dimension(-1, 30), null, 0, false));
         updateProgress = new JProgressBar();
         statusPanel.add(updateProgress, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        refreshButton = new JButton();
+        refreshButton.setOpaque(false);
+        refreshButton.setContentAreaFilled(false);
+        refreshButton.setBorderPainted(false);
+        refreshButton.setIcon(new ImageIcon(getClass()
+                .getResource("/images/baseline_refresh_black_24dp.png")));
+        statusPanel.add(refreshButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         times = new JPanel();
         times.setLayout(new GridLayoutManager(1, 2, new Insets(10, 20, 20, 20), -1, -1));
         times.setMaximumSize(new Dimension(-1, -1));

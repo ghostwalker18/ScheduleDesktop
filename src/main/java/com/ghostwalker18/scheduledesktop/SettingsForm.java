@@ -120,6 +120,7 @@ public class SettingsForm {
         themeLabel.setText(strings.getString("option_theme"));
         languageLabel.setText(strings.getString("option_language"));
         doNotUpdateTimesL.setText(strings.getString("option_do_not_update_times"));
+        saveButton.setText(platformStrings.getString("saveButtonText"));
         saveButton.setToolTipText(platformStrings.getString("save_button_tooltip"));
     }
 

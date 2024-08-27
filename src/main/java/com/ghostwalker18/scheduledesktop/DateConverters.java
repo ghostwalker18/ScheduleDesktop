@@ -37,7 +37,9 @@ public class DateConverters
      */
     @Override
     public String convertToDatabaseColumn(Calendar attribute) {
-        return attribute == null ? null : dateFormat.format(attribute.getTime());
+        synchronized (this){
+            return attribute == null ? null : dateFormat.format(attribute.getTime());
+        }
     }
 
     /**
@@ -48,18 +50,21 @@ public class DateConverters
      */
     @Override
     public Calendar convertToEntityAttribute(String dbData) {
-        if(dbData == null){
-            return null;
-        }
-        else{
-            try{
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateFormat.parse(dbData));
-                return cal;
-            }
-            catch (java.text.ParseException e){
+        synchronized (this){
+            if(dbData == null){
                 return null;
             }
+            else{
+                try{
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dateFormat.parse(dbData));
+                    return cal;
+                }
+                catch (java.text.ParseException e){
+                    return null;
+                }
+            }
         }
+
     }
 }

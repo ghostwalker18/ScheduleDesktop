@@ -27,6 +27,7 @@
     <entry key="teachers_tooltip">Example: "Иванов И.И"</entry>
     <entry key="groups_tooltip">Example: "A-11"</entry>
     <entry key="weekday_tooltip">Show schedule for this day</entry>
+    <entry key="update_tooltip">Update the schedule</entry>
     <entry key="save_button_tooltip">Save settings and restart application for applying</entry>
     <entry key="download_file_dialog">Save the schedule in</entry>
     <entry key="lookInLabelText">Search in</entry>

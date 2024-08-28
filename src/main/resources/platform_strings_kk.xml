@@ -27,6 +27,7 @@
     <entry key="teachers_tooltip">Мысалы: "Иванов И.И"</entry>
     <entry key="groups_tooltip">Мысалы: "A-11"</entry>
     <entry key="weekday_tooltip">Осы күнге арналған кестені көрсету</entry>
+    <entry key="update_tooltip">Кестені жаңарту</entry>
     <entry key="save_button_tooltip">Параметрлерді сақтайды және қолданбаны қайта іске қосады</entry>
     <entry key="download_file_dialog">Кестені сақтаңыз</entry>
     <entry key="lookInLabelText">Іздеу</entry>

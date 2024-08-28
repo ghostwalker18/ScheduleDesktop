@@ -228,6 +228,8 @@ public class MainForm
         clearTeacherButton.setText(platformStrings.getString("clear"));
 
         updateStatus.setText(platformStrings.getString("downloading"));
+
+        refreshButton.setToolTipText(platformStrings.getString("update_tooltip"));
     }
 
     /**

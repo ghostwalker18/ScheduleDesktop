@@ -18,8 +18,10 @@
     <entry key="downloading">Загрузка...</entry>
     <entry key="combox_placeholder">Не выбрана</entry>
     <entry key="share_tooltip">Скапіяваць расклад ў буфер абмену</entry>
+    <entry key="share_completed">Расклад быў скапіяваны ў буфер абмену</entry>
     <entry key="settings_tooltip">Налады прыкладання</entry>
     <entry key="download_tooltip">Спампаваць Excel - файл раскладу ў абранае месца</entry>
+    <entry key="download_completed">Файлы раскладу былі захаваныя па адрасе:</entry>
     <entry key="backward_tooltip">Папярэдні тыдзень</entry>
     <entry key="forward_tooltip">Наступны тыдзень</entry>
     <entry key="teachers_tooltip">Напрыклад: "Иванов И.И"</entry>

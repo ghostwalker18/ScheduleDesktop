@@ -17,9 +17,11 @@
     <entry key="clear">Тазалау</entry>
     <entry key="downloading">Жүктеу...</entry>
     <entry key="combox_placeholder">Таңдалмаған</entry>
+    <entry key="share_completed">Кесте алмасу буферіне көшірілді</entry>
     <entry key="share_tooltip">Кестені алмасу буферіне көшіру</entry>
     <entry key="settings_tooltip">Қолданба параметрлері</entry>
     <entry key="download_tooltip">Таңдалған орынға Excel кесте файлын жүктеп алыңыз</entry>
+    <entry key="download_completed">Кесте файлдары сақталды:</entry>
     <entry key="backward_tooltip">Алдыңғы апта</entry>
     <entry key="forward_tooltip">Келесі апта</entry>
     <entry key="teachers_tooltip">Мысалы: "Иванов И.И"</entry>

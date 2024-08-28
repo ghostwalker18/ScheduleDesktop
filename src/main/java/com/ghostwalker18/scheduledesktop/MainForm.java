@@ -142,6 +142,8 @@ public class MainForm
             Toolkit.getDefaultToolkit()
                     .getSystemClipboard()
                     .setContents(new StringSelection(schedule), null);
+            Toast message = new Toast(shareButton, platformStrings.getString("share_completed"));
+            message.display();
         });
         shareButton.addKeyListener(new KeyAdapter() {
             @Override
@@ -152,6 +154,8 @@ public class MainForm
                     Toolkit.getDefaultToolkit()
                             .getSystemClipboard()
                             .setContents(new StringSelection(schedule), null);
+                    Toast message = new Toast(shareButton, platformStrings.getString("share_completed"));
+                    message.display();
                 }
             }
         });
@@ -311,6 +315,9 @@ public class MainForm
                         System.err.println(e.getMessage());
                     }
                 }
+                Toast message = new Toast(shareButton,
+                        platformStrings.getString("download_completed") + directory);
+                message.display();
             }).start();
         }
     }

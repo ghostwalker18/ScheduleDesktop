@@ -18,8 +18,10 @@
     <entry key="downloading">Загрузка...</entry>
     <entry key="combox_placeholder">Не выбрано</entry>
     <entry key="share_tooltip">Скопировать расписание в буфер обмена</entry>
+    <entry key="share_completed">Расписание было скопировано в буфер обмена</entry>
     <entry key="settings_tooltip">Настройки приложения</entry>
     <entry key="download_tooltip">Скачать Excel-файл расписания в выбранное место</entry>
+    <entry key="download_completed">Файлы расписания были сохранены по адресу:</entry>
     <entry key="backward_tooltip">Предыдущая неделя</entry>
     <entry key="forward_tooltip">Следующая неделя</entry>
     <entry key="teachers_tooltip">Например: "Иванов И.И"</entry>

@@ -18,8 +18,10 @@
     <entry key="downloading">Завантаження...</entry>
     <entry key="combox_placeholder">Не вибрано</entry>
     <entry key="share_tooltip">Копіювати розклад у буфер обміну</entry>
+    <entry key="share_completed">Розклад було скопійовано в буфер обміну</entry>
     <entry key="settings_tooltip">Налаштування програми</entry>
     <entry key="download_tooltip">Завантажити Excel - файл розкладу в вибране місце</entry>
+    <entry key="download_completed">Файли розкладу були збережені за адресою:</entry>
     <entry key="backward_tooltip">Попередній тиждень</entry>
     <entry key="forward_tooltip">Наступний тиждень</entry>
     <entry key="teachers_tooltip">Наприклад: "Иванов И.И"</entry>

@@ -57,8 +57,8 @@ public class ScheduleRepository {
     private final Preferences preferences = Application.getPreferences();
     private final String baseUri = "https://ptgh.onego.ru/9006/";
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
-    private final String mondayTimesPath = "mondayTimes.jpg";
-    private final String otherTimesPath = "otherTimes.jpg";
+    public final static String mondayTimesPath = "mondayTimes.jpg";
+    public final static String otherTimesPath = "otherTimes.jpg";
     private final List<Pair<String, XSSFWorkbook>> scheduleFiles = new LinkedList<>();
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
@@ -281,7 +281,7 @@ public class ScheduleRepository {
             Elements linkElements = doc.select(mainSelector).get(0)
                     .select("tr").get(1)
                     .select("td").get(1)
-                    .select("p > strong > span > a");
+                    .select("p > a");
             for(Element linkElement : linkElements){
                 links.add(linkElement.attr("href"));
             }
@@ -325,7 +325,7 @@ public class ScheduleRepository {
             Elements linkElements = doc.select(mainSelector).get(0)
                     .select("tr").get(1)
                     .select("td").get(0)
-                    .select("p > strong > span > a");
+                    .select("p > a");
             for(Element linkElement : linkElements){
                 links.add(linkElement.attr("href"));
             }

@@ -19,6 +19,7 @@
     <entry key="combox_placeholder">Не выбрано</entry>
     <entry key="share_tooltip">Скопировать расписание в буфер обмена</entry>
     <entry key="share_completed">Расписание было скопировано в буфер обмена</entry>
+    <entry key="share_times_completed">Файлы расписания звонков были скопированы в буфер обмена</entry>
     <entry key="settings_tooltip">Настройки приложения</entry>
     <entry key="download_tooltip">Скачать Excel-файл расписания в выбранное место</entry>
     <entry key="download_completed">Файлы расписания были сохранены по адресу:</entry>

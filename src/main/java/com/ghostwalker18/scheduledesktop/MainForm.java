@@ -30,8 +30,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.Vector;
+import java.util.List;
 
 /**
  * Этот класс представляет собой основной экран приложения.
@@ -138,24 +140,28 @@ public class MainForm
         });
 
         shareButton.addActionListener(e -> {
-            String schedule = getSchedule();
-            Toolkit.getDefaultToolkit()
-                    .getSystemClipboard()
-                    .setContents(new StringSelection(schedule), null);
-            Toast message = new Toast(shareButton, platformStrings.getString("share_completed"));
-            message.display();
+            switch (tabs.getSelectedIndex()){
+                case 0:
+                    shareSchedule();
+                    break;
+                case 1:
+                    shareTimes();
+                    break;
+            }
         });
         shareButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String schedule = getSchedule();
-                    Toolkit.getDefaultToolkit()
-                            .getSystemClipboard()
-                            .setContents(new StringSelection(schedule), null);
-                    Toast message = new Toast(shareButton, platformStrings.getString("share_completed"));
-                    message.display();
+                    switch (tabs.getSelectedIndex()){
+                        case 0:
+                            shareSchedule();
+                            break;
+                        case 1:
+                            shareTimes();
+                            break;
+                    }
                 }
             }
         });
@@ -278,6 +284,35 @@ public class MainForm
                 state.setTeacher(null);
             }
         });
+    }
+
+    /**
+     * Этот метод используется для добавления форматированной строки расписания в системный
+     * буфер обмена и уведомления об этом.
+     */
+    private void shareSchedule(){
+        Toolkit.getDefaultToolkit()
+                .getSystemClipboard()
+                .setContents(new StringSelection(getSchedule()), null);
+
+        Toast message = new Toast(shareButton, platformStrings.getString("share_completed"));
+        message.display();
+    }
+
+    /**
+     * Этот метод используется для добавления файлов звонков в системный буфер обмена и
+     * уведомления об этом.
+     */
+    private void shareTimes(){
+        Toolkit.getDefaultToolkit()
+                .getSystemClipboard()
+                .setContents(new FileTransferable()
+                        .add(new File(ScheduleRepository.mondayTimesPath))
+                                .add(new File(ScheduleRepository.otherTimesPath))
+                        , null);
+
+        Toast message = new Toast(shareButton, platformStrings.getString("share_times_completed"));
+        message.display();
     }
 
     /**

@@ -293,32 +293,12 @@ public class ScheduleRepository {
     }
 
     /**
-     * Этот метод получает ссылку с сайта ПАСТ,
-     * по которой доступно основное расписание для корпуса на Мурманской улице.
-     *
-     * @return список ссылок
-     */
-    public String getLinkForScheduleSecondCorpusMain(){
-        try{
-            Document doc = Jsoup.connect(baseUri).get();
-            Element linkElement = doc.select(mainSelector).get(0)
-                    .select("tr").get(1)
-                    .select("td").get(0)
-                    .select("p > a").get(0);
-            return linkElement.attr("href");
-        }
-        catch (IOException e){
-            return null;
-        }
-    }
-
-    /**
      * Этот метод получает ссылки с сайта ПАСТ,
-     * по которым доступны изменения расписания для корпуса на Мурманской улице.
+     * по которым доступно расписание для корпуса на Мурманской улице.
      *
      * @return список ссылок
      */
-    public List<String> getLinksForScheduleSecondCorpusAdditional(){
+    public List<String> getLinksForScheduleSecondCorpus(){
         List<String> links = new ArrayList<>();
         try{
             Document doc = Jsoup.connect(baseUri).get();

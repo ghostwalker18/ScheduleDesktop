@@ -71,6 +71,8 @@ public class ScheduleState extends Observable {
     }
 
     public void setGroup(String group){
+        if(group != null && group.trim().equals(""))
+            group = null;
         this.group = group;
         setChanged();
         notifyObservers();
@@ -81,6 +83,8 @@ public class ScheduleState extends Observable {
     }
 
     public void setTeacher(String teacher){
+        if(teacher != null && teacher.trim().equals(""))
+            teacher = null;
         this.teacher = teacher;
         setChanged();
         notifyObservers();

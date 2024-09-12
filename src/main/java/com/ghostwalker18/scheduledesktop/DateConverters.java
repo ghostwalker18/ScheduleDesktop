@@ -16,6 +16,7 @@ package com.ghostwalker18.scheduledesktop;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -28,7 +29,9 @@ import java.util.Calendar;
 @Converter
 public class DateConverters
         implements AttributeConverter<Calendar, String> {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private static final SimpleDateFormat dateFormatDB = new SimpleDateFormat("dd.MM.yyyy");
+    private static final SimpleDateFormat dateFormatFirstCorpus = new SimpleDateFormat("dd.MM.yyyy");
+    private static final SimpleDateFormat dateFormatSecondCorpus = new SimpleDateFormat("d MMMM yyyy");
 
     /**
      * Этот метод преобразует Calendar сущнисти в String для БД.
@@ -38,7 +41,7 @@ public class DateConverters
     @Override
     public String convertToDatabaseColumn(Calendar attribute) {
         synchronized (this){
-            return attribute == null ? null : dateFormat.format(attribute.getTime());
+            return attribute == null ? null : dateFormatDB.format(attribute.getTime());
         }
     }
 
@@ -57,7 +60,7 @@ public class DateConverters
             else{
                 try{
                     Calendar cal = Calendar.getInstance();
-                    cal.setTime(dateFormat.parse(dbData));
+                    cal.setTime(dateFormatDB.parse(dbData));
                     return cal;
                 }
                 catch (java.text.ParseException e){
@@ -66,5 +69,51 @@ public class DateConverters
             }
         }
 
+    }
+
+    /**
+     * Этот метод преобразует String из расписания первого корпуса на Первомайском пр. в Calendar сущности.
+     * @param date дата из расписания первого корпуса
+     * @return преобразованная дата в формате Calendar
+     */
+    public Calendar convertFirstCorpusDate(String date){
+        synchronized (this){
+            if(date == null){
+                return null;
+            }
+            else{
+                try{
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dateFormatFirstCorpus.parse(date));
+                    return cal;
+                }
+                catch (ParseException e){
+                    return null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Этот метод преобразует String из расписания второго корпуса на Мурманской ул. в Calendar сущности.
+     * @param date дата из расписания второго корпуса
+     * @return преобразованная дата в формате Calendar
+     */
+    public Calendar convertSecondCorpusDate(String date){
+        synchronized (this){
+            if(date == null){
+                return null;
+            }
+            else{
+                try{
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dateFormatSecondCorpus.parse(date));
+                    return cal;
+                }
+                catch (ParseException e){
+                    return null;
+                }
+            }
+        }
     }
 }

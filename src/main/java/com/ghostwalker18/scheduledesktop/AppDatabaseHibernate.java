@@ -148,7 +148,7 @@ public class AppDatabaseHibernate
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
                 query.setParameter("groupName", group);
-                query.setParameter("teacherName", teacher + "%");
+                query.setParameter("teacherName", "%" + teacher + "%");
                 queryResult.onNext(query.list());
             }
         }).start();
@@ -178,7 +178,7 @@ public class AppDatabaseHibernate
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
-                query.setParameter("teacherName", teacher + "%");
+                query.setParameter("teacherName", "%" + teacher + "%");
                 queryResult.onNext(query.list());
             }
         }).start();

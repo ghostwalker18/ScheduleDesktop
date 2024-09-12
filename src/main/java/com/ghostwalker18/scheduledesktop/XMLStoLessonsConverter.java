@@ -29,6 +29,11 @@ import java.util.*;
 public class XMLStoLessonsConverter
     implements IConverter{
 
+    private static final int FIRST_ROW_GAP_1 = 5;
+    private static final int FIST_ROW_GAP_2 = 105;
+    private static final int SCHEDULE_CELL_HEIGHT_1 = 2;
+    private static final int SCHEDULE_CELL_HEIGHT_2 = 4;
+
     /**
      * Этот метод используется для обработки файла расписания первого корпуса на Первомайском пр.
      *
@@ -56,35 +61,41 @@ public class XMLStoLessonsConverter
 
             scheduleFilling : {
                 NavigableSet<Integer> groupBounds = groups.navigableKeySet();
-                for(int j = sheet.getFirstRowNum() + 5; j < sheet.getLastRowNum(); j +=2){
+                for(int j = sheet.getFirstRowNum() + FIRST_ROW_GAP_1;
+                    j < sheet.getLastRowNum();
+                    j += SCHEDULE_CELL_HEIGHT_1){
                     for(int k : groupBounds){
                         if(sheet.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
                             break scheduleFilling;
                         Lesson lesson = new Lesson();
-                        lesson.setDate(dateConverters.convertToEntityAttribute(date));
+                        lesson.setDate(dateConverters.convertFirstCorpusDate(date));
                         lesson.setGroup(Objects.requireNonNull(groups.get(k)));
                         lesson.setLessonNumber(sheet.getRow(j)
                                 .getCell(1)
-                                .getStringCellValue());
+                                .getStringCellValue()
+                                .trim());
                         lesson.setTimes(sheet.getRow(j + 1)
                                 .getCell(1)
-                                .getStringCellValue());
+                                .getStringCellValue()
+                                .trim());
                         lesson.setSubject(sheet.getRow(j)
                                 .getCell(k)
-                                .getStringCellValue());
+                                .getStringCellValue()
+                                .trim());
                         lesson.setTeacher(sheet.getRow(j + 1)
                                 .getCell(k)
-                                .getStringCellValue());
+                                .getStringCellValue()
+                                .trim());
                         Integer nextGroupBound = groupBounds.higher(k);
                         if(nextGroupBound != null){
-                            lesson.setRoomNumber(getCellContentsAsString(sheet, j, nextGroupBound - 1));
+                            lesson.setRoomNumber(getCellContentsAsString(sheet, j, nextGroupBound - 1).trim());
                         }
                         else{
-                            String roomNumber = getCellContentsAsString(sheet, j, k + 2);
+                            String roomNumber = getCellContentsAsString(sheet, j, k + 2).trim();
                             if(!roomNumber.equals(""))
                                 lesson.setRoomNumber(roomNumber);
                             else
-                                lesson.setRoomNumber(getCellContentsAsString(sheet, j, k + 3));
+                                lesson.setRoomNumber(getCellContentsAsString(sheet, j, k + 3).trim());
                         }
                         //Required for primary key
                         if(!lesson.getSubject().equals(""))
@@ -103,7 +114,84 @@ public class XMLStoLessonsConverter
      * @return лист объектов класса Lesson
      */
     public List<Lesson> convertSecondCorpus(XSSFWorkbook excelFile){
-        return new LinkedList<Lesson>();
+        List<Lesson> lessons = new ArrayList<>();
+        DateConverters dateConverters = new DateConverters();
+
+        for(int i = 0; i < excelFile.getNumberOfSheets(); i++) {
+            XSSFSheet sheet = excelFile.getSheetAt(i);
+            String date = sheet.getSheetName().trim();
+            NavigableMap<Integer, String> groups = new TreeMap<>();
+            XSSFRow groupsRow = sheet.getRow(3);
+            if (groupsRow == null)
+                break;
+            for (int j = groupsRow.getFirstCellNum() + 2; j < groupsRow.getLastCellNum(); j++) {
+                XSSFCell groupRowCell = groupsRow.getCell(j);
+                //if cells are united, only first cell in union is not null
+                if (groupRowCell == null)
+                    continue;
+                if (!groupRowCell.getStringCellValue().trim().equals("") &&
+                        !groupRowCell.getStringCellValue().trim().equals("Группа") &&
+                        !groupRowCell.getStringCellValue().trim().equals("День недели")
+                )
+                    groups.put(j, groupRowCell.getStringCellValue());
+            }
+
+            scheduleFilling : {
+                NavigableSet<Integer> groupBounds = groups.navigableKeySet();
+                for(int j = sheet.getFirstRowNum() + FIST_ROW_GAP_2;
+                    j < sheet.getLastRowNum();
+                    j += SCHEDULE_CELL_HEIGHT_2){
+                    for(int k : groupBounds){
+                        if(sheet.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
+                            break scheduleFilling;
+                        Lesson lesson = new Lesson();
+                        lesson.setDate(dateConverters.convertSecondCorpusDate(date));
+                        lesson.setGroup(Objects.requireNonNull(groups.get(k)));
+                        lesson.setLessonNumber(sheet.getRow(j)
+                                .getCell(1)
+                                .getStringCellValue()
+                                .trim());
+                        lesson.setTimes(sheet.getRow(j + 1)
+                                .getCell(1)
+                                .getStringCellValue()
+                                .trim());
+                        String lessonSubject = sheet.getRow(j)
+                                .getCell(k)
+                                .getStringCellValue()
+                                .trim();
+                        if(sheet.getRow(j+1)
+                                        .getCell(k)
+                                                .getStringCellValue() != null){
+                            lessonSubject += sheet.getRow(j+1)
+                                    .getCell(k)
+                                    .getStringCellValue()
+                                    .trim();
+                        }
+                        lesson.setSubject(lessonSubject);
+                        lesson.setTeacher(sheet.getRow(j + 2)
+                                .getCell(k)
+                                .getStringCellValue()
+                                .trim());
+                        Integer nextGroupBound = groupBounds.higher(k);
+                        if(nextGroupBound != null){
+                            lesson.setRoomNumber(getCellContentsAsString(sheet, j, nextGroupBound - 1)
+                            + getCellContentsAsString(sheet, j + 1, nextGroupBound - 1));
+                        }
+                        else{
+                            String roomNumber = getCellContentsAsString(sheet, j, k + 3) +
+                                    getCellContentsAsString(sheet, j + 1, k + 3);
+                            if(!roomNumber.equals(""))
+                                lesson.setRoomNumber(roomNumber);
+                        }
+                        //Required for primary key
+                        if(!lesson.getSubject().equals(""))
+                            lessons.add(lesson);
+                    }
+                }
+            }
+        }
+
+        return lessons;
     }
 
     /**

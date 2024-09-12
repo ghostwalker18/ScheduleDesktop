@@ -35,7 +35,7 @@ import java.util.*;
  * @author  Ипатов Никита
  */
 public class AppDatabaseHibernate
-        implements AppDatabase{
+        implements IAppDatabase{
     private static AppDatabaseHibernate instance = null;
     private final SessionFactory sessionFactory;
     private final PublishSubject<Boolean> onDataBaseUpdate = PublishSubject.create();

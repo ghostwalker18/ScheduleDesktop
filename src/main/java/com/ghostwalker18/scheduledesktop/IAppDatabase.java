@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author  Ипатов Никита
  */
-public interface AppDatabase {
+public interface IAppDatabase {
     /**
      * Этот метод позволяет вставить элементы Lesson в БД.
      * @param lessons занятия

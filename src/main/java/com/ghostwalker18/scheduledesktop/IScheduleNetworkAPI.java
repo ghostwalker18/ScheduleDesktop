@@ -25,7 +25,7 @@ import retrofit2.http.Url;
  *
  * @author  Ипатов Никита
  */
-public interface ScheduleNetworkAPI {
+public interface IScheduleNetworkAPI {
 
     /**
      * Получение файла расписания звонков на понедельник

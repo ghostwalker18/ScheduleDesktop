@@ -52,8 +52,9 @@ public class ScheduleRepository {
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    private final ScheduleNetworkAPI api;
-    private final AppDatabase db;
+    private final IScheduleNetworkAPI api;
+    private final IAppDatabase db;
+    private IConverter converter = new XMLStoLessonsConverter();
     private final Preferences preferences = Application.getPreferences();
     private final String baseUri = "https://ptgh.onego.ru/9006/";
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
@@ -94,7 +95,7 @@ public class ScheduleRepository {
                 .baseUrl(baseUri)
                 .callbackExecutor(Executors.newSingleThreadExecutor())
                 .build()
-                .create(ScheduleNetworkAPI.class);
+                .create(IScheduleNetworkAPI.class);
     }
 
     /**
@@ -206,7 +207,43 @@ public class ScheduleRepository {
                             try(InputStream stream = response.body().byteStream()){
                                 XSSFWorkbook excelFile = new XSSFWorkbook(stream);
                                 scheduleFiles.add(new Pair<>(getNameFromLink(link), excelFile));
-                                List<Lesson> lessons = XMLStoLessonsConverter.convertFirstCorpus(excelFile);
+                                List<Lesson> lessons = converter.convertFirstCorpus(excelFile);
+                                db.insertMany(lessons);
+                                status.onNext(new Status(strings.getString("processing_completed_status"),
+                                        100));
+                            }
+                            catch (IOException e){
+                                status.onNext(new Status(strings.getString("schedule_parsing_error"),
+                                        0));
+                            }
+                            response.body().close();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        status.onNext(new Status(strings.getString("schedule_download_error"), 0));
+                    }
+                });
+            }
+        }).start();
+
+        new Thread(() -> {
+            List<String> scheduleLinks = getLinksForScheduleSecondCorpus();
+            if(scheduleLinks.size() == 0)
+                status.onNext(new Status(strings.getString("schedule_download_error"), 0));
+            for(String link : scheduleLinks){
+                status.onNext(new Status(strings.getString("schedule_download_status"), 10));
+                api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.body() != null){
+                            status.onNext(new Status(strings.getString("schedule_parsing_status"),
+                                    33));
+                            try(InputStream stream = response.body().byteStream()){
+                                XSSFWorkbook excelFile = new XSSFWorkbook(stream);
+                                scheduleFiles.add(new Pair<>(getNameFromLink(link), excelFile));
+                                List<Lesson> lessons = converter.convertSecondCorpus(excelFile);
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
                                         100));

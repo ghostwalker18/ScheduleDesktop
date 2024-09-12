@@ -22,18 +22,20 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.*;
 
 /**
- * Этот класс содержит в себе статические методы для работы с файлами расписания ПАСТ.
+ * Этот класс содержит в себе методы для работы с файлами расписания ПТГХ.
  *
  * @author  Ипатов Никита
  */
-public class XMLStoLessonsConverter {
+public class XMLStoLessonsConverter
+    implements IConverter{
+
     /**
-     * Этот метод используется для обработки файла расписания первого корпуса.
+     * Этот метод используется для обработки файла расписания первого корпуса на Первомайском пр.
      *
      * @param excelFile эксель файл расписания для первого корпуса
      * @return лист объектов класса Lesson
      */
-    public static List<Lesson> convertFirstCorpus(XSSFWorkbook excelFile){
+    public List<Lesson> convertFirstCorpus(XSSFWorkbook excelFile){
         List<Lesson> lessons = new ArrayList<>();
         DateConverters dateConverters = new DateConverters();
 
@@ -92,6 +94,16 @@ public class XMLStoLessonsConverter {
             }
         }
         return lessons;
+    }
+
+    /**
+     * Этот метод используется для обработки файла расписания второго корпуса на ул.Мурманской.
+     *
+     * @param excelFile эксель файл расписания для второго корпуса
+     * @return лист объектов класса Lesson
+     */
+    public List<Lesson> convertSecondCorpus(XSSFWorkbook excelFile){
+        return new LinkedList<Lesson>();
     }
 
     /**

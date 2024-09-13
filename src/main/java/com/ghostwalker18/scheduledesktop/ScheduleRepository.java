@@ -244,7 +244,7 @@ public class ScheduleRepository {
                                 XSSFWorkbook excelFile = new XSSFWorkbook(stream);
                                 scheduleFiles.add(new Pair<>(getNameFromLink(link), excelFile));
                                 List<Lesson> lessons = converter.convertSecondCorpus(excelFile);
-                                //db.insertMany(lessons);
+                                db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
                                         100));
                             }

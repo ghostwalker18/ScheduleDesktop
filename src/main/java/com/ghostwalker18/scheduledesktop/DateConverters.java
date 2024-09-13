@@ -53,22 +53,7 @@ public class DateConverters
      */
     @Override
     public Calendar convertToEntityAttribute(String dbData) {
-        synchronized (this){
-            if(dbData == null){
-                return null;
-            }
-            else{
-                try{
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(dateFormatDB.parse(dbData));
-                    return cal;
-                }
-                catch (java.text.ParseException e){
-                    return null;
-                }
-            }
-        }
-
+        return stringToCal(dbData, dateFormatDB);
     }
 
     /**
@@ -77,21 +62,7 @@ public class DateConverters
      * @return преобразованная дата в формате Calendar
      */
     public Calendar convertFirstCorpusDate(String date){
-        synchronized (this){
-            if(date == null){
-                return null;
-            }
-            else{
-                try{
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(dateFormatFirstCorpus.parse(date));
-                    return cal;
-                }
-                catch (ParseException e){
-                    return null;
-                }
-            }
-        }
+        return stringToCal(date, dateFormatFirstCorpus);
     }
 
     /**
@@ -100,19 +71,27 @@ public class DateConverters
      * @return преобразованная дата в формате Calendar
      */
     public Calendar convertSecondCorpusDate(String date){
-        synchronized (this){
-            if(date == null){
-                return null;
+        return stringToCal(date, dateFormatSecondCorpus);
+    }
+
+    /**
+     * Этот метод используется для преобразования строки в дату согласно заданному формату.
+     * @param date строка даты
+     * @param format формат даты
+     * @return дата
+     */
+    private synchronized Calendar stringToCal(String date, SimpleDateFormat format){
+        if(date == null){
+            return null;
+        }
+        else{
+            try{
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(format.parse(date));
+                return cal;
             }
-            else{
-                try{
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(dateFormatSecondCorpus.parse(date));
-                    return cal;
-                }
-                catch (ParseException e){
-                    return null;
-                }
+            catch (ParseException e){
+                return null;
             }
         }
     }

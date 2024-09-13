@@ -14,7 +14,7 @@
   -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="app_name">Расклад ПАБТ (неафіцыйны)</entry>
+    <entry key="app_name">Расклад ПТГГ (неафіцыйны)</entry>
     <entry key="settings">Настройкі</entry>
     <entry key="days_tab">Расклад заняткаў</entry>
     <entry key="times_tab">Расклад званкоў</entry>

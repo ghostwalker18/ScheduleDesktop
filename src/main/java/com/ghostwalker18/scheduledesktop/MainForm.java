@@ -29,6 +29,8 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -343,10 +345,10 @@ public class MainForm
             new Thread(() -> {
                 //Chosen directory is also a file, heh
                 String directory = fileChooser.getSelectedFile().getAbsolutePath();
-                for(Pair<String, XSSFWorkbook> fileRaw : repository.getScheduleFiles()){
+                for(Pair<String, File> fileRaw : repository.getScheduleFiles()){
                     File outputFile = new File(directory + File.separator + fileRaw.getValue0());
-                    try(FileOutputStream outputStream = new FileOutputStream(outputFile)){
-                        fileRaw.getValue1().write(outputStream);
+                    try{
+                        Files.copy(fileRaw.getValue1().toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     }
                     catch (IOException e){
                         System.err.println(e.getMessage());

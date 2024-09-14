@@ -56,7 +56,6 @@ public class XMLStoLessonsConverter
                     //mistake protection
                     groups.put(j, group.replaceAll("\\s+", ""));
                 }
-                    groups.put(j, groupRowCell.getStringCellValue());
             }
 
             //start filling schedule from top to bottom and from left to right

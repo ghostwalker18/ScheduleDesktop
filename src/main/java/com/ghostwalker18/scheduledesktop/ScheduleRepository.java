@@ -20,6 +20,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import okhttp3.ResponseBody;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
@@ -35,6 +36,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
@@ -60,7 +63,7 @@ public class ScheduleRepository {
     private final String mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     public final static String mondayTimesPath = "mondayTimes.jpg";
     public final static String otherTimesPath = "otherTimes.jpg";
-    private final List<Pair<String, XSSFWorkbook>> scheduleFiles = new LinkedList<>();
+    private final List<Pair<String, File>> scheduleFiles = new LinkedList<>();
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
     private final ReplaySubject<Status> status = ReplaySubject.create();
@@ -205,14 +208,20 @@ public class ScheduleRepository {
                             status.onNext(new Status(strings.getString("schedule_parsing_status"),
                                     33));
                             try(InputStream stream = response.body().byteStream()){
-                                XSSFWorkbook excelFile = new XSSFWorkbook(stream);
-                                scheduleFiles.add(new Pair<>(getNameFromLink(link), excelFile));
+                                File scheduleFile = Files
+                                        .createTempFile(null, ".tmp")
+                                        .toFile();
+                                scheduleFile.deleteOnExit();
+                                Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
+                                XSSFWorkbook excelFile = new XSSFWorkbook(scheduleFile);
                                 List<Lesson> lessons = converter.convertFirstCorpus(excelFile);
+                                excelFile.close();
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
                                         100));
                             }
-                            catch (IOException e){
+                            catch (IOException | InvalidFormatException e){
                                 status.onNext(new Status(strings.getString("schedule_parsing_error"),
                                         0));
                             }
@@ -241,14 +250,20 @@ public class ScheduleRepository {
                             status.onNext(new Status(strings.getString("schedule_parsing_status"),
                                     33));
                             try(InputStream stream = response.body().byteStream()){
-                                XSSFWorkbook excelFile = new XSSFWorkbook(stream);
-                                scheduleFiles.add(new Pair<>(getNameFromLink(link), excelFile));
+                                File scheduleFile = Files
+                                        .createTempFile(null, ".tmp")
+                                        .toFile();
+                                scheduleFile.deleteOnExit();
+                                Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
+                                XSSFWorkbook excelFile = new XSSFWorkbook(scheduleFile);
                                 List<Lesson> lessons = converter.convertSecondCorpus(excelFile);
+                                excelFile.close();
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
                                         100));
                             }
-                            catch (IOException e){
+                            catch (IOException | InvalidFormatException e){
                                 status.onNext(new Status(strings.getString("schedule_parsing_error"),
                                         0));
                             }
@@ -357,7 +372,7 @@ public class ScheduleRepository {
      * Этот метод возвращает пары название файла / содержимое файла для всех скачанных файлов расписания.
      * @return
      */
-    public List<Pair<String, XSSFWorkbook>> getScheduleFiles(){
+    public List<Pair<String, File>> getScheduleFiles(){
         return scheduleFiles;
     }
 

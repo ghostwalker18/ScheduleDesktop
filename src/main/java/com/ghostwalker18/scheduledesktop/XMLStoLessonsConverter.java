@@ -14,10 +14,10 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import java.util.*;
 
 /**
@@ -33,21 +33,21 @@ public class XMLStoLessonsConverter
     private static final int SCHEDULE_CELL_HEIGHT_1 = 2;
     private static final int SCHEDULE_CELL_HEIGHT_2 = 4;
 
-    public List<Lesson> convertFirstCorpus(XSSFWorkbook excelFile){
+    public List<Lesson> convertFirstCorpus(Workbook excelFile){
         List<Lesson> lessons = new ArrayList<>();
         DateConverters dateConverters = new DateConverters();
 
         for(int i = 0; i < excelFile.getNumberOfSheets(); i++){
-            XSSFSheet sheet = excelFile.getSheetAt(i);
+            Sheet sheet = excelFile.getSheetAt(i);
             String date = sheet.getSheetName() + "." + Calendar.getInstance().get(Calendar.YEAR);
             NavigableMap<Integer, String> groups = new TreeMap<>();
-            XSSFRow groupsRow = sheet.getRow(3);
+            Row groupsRow = sheet.getRow(3);
             //checking if there is a schedule at the list
             if(groupsRow == null)
                 break;
             //getting groups` names
             for(int j = groupsRow.getFirstCellNum() + 2; j < groupsRow.getLastCellNum(); j++){
-                XSSFCell groupRowCell = groupsRow.getCell(j);
+                Cell groupRowCell = groupsRow.getCell(j);
                 //if cells are united, only first cell in union is not null
                 if(groupRowCell == null )
                     continue;
@@ -98,21 +98,21 @@ public class XMLStoLessonsConverter
         return lessons;
     }
 
-    public List<Lesson> convertSecondCorpus(XSSFWorkbook excelFile){
+    public List<Lesson> convertSecondCorpus(Workbook excelFile){
         List<Lesson> lessons = new ArrayList<>();
         DateConverters dateConverters = new DateConverters();
 
         for(int i = 0; i < excelFile.getNumberOfSheets(); i++) {
-            XSSFSheet sheet = excelFile.getSheetAt(i);
+            Sheet sheet = excelFile.getSheetAt(i);
             String date = sheet.getSheetName().trim();
             NavigableMap<Integer, String> groups = new TreeMap<>();
-            XSSFRow groupsRow = sheet.getRow(3);
+            Row groupsRow = sheet.getRow(3);
             //checking if there is a schedule at the list
             if (groupsRow == null)
                 break;
             //getting groups` names
             for (int j = groupsRow.getFirstCellNum() + 2; j < groupsRow.getLastCellNum(); j++) {
-                XSSFCell groupRowCell = groupsRow.getCell(j);
+                Cell groupRowCell = groupsRow.getCell(j);
                 //if cells are united, only first cell in union is not null
                 if (groupRowCell == null)
                     continue;
@@ -177,8 +177,8 @@ public class XMLStoLessonsConverter
      * @param column номер столбца ячейки
      * @return содержимое ячейки в виде строки
      */
-    private static String getCellContentsAsString(XSSFSheet sheet, int row, int column){
-        XSSFCell cell = sheet.getRow(row)
+    private static String getCellContentsAsString(Sheet sheet, int row, int column){
+        Cell cell = sheet.getRow(row)
                 .getCell(column);
         if(cell == null)
             return "";

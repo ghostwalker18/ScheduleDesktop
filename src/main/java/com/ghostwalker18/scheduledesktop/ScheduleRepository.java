@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.github.pjfanning.xlsx.StreamingReader;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
@@ -21,6 +22,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import okhttp3.ResponseBody;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
@@ -214,14 +216,17 @@ public class ScheduleRepository {
                                 scheduleFile.deleteOnExit();
                                 Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                                 scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
-                                XSSFWorkbook excelFile = new XSSFWorkbook(scheduleFile);
+                                Workbook excelFile = StreamingReader.builder()
+                                        .rowCacheSize(10)
+                                        .bufferSize(4096)
+                                        .open(scheduleFile);
                                 List<Lesson> lessons = converter.convertFirstCorpus(excelFile);
                                 excelFile.close();
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
                                         100));
                             }
-                            catch (IOException | InvalidFormatException e){
+                            catch (Exception e){
                                 status.onNext(new Status(strings.getString("schedule_parsing_error"),
                                         0));
                             }
@@ -256,14 +261,17 @@ public class ScheduleRepository {
                                 scheduleFile.deleteOnExit();
                                 Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                                 scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
-                                XSSFWorkbook excelFile = new XSSFWorkbook(scheduleFile);
+                                Workbook excelFile = StreamingReader.builder()
+                                        .rowCacheSize(10)
+                                        .bufferSize(4096)
+                                        .open(scheduleFile);
                                 List<Lesson> lessons = converter.convertSecondCorpus(excelFile);
                                 excelFile.close();
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
                                         100));
                             }
-                            catch (IOException | InvalidFormatException e){
+                            catch (Exception e){
                                 status.onNext(new Status(strings.getString("schedule_parsing_error"),
                                         0));
                             }

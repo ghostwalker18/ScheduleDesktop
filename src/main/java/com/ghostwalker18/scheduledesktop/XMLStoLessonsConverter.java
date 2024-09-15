@@ -29,7 +29,7 @@ public class XMLStoLessonsConverter
     implements IConverter{
 
     private static final int FIRST_ROW_GAP_1 = 5;
-    private static final int FIST_ROW_GAP_2 = 105;
+    private static final int FIST_ROW_GAP_2 = 5;
     private static final int SCHEDULE_CELL_HEIGHT_1 = 2;
     private static final int SCHEDULE_CELL_HEIGHT_2 = 4;
 
@@ -37,11 +37,17 @@ public class XMLStoLessonsConverter
         List<Lesson> lessons = new ArrayList<>();
         DateConverters dateConverters = new DateConverters();
 
+
         for(int i = 0; i < excelFile.getNumberOfSheets(); i++){
             Sheet sheet = excelFile.getSheetAt(i);
+            RowCache cache = RowCache.builder()
+                    .setSheet(sheet)
+                    .setSize(5)
+                    .build();
             String date = sheet.getSheetName() + "." + Calendar.getInstance().get(Calendar.YEAR);
             NavigableMap<Integer, String> groups = new TreeMap<>();
-            Row groupsRow = sheet.getRow(3);
+            //Row groupsRow = sheet.getRow(3);
+            Row groupsRow = cache.getRow(3);
             //checking if there is a schedule at the list
             if(groupsRow == null)
                 break;
@@ -66,24 +72,24 @@ public class XMLStoLessonsConverter
                     j += SCHEDULE_CELL_HEIGHT_1){
                     for(int k : groupBounds){
                         //bottom of schedule are group names, breaking here
-                        if(sheet.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
+                        if(cache.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
                             break scheduleFilling;
                         Lesson lesson = new Lesson();
                         lesson.setDate(dateConverters.convertFirstCorpusDate(date));
                         lesson.setGroup(Objects.requireNonNull(groups.get(k)));
-                        lesson.setLessonNumber(getCellContentsAsString(sheet, j, 1).trim());
-                        lesson.setTimes(getCellContentsAsString(sheet, j + 1, 1).trim());
-                        lesson.setSubject(getCellContentsAsString(sheet, j, k).trim());
-                        lesson.setTeacher(getCellContentsAsString(sheet, j + 1, k).trim());
+                        lesson.setLessonNumber(getCellContentsAsString(cache, j, 1).trim());
+                        lesson.setTimes(getCellContentsAsString(cache, j + 1, 1).trim());
+                        lesson.setSubject(getCellContentsAsString(cache, j, k).trim());
+                        lesson.setTeacher(getCellContentsAsString(cache, j + 1, k).trim());
                         Integer nextGroupBound = groupBounds.higher(k);
                         String roomNumber;
                         if(nextGroupBound != null){
-                            roomNumber = getCellContentsAsString(sheet, j, nextGroupBound - 1).trim();
+                            roomNumber = getCellContentsAsString(cache, j, nextGroupBound - 1).trim();
                         }
                         else{
-                            roomNumber = getCellContentsAsString(sheet, j, k + 2).trim();
+                            roomNumber = getCellContentsAsString(cache, j, k + 2).trim();
                             if(roomNumber.equals(""))
-                                roomNumber = getCellContentsAsString(sheet, j, k + 3).trim();
+                                roomNumber = getCellContentsAsString(cache, j, k + 3).trim();
                         }
                         lesson.setRoomNumber(roomNumber);
                         //Required for primary key
@@ -103,9 +109,13 @@ public class XMLStoLessonsConverter
 
         for(int i = 0; i < excelFile.getNumberOfSheets(); i++) {
             Sheet sheet = excelFile.getSheetAt(i);
+            RowCache cache = RowCache.builder()
+                    .setSheet(sheet)
+                    .setSize(10)
+                    .build();
             String date = sheet.getSheetName().trim();
             NavigableMap<Integer, String> groups = new TreeMap<>();
-            Row groupsRow = sheet.getRow(3);
+            Row groupsRow = cache.getRow(3);
             //checking if there is a schedule at the list
             if (groupsRow == null)
                 break;
@@ -133,28 +143,28 @@ public class XMLStoLessonsConverter
                     j += SCHEDULE_CELL_HEIGHT_2){
                     for(int k : groupBounds){
                         //bottom of schedule are group names, breaking here
-                        if(sheet.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
+                        if(cache.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
                             break scheduleFilling;
                         Lesson lesson = new Lesson();
                         lesson.setDate(dateConverters.convertSecondCorpusDate(date));
                         lesson.setGroup(Objects.requireNonNull(groups.get(k)));
-                        lesson.setLessonNumber(getCellContentsAsString(sheet, j, 1).trim());
-                        lesson.setTimes(getCellContentsAsString(sheet, j + 1, 1).trim());
-                        String lessonSubject = getCellContentsAsString(sheet, j, k) + " " +
-                                getCellContentsAsString(sheet, j + 1, k);
+                        lesson.setLessonNumber(getCellContentsAsString(cache, j, 1).trim());
+                        lesson.setTimes(getCellContentsAsString(cache, j + 1, 1).trim());
+                        String lessonSubject = getCellContentsAsString(cache, j, k) + " " +
+                                getCellContentsAsString(cache, j + 1, k);
                         lesson.setSubject(lessonSubject.trim());
-                        lesson.setTeacher(getCellContentsAsString(sheet, j + 2, k).trim());
+                        lesson.setTeacher(getCellContentsAsString(cache, j + 2, k).trim());
                         Integer nextGroupBound = groupBounds.higher(k);
                         String roomNumber;
                         if(nextGroupBound != null){
-                            roomNumber = getCellContentsAsString(sheet, j, nextGroupBound - 1) + " "
-                            + getCellContentsAsString(sheet, j + 1, nextGroupBound - 1) + " "
-                            + getCellContentsAsString(sheet, j + 2, nextGroupBound - 1);
+                            roomNumber = getCellContentsAsString(cache, j, nextGroupBound - 1) + " "
+                            + getCellContentsAsString(cache, j + 1, nextGroupBound - 1) + " "
+                            + getCellContentsAsString(cache, j + 2, nextGroupBound - 1);
                         }
                         else{
-                            roomNumber = getCellContentsAsString(sheet, j, k + 3) + " " +
-                                    getCellContentsAsString(sheet, j + 1, k + 3) + " " +
-                                    getCellContentsAsString(sheet, j + 2, k + 3);
+                            roomNumber = getCellContentsAsString(cache, j, k + 3) + " " +
+                                    getCellContentsAsString(cache, j + 1, k + 3) + " " +
+                                    getCellContentsAsString(cache, j + 2, k + 3);
                         }
                         lesson.setRoomNumber(roomNumber.trim());
                         //Required for primary key
@@ -171,23 +181,23 @@ public class XMLStoLessonsConverter
     /**
      * Этот метод используется для получения содержимого ячейки в виде строки.
      *
-     * @param sheet лист эксель
+     * @param cache лист эксель
      * @param row номер ряда ячейки
      * @param column номер столбца ячейки
      * @return содержимое ячейки в виде строки
      */
-    private static String getCellContentsAsString(Sheet sheet, int row, int column){
-        Cell cell = sheet.getRow(row)
+    private static String getCellContentsAsString(RowCache cache, int row, int column){
+        Cell cell = cache.getRow(row)
                 .getCell(column);
         if(cell == null)
             return "";
-        switch (cell.getCellTypeEnum()){
+        switch (cell.getCellType()){
             case STRING:
-                return sheet.getRow(row)
+                return cache.getRow(row)
                         .getCell(column)
                         .getStringCellValue();
             case NUMERIC:
-                return String.valueOf((int)sheet.getRow(row)
+                return String.valueOf((int)cache.getRow(row)
                         .getCell(column)
                         .getNumericCellValue());
             default:

@@ -19,6 +19,7 @@ import javax.persistence.Converter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Этот класс используется для ORM.
@@ -29,9 +30,12 @@ import java.util.Calendar;
 @Converter
 public class DateConverters
         implements AttributeConverter<Calendar, String> {
-    private static final SimpleDateFormat dateFormatDB = new SimpleDateFormat("dd.MM.yyyy");
-    private static final SimpleDateFormat dateFormatFirstCorpus = new SimpleDateFormat("dd.MM.yyyy");
-    private static final SimpleDateFormat dateFormatSecondCorpus = new SimpleDateFormat("d MMMM yyyy");
+    private static final SimpleDateFormat dateFormatDB = new SimpleDateFormat("dd.MM.yyyy",
+            new Locale("ru"));
+    private static final SimpleDateFormat dateFormatFirstCorpus = new SimpleDateFormat("dd.MM.yyyy",
+            new Locale("ru"));
+    private static final SimpleDateFormat dateFormatSecondCorpus = new SimpleDateFormat("d MMMM yyyy",
+            new Locale("ru"));
 
     /**
      * Этот метод преобразует Calendar сущнисти в String для БД.

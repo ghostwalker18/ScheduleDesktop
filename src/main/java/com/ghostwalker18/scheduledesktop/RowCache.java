@@ -32,6 +32,10 @@ public class RowCache {
     private Row[] rows;
     private Row[] oldRows;
 
+    /**
+     * Этот метод используется для получения построителя кэша.
+     * @return строитель
+     */
     public static Builder builder(){
         return new Builder();
     }

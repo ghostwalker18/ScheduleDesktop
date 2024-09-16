@@ -32,9 +32,9 @@ public class DateConverters
         implements AttributeConverter<Calendar, String> {
     private static final SimpleDateFormat dateFormatDB = new SimpleDateFormat("dd.MM.yyyy",
             new Locale("ru"));
-    private static final SimpleDateFormat dateFormatFirstCorpus = new SimpleDateFormat("dd.MM.yyyy",
+    private static final SimpleDateFormat dateFormatSecondCorpus = new SimpleDateFormat("dd.MM.yyyy",
             new Locale("ru"));
-    private static final SimpleDateFormat dateFormatSecondCorpus = new SimpleDateFormat("d MMMM yyyy",
+    private static final SimpleDateFormat dateFormatFirstCorpus = new SimpleDateFormat("d MMMM yyyy",
             new Locale("ru"));
 
     /**
@@ -61,7 +61,7 @@ public class DateConverters
     }
 
     /**
-     * Этот метод преобразует String из расписания первого корпуса на Первомайском пр. в Calendar сущности.
+     * Этот метод преобразует String из расписания первого корпуса на Мурманской ул. в Calendar сущности.
      * @param date дата из расписания первого корпуса
      * @return преобразованная дата в формате Calendar
      */
@@ -70,7 +70,7 @@ public class DateConverters
     }
 
     /**
-     * Этот метод преобразует String из расписания второго корпуса на Мурманской ул. в Calendar сущности.
+     * Этот метод преобразует String из расписания второго корпуса на Первомайском пр. в Calendar сущности.
      * @param date дата из расписания второго корпуса
      * @return преобразованная дата в формате Calendar
      */

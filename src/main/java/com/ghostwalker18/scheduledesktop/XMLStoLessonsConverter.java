@@ -18,6 +18,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -27,83 +29,16 @@ import java.util.*;
  */
 public class XMLStoLessonsConverter
     implements IConverter{
+    private static  int FIRST_ROW_GAP_1;
+    private static final int GROUPS_ROW_1 = 3;
+    private static final int SCHEDULE_HEIGHT_1 = 24;
+    private static final int SCHEDULE_CELL_HEIGHT_1 = 4;
 
-    private static final int FIRST_ROW_GAP_1 = 5;
-    private static final int FIST_ROW_GAP_2 = 5;
-    private static final int SCHEDULE_CELL_HEIGHT_1 = 2;
-    private static final int SCHEDULE_CELL_HEIGHT_2 = 4;
+    private static final int FIRST_ROW_GAP_2 = 5;
+    private static final int GROUPS_ROW_2 = 3;
+    private static final int SCHEDULE_CELL_HEIGHT_2 = 2;
 
     public List<Lesson> convertFirstCorpus(Workbook excelFile){
-        List<Lesson> lessons = new ArrayList<>();
-        DateConverters dateConverters = new DateConverters();
-
-
-        for(int i = 0; i < excelFile.getNumberOfSheets(); i++){
-            Sheet sheet = excelFile.getSheetAt(i);
-            RowCache cache = RowCache.builder()
-                    .setSheet(sheet)
-                    .setSize(5)
-                    .build();
-            String date = sheet.getSheetName() + "." + Calendar.getInstance().get(Calendar.YEAR);
-            NavigableMap<Integer, String> groups = new TreeMap<>();
-            //Row groupsRow = sheet.getRow(3);
-            Row groupsRow = cache.getRow(3);
-            //checking if there is a schedule at the list
-            if(groupsRow == null)
-                break;
-            //getting groups` names
-            for(int j = groupsRow.getFirstCellNum() + 2; j < groupsRow.getLastCellNum(); j++){
-                Cell groupRowCell = groupsRow.getCell(j);
-                //if cells are united, only first cell in union is not null
-                if(groupRowCell == null )
-                    continue;
-                if(!groupRowCell.getStringCellValue().trim().equals("")){
-                    String group = groupRowCell.getStringCellValue().trim();
-                    //mistake protection
-                    groups.put(j, group.replaceAll("\\s+", ""));
-                }
-            }
-
-            //start filling schedule from top to bottom and from left to right
-            scheduleFilling : {
-                NavigableSet<Integer> groupBounds = groups.navigableKeySet();
-                for(int j = sheet.getFirstRowNum() + FIRST_ROW_GAP_1;
-                    j < sheet.getLastRowNum();
-                    j += SCHEDULE_CELL_HEIGHT_1){
-                    for(int k : groupBounds){
-                        //bottom of schedule are group names, breaking here
-                        if(cache.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
-                            break scheduleFilling;
-                        Lesson lesson = new Lesson();
-                        lesson.setDate(dateConverters.convertFirstCorpusDate(date));
-                        lesson.setGroup(Objects.requireNonNull(groups.get(k)));
-                        lesson.setLessonNumber(getCellContentsAsString(cache, j, 1).trim());
-                        lesson.setTimes(getCellContentsAsString(cache, j + 1, 1).trim());
-                        lesson.setSubject(getCellContentsAsString(cache, j, k).trim());
-                        lesson.setTeacher(getCellContentsAsString(cache, j + 1, k).trim());
-                        Integer nextGroupBound = groupBounds.higher(k);
-                        String roomNumber;
-                        if(nextGroupBound != null){
-                            roomNumber = getCellContentsAsString(cache, j, nextGroupBound - 1).trim();
-                        }
-                        else{
-                            roomNumber = getCellContentsAsString(cache, j, k + 2).trim();
-                            if(roomNumber.equals(""))
-                                roomNumber = getCellContentsAsString(cache, j, k + 3).trim();
-                        }
-                        lesson.setRoomNumber(roomNumber);
-                        //Required for primary key
-                        if(!lesson.getSubject().equals(""))
-                            lessons.add(lesson);
-                    }
-                }
-            }
-        }
-
-        return lessons;
-    }
-
-    public List<Lesson> convertSecondCorpus(Workbook excelFile){
         List<Lesson> lessons = new ArrayList<>();
         DateConverters dateConverters = new DateConverters();
 
@@ -113,9 +48,13 @@ public class XMLStoLessonsConverter
                     .setSheet(sheet)
                     .setSize(10)
                     .build();
-            String date = sheet.getSheetName().trim();
+
+            String dateString = sheet.getSheetName().trim();
+            Calendar date = dateConverters.convertFirstCorpusDate(dateString);
+            String dayOfWeek = new SimpleDateFormat("EEEE", new Locale("ru")).format(date.getTime());
+
             NavigableMap<Integer, String> groups = new TreeMap<>();
-            Row groupsRow = cache.getRow(3);
+            Row groupsRow = cache.getRow(GROUPS_ROW_1);
             //checking if there is a schedule at the list
             if (groupsRow == null)
                 break;
@@ -135,18 +74,23 @@ public class XMLStoLessonsConverter
                 }
             }
 
+            //searching for first row gap where schedule starts
+            for(int j = sheet.getFirstRowNum(); j < sheet.getLastRowNum(); j++){
+                if(getCellContentsAsString(cache, j, 0).toLowerCase().equals(dayOfWeek)){
+                    FIRST_ROW_GAP_1 = j;
+                    break;
+                }
+            }
+
             //start filling schedule from top to bottom and from left to right
             scheduleFilling : {
                 NavigableSet<Integer> groupBounds = groups.navigableKeySet();
-                for(int j = sheet.getFirstRowNum() + FIST_ROW_GAP_2;
-                    j < sheet.getLastRowNum();
-                    j += SCHEDULE_CELL_HEIGHT_2){
+                for(int j = sheet.getFirstRowNum() + FIRST_ROW_GAP_1;
+                    j < FIRST_ROW_GAP_1 + SCHEDULE_HEIGHT_1;
+                    j += SCHEDULE_CELL_HEIGHT_1){
                     for(int k : groupBounds){
-                        //bottom of schedule are group names, breaking here
-                        if(cache.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
-                            break scheduleFilling;
                         Lesson lesson = new Lesson();
-                        lesson.setDate(dateConverters.convertSecondCorpusDate(date));
+                        lesson.setDate(date);
                         lesson.setGroup(Objects.requireNonNull(groups.get(k)));
                         lesson.setLessonNumber(getCellContentsAsString(cache, j, 1).trim());
                         lesson.setTimes(getCellContentsAsString(cache, j + 1, 1).trim());
@@ -158,8 +102,8 @@ public class XMLStoLessonsConverter
                         String roomNumber;
                         if(nextGroupBound != null){
                             roomNumber = getCellContentsAsString(cache, j, nextGroupBound - 1) + " "
-                            + getCellContentsAsString(cache, j + 1, nextGroupBound - 1) + " "
-                            + getCellContentsAsString(cache, j + 2, nextGroupBound - 1);
+                                    + getCellContentsAsString(cache, j + 1, nextGroupBound - 1) + " "
+                                    + getCellContentsAsString(cache, j + 2, nextGroupBound - 1);
                         }
                         else{
                             roomNumber = getCellContentsAsString(cache, j, k + 3) + " " +
@@ -167,6 +111,77 @@ public class XMLStoLessonsConverter
                                     getCellContentsAsString(cache, j + 2, k + 3);
                         }
                         lesson.setRoomNumber(roomNumber.trim());
+                        //Required for primary key
+                        if(!lesson.getSubject().equals(""))
+                            lessons.add(lesson);
+                    }
+                }
+            }
+        }
+
+        return lessons;
+    }
+
+    public List<Lesson> convertSecondCorpus(Workbook excelFile){
+        List<Lesson> lessons = new ArrayList<>();
+        DateConverters dateConverters = new DateConverters();
+
+        for(int i = 0; i < excelFile.getNumberOfSheets(); i++){
+            Sheet sheet = excelFile.getSheetAt(i);
+            RowCache cache = RowCache.builder()
+                    .setSheet(sheet)
+                    .setSize(5)
+                    .build();
+
+            String dateString = sheet.getSheetName() + "." + Calendar.getInstance().get(Calendar.YEAR);
+            Calendar date = dateConverters.convertSecondCorpusDate(dateString);
+
+            NavigableMap<Integer, String> groups = new TreeMap<>();
+            Row groupsRow = cache.getRow(GROUPS_ROW_2);
+            //checking if there is a schedule at the list
+            if(groupsRow == null)
+                break;
+            //getting groups` names
+            for(int j = groupsRow.getFirstCellNum() + 2; j < groupsRow.getLastCellNum(); j++){
+                Cell groupRowCell = groupsRow.getCell(j);
+                //if cells are united, only first cell in union is not null
+                if(groupRowCell == null )
+                    continue;
+                if(!groupRowCell.getStringCellValue().trim().equals("")){
+                    String group = groupRowCell.getStringCellValue().trim();
+                    //mistake protection
+                    groups.put(j, group.replaceAll("\\s+", ""));
+                }
+            }
+
+            //start filling schedule from top to bottom and from left to right
+            scheduleFilling : {
+                NavigableSet<Integer> groupBounds = groups.navigableKeySet();
+                for(int j = sheet.getFirstRowNum() + FIRST_ROW_GAP_2;
+                    j < sheet.getLastRowNum();
+                    j += SCHEDULE_CELL_HEIGHT_2){
+                    for(int k : groupBounds){
+                        //bottom of schedule are group names, breaking here
+                        if(cache.getRow(j).getCell(k).getStringCellValue().equals(groups.get(k)))
+                            break scheduleFilling;
+                        Lesson lesson = new Lesson();
+                        lesson.setDate(date);
+                        lesson.setGroup(Objects.requireNonNull(groups.get(k)));
+                        lesson.setLessonNumber(getCellContentsAsString(cache, j, 1).trim());
+                        lesson.setTimes(getCellContentsAsString(cache, j + 1, 1).trim());
+                        lesson.setSubject(getCellContentsAsString(cache, j, k).trim());
+                        lesson.setTeacher(getCellContentsAsString(cache, j + 1, k).trim());
+                        Integer nextGroupBound = groupBounds.higher(k);
+                        String roomNumber;
+                        if(nextGroupBound != null){
+                            roomNumber = getCellContentsAsString(cache, j, nextGroupBound - 1).trim();
+                        }
+                        else{
+                            roomNumber = getCellContentsAsString(cache, j, k + 2).trim();
+                            if(roomNumber.equals(""))
+                                roomNumber = getCellContentsAsString(cache, j, k + 3).trim();
+                        }
+                        lesson.setRoomNumber(roomNumber);
                         //Required for primary key
                         if(!lesson.getSubject().equals(""))
                             lessons.add(lesson);

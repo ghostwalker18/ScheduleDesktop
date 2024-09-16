@@ -21,9 +21,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import okhttp3.ResponseBody;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -198,51 +196,6 @@ public class ScheduleRepository {
             }).start();
         }
         new Thread(() -> {
-            List<String> scheduleLinks = getLinksForScheduleFirstCorpus();
-            if(scheduleLinks.size() == 0)
-                status.onNext(new Status(strings.getString("schedule_download_error"), 0));
-            for(String link : scheduleLinks){
-                status.onNext(new Status(strings.getString("schedule_download_status"), 10));
-                api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if(response.body() != null){
-                            status.onNext(new Status(strings.getString("schedule_parsing_status"),
-                                    33));
-                            try(InputStream stream = response.body().byteStream()){
-                                File scheduleFile = Files
-                                        .createTempFile(null, ".tmp")
-                                        .toFile();
-                                scheduleFile.deleteOnExit();
-                                Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                                scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
-                                Workbook excelFile = StreamingReader.builder()
-                                        .rowCacheSize(10)
-                                        .bufferSize(4096)
-                                        .open(scheduleFile);
-                                List<Lesson> lessons = converter.convertFirstCorpus(excelFile);
-                                excelFile.close();
-                                db.insertMany(lessons);
-                                status.onNext(new Status(strings.getString("processing_completed_status"),
-                                        100));
-                            }
-                            catch (Exception e){
-                                status.onNext(new Status(strings.getString("schedule_parsing_error"),
-                                        0));
-                            }
-                            response.body().close();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        status.onNext(new Status(strings.getString("schedule_download_error"), 0));
-                    }
-                });
-            }
-        }).start();
-
-        new Thread(() -> {
             List<String> scheduleLinks = getLinksForScheduleSecondCorpus();
             if(scheduleLinks.size() == 0)
                 status.onNext(new Status(strings.getString("schedule_download_error"), 0));
@@ -266,6 +219,51 @@ public class ScheduleRepository {
                                         .bufferSize(4096)
                                         .open(scheduleFile);
                                 List<Lesson> lessons = converter.convertSecondCorpus(excelFile);
+                                excelFile.close();
+                                db.insertMany(lessons);
+                                status.onNext(new Status(strings.getString("processing_completed_status"),
+                                        100));
+                            }
+                            catch (Exception e){
+                                status.onNext(new Status(strings.getString("schedule_parsing_error"),
+                                        0));
+                            }
+                            response.body().close();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        status.onNext(new Status(strings.getString("schedule_download_error"), 0));
+                    }
+                });
+            }
+        }).start();
+
+        new Thread(() -> {
+            List<String> scheduleLinks = getLinksForScheduleFirstCorpus();
+            if(scheduleLinks.size() == 0)
+                status.onNext(new Status(strings.getString("schedule_download_error"), 0));
+            for(String link : scheduleLinks){
+                status.onNext(new Status(strings.getString("schedule_download_status"), 10));
+                api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.body() != null){
+                            status.onNext(new Status(strings.getString("schedule_parsing_status"),
+                                    33));
+                            try(InputStream stream = response.body().byteStream()){
+                                File scheduleFile = Files
+                                        .createTempFile(null, ".tmp")
+                                        .toFile();
+                                scheduleFile.deleteOnExit();
+                                Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
+                                Workbook excelFile = StreamingReader.builder()
+                                        .rowCacheSize(10)
+                                        .bufferSize(4096)
+                                        .open(scheduleFile);
+                                List<Lesson> lessons = converter.convertFirstCorpus(excelFile);
                                 excelFile.close();
                                 db.insertMany(lessons);
                                 status.onNext(new Status(strings.getString("processing_completed_status"),
@@ -334,7 +332,7 @@ public class ScheduleRepository {
      * @return список ссылок
      */
     @NotNull
-    public List<String> getLinksForScheduleFirstCorpus(){
+    public List<String> getLinksForScheduleSecondCorpus(){
         List<String> links = new ArrayList<>();
         try{
             Document doc = Jsoup.connect(baseUri).get();
@@ -358,7 +356,7 @@ public class ScheduleRepository {
      *
      * @return список ссылок
      */
-    public List<String> getLinksForScheduleSecondCorpus(){
+    public List<String> getLinksForScheduleFirstCorpus(){
         List<String> links = new ArrayList<>();
         try{
             Document doc = Jsoup.connect(baseUri).get();

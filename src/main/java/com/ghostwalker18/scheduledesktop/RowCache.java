@@ -64,7 +64,7 @@ public class RowCache {
                 return rows[row - lowBoundary];
         }
         else{
-            lowBoundary = row;
+            lowBoundary += size;
             load();
             return getRow(row);
         }

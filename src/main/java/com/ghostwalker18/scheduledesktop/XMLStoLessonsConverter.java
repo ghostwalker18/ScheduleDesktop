@@ -167,7 +167,8 @@ public class XMLStoLessonsConverter
                         lesson.setDate(date);
                         lesson.setGroup(Objects.requireNonNull(groups.get(k)));
                         lesson.setLessonNumber(getCellContentsAsString(cache, j, 1).trim());
-                        lesson.setTimes(getCellContentsAsString(cache, j + 1, 1).trim());
+                        lesson.setTimes(transformTimeTo_XX_XXFormat(
+                                getCellContentsAsString(cache, j + 1, 1).trim()));
                         lesson.setSubject(getCellContentsAsString(cache, j, k).trim());
                         lesson.setTeacher(getCellContentsAsString(cache, j + 1, k).trim());
                         Integer nextGroupBound = groupBounds.higher(k);
@@ -217,5 +218,16 @@ public class XMLStoLessonsConverter
             default:
                 return "";
         }
+    }
+
+    /**
+     * Этот метод используется для преобразования строки с временем к формату ХХ.ХХ
+     * @param time время
+     * @return время
+     */
+    private static String transformTimeTo_XX_XXFormat(String time){
+        if(time.startsWith("0") || time.startsWith("1") || time.startsWith("2") || time.equals(""))
+            return time;
+        return "0" + time;
     }
 }

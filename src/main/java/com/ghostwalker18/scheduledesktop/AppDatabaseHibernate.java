@@ -142,7 +142,7 @@ public class AppDatabaseHibernate
     public Observable<List<Lesson>> getLessonsForGroupWithTeacher(Calendar date, String group, String teacher){
         BehaviorSubject<List<Lesson>>  queryResult = GetLessonsForGroupWithTeacherQuery.cacheQuery(date, group, teacher);
 
-        String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date";
+        String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date order by lessonTimes";
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
@@ -158,7 +158,7 @@ public class AppDatabaseHibernate
     public Observable<List<Lesson>> getLessonsForGroup(Calendar date, String group){
         BehaviorSubject<List<Lesson>>  queryResult = GetLessonsForGroupQuery.cacheQuery(date, group);
 
-        String hql = "from Lesson where groupName = :groupName and date = :date";
+        String hql = "from Lesson where groupName = :groupName and date = :date order by lessonTimes";
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
@@ -173,7 +173,7 @@ public class AppDatabaseHibernate
     public Observable<List<Lesson>> getLessonsForTeacher(Calendar date, String teacher){
         BehaviorSubject<List<Lesson>> queryResult = GetLessonsForTeacherQuery.cacheQuery(date, teacher);
 
-        String hql = "from Lesson where teacher like :teacherName and date = :date";
+        String hql = "from Lesson where teacher like :teacherName and date = :date order by lessonTimes";
         new Thread(()->{
             try(Session session = sessionFactory.openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);

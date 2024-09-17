@@ -97,6 +97,7 @@ public class SettingsForm {
         saveButton.addActionListener(e -> {
             save();
             Application.restartApplication();
+            SwingUtilities.getWindowAncestor(mainPanel).dispose();
         });
     }
 

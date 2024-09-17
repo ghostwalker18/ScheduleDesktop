@@ -74,8 +74,8 @@ public class XMLStoLessonsConverter
             }
 
             //searching for first row gap where schedule starts
-            for(int j = sheet.getFirstRowNum(); j < sheet.getLastRowNum(); j++){
-                if(getCellContentsAsString(cache, j, 0).toLowerCase().equals(dayOfWeek)){
+            for(int j = GROUPS_ROW_1 + 2; j < sheet.getLastRowNum(); j++){
+                if(!cache.getRow(j).getZeroHeight()){
                     FIRST_ROW_GAP_1 = j;
                     break;
                 }

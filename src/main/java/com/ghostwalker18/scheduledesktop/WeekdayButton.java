@@ -107,8 +107,7 @@ public class WeekdayButton
 
         repository.getSchedule(date, teacher, group).subscribe(lessonsList -> {
             lessons = lessonsList;
-            table.setModel(makeDataModel(lessonsList));
-            table.getColumnModel().getColumn(2).setCellRenderer(renderer);
+            updateTableGUI(lessons);
         });
     }
 
@@ -165,6 +164,19 @@ public class WeekdayButton
         return rightNow.get(Calendar.YEAR) == date.get(Calendar.YEAR)
                 && rightNow.get(Calendar.MONTH) == date.get(Calendar.MONTH)
                 && rightNow.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * Этот метод использутся для обновления GUI таблицы расписания на UI-потоке.
+     * @param lessons занятия для заполнения таблицы
+     */
+    private void updateTableGUI(List<Lesson> lessons){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> updateTableGUI(lessons));
+            return;
+        }
+        table.setModel(makeDataModel(lessons));
+        table.getColumnModel().getColumn(2).setCellRenderer(renderer);
     }
 
     /**
@@ -250,8 +262,7 @@ public class WeekdayButton
         button.setText(generateTitle(date, this.dayOfWeek));
         repository.getSchedule(date, teacher, group).subscribe(lessonsList -> {
             lessons = lessonsList;
-            table.setModel(makeDataModel(lessonsList));
-            table.getColumnModel().getColumn(2).setCellRenderer(renderer);
+            updateTableGUI(lessonsList);
         });
     }
 }

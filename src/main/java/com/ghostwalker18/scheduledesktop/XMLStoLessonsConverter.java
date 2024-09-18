@@ -96,7 +96,7 @@ public class XMLStoLessonsConverter
                         String lessonSubject = getCellContentsAsString(cache, j, k) + " " +
                                 getCellContentsAsString(cache, j + 1, k);
                         lesson.setSubject(prepareSubject(lessonSubject.trim()));
-                        lesson.setTeacher(getCellContentsAsString(cache, j + 2, k).trim());
+                        lesson.setTeacher(prepareTeacher(getCellContentsAsString(cache, j + 2, k).trim()));
                         Integer nextGroupBound = groupBounds.higher(k);
                         String roomNumber;
                         if(nextGroupBound != null){
@@ -170,7 +170,7 @@ public class XMLStoLessonsConverter
                         lesson.setTimes(prepareTimes(
                                 getCellContentsAsString(cache, j + 1, 1).trim()));
                         lesson.setSubject(prepareSubject(getCellContentsAsString(cache, j, k).trim()));
-                        lesson.setTeacher(getCellContentsAsString(cache, j + 1, k).trim());
+                        lesson.setTeacher(prepareTeacher(getCellContentsAsString(cache, j + 1, k).trim()));
                         Integer nextGroupBound = groupBounds.higher(k);
                         String roomNumber;
                         if(nextGroupBound != null){
@@ -232,12 +232,22 @@ public class XMLStoLessonsConverter
     }
 
     /**
+     * Этот метод используется для приведения строки с именем преподавателя к удобочитаемому виду.
+     * @param teacher имя преподавателя
+     * @return обработанное имя преподавателя
+     */
+    private static String prepareTeacher(String teacher){
+        return teacher.replaceAll("\\s+", " ")
+                .replaceAll("/", "");
+    }
+
+    /**
      * Этот метод используется для приведения строки с номером кабинета к удобочитаемому виду.
      * @param roomNumber номер кабинета
      * @return обработанный номер кабинета
      */
     private static String prepareRoomNumber(String roomNumber){
-        return roomNumber.replaceAll("/\\s+", "/")
+        return roomNumber.replaceAll("\\s*/\\s*", "/")
                 .replaceAll("\\s+", " ");
     }
 

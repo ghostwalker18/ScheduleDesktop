@@ -14,7 +14,10 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import sun.swing.DefaultLookup;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
@@ -43,7 +46,12 @@ public class MultilineTableCellRenderer
             setBackground(UIManager.getColor("Table.selectionInactiveBackground"));
         }
         else{
-            setBackground(UIManager.getColor("Table.background"));
+            Color background = UIManager.getColor("Table.background");
+            Color alternateColor = UIManager.getColor("Table.alternateRowColor");
+            if (alternateColor != null && row % 2 != 0) {
+                background = alternateColor;
+            }
+            setBackground(background);
         }
         return this;
     }

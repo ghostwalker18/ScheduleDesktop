@@ -174,6 +174,7 @@ public class Application{
      * @param args аргументы командной строки
      */
     public static void main(String[] args){
+        System.setProperty("sun.java2d.uiScale", "1");
         Application app = Application.getInstance();
     }
 }

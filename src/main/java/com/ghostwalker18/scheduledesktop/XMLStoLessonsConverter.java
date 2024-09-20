@@ -231,6 +231,8 @@ public class XMLStoLessonsConverter
      * @return время
      */
     private static String prepareTimes(String times){
+        if(times.equals(""))
+            return null;
         if(times.startsWith("0") || times.startsWith("1") || times.startsWith("2") || times.equals(""))
             return times;
         return "0" + times;
@@ -242,6 +244,8 @@ public class XMLStoLessonsConverter
      * @return обработанное имя преподавателя
      */
     private static String prepareTeacher(String teacher){
+        if(teacher.equals(""))
+            return null;
         return teacher.replaceAll("\\s+", " ")
                 .replaceAll("/", "");
     }
@@ -252,6 +256,8 @@ public class XMLStoLessonsConverter
      * @return обработанный номер кабинета
      */
     private static String prepareRoomNumber(String roomNumber){
+        if(roomNumber.equals(""))
+            return null;
         return roomNumber.replaceAll("\\s*/\\s*", "/")
                 .replaceAll("\\s+", " ");
     }

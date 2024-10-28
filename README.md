@@ -1,3 +1,6 @@
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=ghostwalker18_ScheduleDesktop&metric=alert_status)](https://sonarcloud.io/dashboard?id=ghostwalker18_ScheduleDesktop)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ghostwalker18_ScheduleDesktop&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ghostwalker18_ScheduleDesktop)
+[![Code smells](https://sonarcloud.io/api/project_badges/measure?project=ghostwalker18_ScheduleDesktop&metric=code_smells)](https://sonarcloud.io/dashboard?id=ghostwalker18_ScheduleDesktop)
 # Расписание Петрозаводского техникума городского хозяйства.
 ![Расписание занятий](https://github.com/ghostwalker18/ScheduleDesktop/blob/master/promo_images/schedule1.png?raw=true)
 

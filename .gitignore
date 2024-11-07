@@ -1,4 +1,9 @@
 ### IntelliJ IDEA ###
+**/src/main/**/MainFormProto.java
+**/src/main/**/MainFormProto.form
+**/src/main/**/SettingsFormProto.java
+**/src/main/**/SettingsFormProto.form
+.idea/
 .gradle/
 build/
 out/

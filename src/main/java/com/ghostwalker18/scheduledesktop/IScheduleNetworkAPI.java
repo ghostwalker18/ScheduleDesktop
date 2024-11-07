@@ -32,7 +32,7 @@ public interface IScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(ScheduleRepository.mondayTimesURL)
+    @GET(ScheduleRepository.MONDAY_TIMES_URL)
     Call<ResponseBody> getMondayTimes();
 
     /**
@@ -40,7 +40,7 @@ public interface IScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(ScheduleRepository.otherTimesURL)
+    @GET(ScheduleRepository.OTHER_TIMES_URL)
     Call<ResponseBody> getOtherTimes();
 
     /**

@@ -17,6 +17,7 @@ package com.ghostwalker18.scheduledesktop;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -36,8 +37,8 @@ public class SettingsForm {
             new XMLBundleControl());
     private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    public static final HashMap<String, String> languagesCodes = new HashMap<>();
-    public static final HashMap<String, String> themesCodes = new HashMap<>();
+    public static final Map<String, String> languagesCodes = new HashMap<>();
+    public static final Map<String, String> themesCodes = new HashMap<>();
 
     static {
         languagesCodes.put(languages.getString("ru"), "ru");

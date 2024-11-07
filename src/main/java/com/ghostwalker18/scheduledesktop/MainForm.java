@@ -305,8 +305,8 @@ public class MainForm
         Toolkit.getDefaultToolkit()
                 .getSystemClipboard()
                 .setContents(new FileTransferable()
-                        .add(new File(ScheduleRepository.mondayTimesPath))
-                                .add(new File(ScheduleRepository.otherTimesPath))
+                        .add(new File(ScheduleRepository.MONDAY_TIMES_PATH))
+                                .add(new File(ScheduleRepository.OTHER_TIMES_PATH))
                         , null);
 
         Toast message = new Toast(shareButton, platformStrings.getString("share_times_completed"));
@@ -470,7 +470,7 @@ public class MainForm
         try {
             String savedGroup = state.getGroup();
             repository.saveGroup(savedGroup);
-        } catch (Exception exception) {}
+        } catch (Exception ignored) {/*Not required*/}
     }
 
     @Override

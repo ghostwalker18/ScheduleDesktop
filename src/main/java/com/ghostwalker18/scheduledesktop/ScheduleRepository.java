@@ -52,8 +52,14 @@ import java.util.prefs.Preferences;
  * @author  Ипатов Никита
  */
 public class ScheduleRepository {
-    public static final String mondayTimesURL = "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
-    public static final String otherTimesURL = "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
+    public static final String MONDAY_TIMES_URL =
+            "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
+    public static final String OTHER_TIMES_URL =
+            "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
+    private static final String BASE_URI = "https://ptgh.onego.ru/9006/";
+    private static final String MAIN_SELECTOR = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
+    public static final String MONDAY_TIMES_PATH = "mondayTimes.jpg";
+    public static final String OTHER_TIMES_PATH = "otherTimes.jpg";
     private static ScheduleRepository repository = null;
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
@@ -63,10 +69,6 @@ public class ScheduleRepository {
     private final IAppDatabase db;
     private IConverter converter = new XMLStoLessonsConverter();
     private final Preferences preferences = Application.getPreferences();
-    private final String BASE_URI = "https://ptgh.onego.ru/9006/";
-    private final String MAIN_SELECTOR = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
-    public final static String mondayTimesPath = "mondayTimes.jpg";
-    public final static String otherTimesPath = "otherTimes.jpg";
     private final List<Pair<String, File>> scheduleFiles = new LinkedList<>();
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
@@ -280,8 +282,8 @@ public class ScheduleRepository {
     }
 
     private void updateTimes(){
-        File mondayTimesFile = new File(mondayTimesPath);
-        File otherTimesFile = new File(otherTimesPath);
+        File mondayTimesFile = new File(MONDAY_TIMES_PATH);
+        File otherTimesFile = new File(OTHER_TIMES_PATH);
         if(!preferences.getBoolean("doNotUpdateTimes", true)
                 || !mondayTimesFile.exists()
                 || !otherTimesFile.exists()){
@@ -361,7 +363,7 @@ public class ScheduleRepository {
         try{
             scheduleLinks = linksGetter.call();
         } catch (Exception ignored) {/*Not required*/}
-        if(scheduleLinks.size() == 0)
+        if(scheduleLinks.isEmpty())
             status.onNext(new Status(strings.getString("schedule_download_error"), 0));
         for(String link : scheduleLinks){
             status.onNext(new Status(strings.getString("schedule_download_status"), 10));

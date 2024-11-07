@@ -20,7 +20,7 @@ tasks.withType(AbstractCopyTask).all {
 }
 
 group = 'com.ghostwalker18.scheduledesktop'
-version = '2.1'
+version = '2.2'
 sourceCompatibility = '1.8'
 
 repositories {

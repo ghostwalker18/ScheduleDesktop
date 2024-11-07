@@ -53,11 +53,11 @@ public class SettingsForm {
     }
 
     private final Preferences preferences = Application.getPreferences();
-    private JComboBox languageComboBox;
+    private JComboBox<String> languageComboBox;
     private JButton saveButton;
     private JLabel languageLabel;
-    public JPanel mainPanel;
-    private JComboBox themeComboBox;
+    private JPanel mainPanel;
+    private JComboBox<String> themeComboBox;
     private JLabel themeLabel;
     private JCheckBox doNotUpdateTimesCB;
     private JLabel doNotUpdateTimesL;
@@ -66,7 +66,7 @@ public class SettingsForm {
         $$$setupUI$$$();
         setupLanguage();
 
-        languageComboBox.setModel(new DefaultComboBoxModel(new Vector(languagesCodes
+        languageComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(languagesCodes
                 .keySet()
                 .stream()
                 .sorted()
@@ -79,7 +79,7 @@ public class SettingsForm {
             }
         }
 
-        themeComboBox.setModel(new DefaultComboBoxModel(new Vector(themesCodes
+        themeComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(themesCodes
                 .keySet()
                 .stream()
                 .sorted()
@@ -97,7 +97,7 @@ public class SettingsForm {
         saveButton.addActionListener(e -> {
             save();
             Application.restartApplication();
-            SwingUtilities.getWindowAncestor(mainPanel).dispose();
+            SwingUtilities.getWindowAncestor(getMainPanel()).dispose();
         });
     }
 
@@ -132,8 +132,8 @@ public class SettingsForm {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());
+        setMainPanel(new JPanel());
+        getMainPanel().setLayout(new GridBagLayout());
         languageComboBox = new JComboBox();
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
@@ -144,7 +144,7 @@ public class SettingsForm {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 0, 10);
-        mainPanel.add(languageComboBox, gbc);
+        getMainPanel().add(languageComboBox, gbc);
         saveButton = new JButton();
         saveButton.setEnabled(true);
         saveButton.setHideActionText(false);
@@ -156,7 +156,7 @@ public class SettingsForm {
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 10, 0, 10);
-        mainPanel.add(saveButton, gbc);
+        getMainPanel().add(saveButton, gbc);
         themeLabel = new JLabel();
         themeLabel.setHorizontalAlignment(10);
         gbc = new GridBagConstraints();
@@ -165,7 +165,7 @@ public class SettingsForm {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 10, 0, 0);
-        mainPanel.add(themeLabel, gbc);
+        getMainPanel().add(themeLabel, gbc);
         themeComboBox = new JComboBox();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
@@ -175,7 +175,7 @@ public class SettingsForm {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 0, 10);
-        mainPanel.add(themeComboBox, gbc);
+        getMainPanel().add(themeComboBox, gbc);
         languageLabel = new JLabel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -183,18 +183,26 @@ public class SettingsForm {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 10, 0, 0);
-        mainPanel.add(languageLabel, gbc);
+        getMainPanel().add(languageLabel, gbc);
         doNotUpdateTimesL = new JLabel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
-        mainPanel.add(doNotUpdateTimesL, gbc);
+        getMainPanel().add(doNotUpdateTimesL, gbc);
         doNotUpdateTimesCB = new JCheckBox();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(0, 0, 0, 10);
-        mainPanel.add(doNotUpdateTimesCB, gbc);
+        getMainPanel().add(doNotUpdateTimesCB, gbc);
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public void setMainPanel(JPanel mainPanel) {
+        this.mainPanel = mainPanel;
     }
 }

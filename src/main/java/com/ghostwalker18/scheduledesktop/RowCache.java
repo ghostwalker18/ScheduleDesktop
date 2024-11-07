@@ -26,11 +26,11 @@ import java.util.Iterator;
  * @author Ипатов Никита
  */
 public class RowCache {
-    private Iterator<Row> iterator;
+    private final Iterator<Row> iterator;
     private int lowBoundary = 0;
-    private int size;
+    private final int size;
     private Row[] rows;
-    private Row[] oldRows;
+    private final Row[] oldRows;
 
     /**
      * Этот метод используется для получения построителя кэша.
@@ -74,9 +74,8 @@ public class RowCache {
      * Этот метод загружает новые данные в кэш.
      */
     private void load(){
-        for(int i = 0; i < size; i++){
-            oldRows[i] = rows[i];
-        }
+        if (size >= 0)
+            System.arraycopy(rows, 0, oldRows, 0, size);
         rows = new Row[size];
         for(int i = 0; i < size; i++) {
             if(iterator.hasNext())

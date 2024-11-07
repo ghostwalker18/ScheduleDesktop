@@ -14,10 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
-import sun.swing.DefaultLookup;
-
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 

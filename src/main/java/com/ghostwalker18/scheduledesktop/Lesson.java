@@ -133,7 +133,7 @@ public class Lesson {
         @Column(name="subjectName")
         protected String subject;
 
-        public LessonPK(){};
+        public LessonPK(){}
 
         public LessonPK(Calendar date, String lessonNumber, String groupName, String subject){
             this.date = date;

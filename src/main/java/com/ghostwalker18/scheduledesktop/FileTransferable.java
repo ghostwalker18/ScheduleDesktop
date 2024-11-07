@@ -24,9 +24,9 @@ import java.util.List;
 
 public class FileTransferable
         implements Transferable {
-    private List<File> listOfFiles = new LinkedList();
+    private List<File> listOfFiles = new LinkedList<File>();
 
-    public FileTransferable(List listOfFiles) {
+    public FileTransferable(List<File> listOfFiles) {
         this.listOfFiles = listOfFiles;
     }
 

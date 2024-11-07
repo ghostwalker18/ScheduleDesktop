@@ -17,7 +17,6 @@ package com.ghostwalker18.scheduledesktop;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
 import javax.swing.*;
 import java.awt.*;
@@ -27,15 +26,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.Vector;
-import java.util.List;
 
 /**
  * Этот класс представляет собой основной экран приложения.
@@ -50,10 +46,10 @@ public class MainForm
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    public JPanel mainPanel;
-    private JComboBox groupComboBox;
+    private JPanel mainPanel;
+    private JComboBox<String> groupComboBox;
     private JButton clearGroupButton;
-    private JComboBox teacherComboBox;
+    private JComboBox<String> teacherComboBox;
     private JButton clearTeacherButton;
     private JPanel headerPanel;
     private JLabel chooseGroupLabel;
@@ -173,7 +169,7 @@ public class MainForm
             frame.setIconImage(Toolkit.getDefaultToolkit()
                     .createImage(Application.class.getResource("/images/baseline_settings_black_36dp.png")));
             frame.setPreferredSize(new Dimension(500, 300));
-            frame.setContentPane(new SettingsForm().mainPanel);
+            frame.setContentPane(new SettingsForm().getMainPanel());
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);
@@ -246,7 +242,7 @@ public class MainForm
     private void setupGroupSearch() {
         repository.getGroups().subscribe(groups -> {
             if (groups != null) {
-                groupComboBox.setModel(new DefaultComboBoxModel(new Vector(groups)));
+                groupComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(groups)));
             }
             groupComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
             groupComboBox.setSelectedIndex(0);
@@ -274,7 +270,7 @@ public class MainForm
     private void setupTeacherSearch() {
         repository.getTeachers().subscribe(teachers -> {
             if (teachers != null) {
-                teacherComboBox.setModel(new DefaultComboBoxModel(new Vector(teachers)));
+                teacherComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(teachers)));
             }
             teacherComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
             teacherComboBox.setSelectedIndex(0);
@@ -322,25 +318,25 @@ public class MainForm
      * @return расписание в виде строки
      */
     private String getSchedule() {
-        String schedule = "";
+        String scheduleText = "";
         if (mondayButton.isOpened())
-            schedule += mondayButton.getSchedule();
+            scheduleText += mondayButton.getSchedule();
         if (tuesdayButton.isOpened())
-            schedule += tuesdayButton.getSchedule();
+            scheduleText += tuesdayButton.getSchedule();
         if (wednesdayButton.isOpened())
-            schedule += wednesdayButton.getSchedule();
+            scheduleText += wednesdayButton.getSchedule();
         if (thursdayButton.isOpened())
-            schedule += thursdayButton.getSchedule();
+            scheduleText += thursdayButton.getSchedule();
         if (fridayButton.isOpened())
-            schedule += fridayButton.getSchedule();
-        return schedule;
+            scheduleText += fridayButton.getSchedule();
+        return scheduleText;
     }
 
     private void downloadSchedule(){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setDialogTitle(platformStrings.getString("download_file_dialog"));
-        int result = fileChooser.showDialog(this.mainPanel, platformStrings.getString("saveButtonText"));
+        int result = fileChooser.showDialog(this.getMainPanel(), platformStrings.getString("saveButtonText"));
         if(result == JFileChooser.APPROVE_OPTION){
             new Thread(() -> {
                 //Chosen directory is also a file, heh
@@ -368,11 +364,11 @@ public class MainForm
      */
     private void $$$setupUI$$$() {
         createUIComponents();
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        setMainPanel(new JPanel());
+        getMainPanel().setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabs = new JTabbedPane();
         tabs.setTabPlacement(1);
-        mainPanel.add(tabs, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        getMainPanel().add(tabs, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         schedule = new JPanel();
         schedule.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
         schedule.setMaximumSize(new Dimension(-1, -1));
@@ -445,7 +441,7 @@ public class MainForm
         otherTimes.setAlignmentY(0.0f);
         times.add(otherTimes, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JToolBar toolBar1 = new JToolBar();
-        mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        getMainPanel().add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
         final Spacer spacer3 = new Spacer();
         toolBar1.add(spacer3);
         downloadScheduleButton = new JButton();
@@ -463,7 +459,7 @@ public class MainForm
     }
 
     @Override
-    public void windowOpened(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {/*Not required*/}
 
     /**
      * Этот метод используется для реакции на событие закрытия окна. Сохранаяет текущею выбранную группу.
@@ -478,17 +474,25 @@ public class MainForm
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {/*Not required*/}
 
     @Override
-    public void windowIconified(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {/*Not required*/}
 
     @Override
-    public void windowDeiconified(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e) {/*Not required*/}
 
     @Override
-    public void windowActivated(WindowEvent e) {}
+    public void windowActivated(WindowEvent e) {/*Not required*/}
 
     @Override
-    public void windowDeactivated(WindowEvent e) {}
+    public void windowDeactivated(WindowEvent e) {/*Not required*/}
+
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public void setMainPanel(JPanel mainPanel) {
+        this.mainPanel = mainPanel;
+    }
 }

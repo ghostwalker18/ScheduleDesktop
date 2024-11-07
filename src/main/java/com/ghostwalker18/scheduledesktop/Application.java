@@ -15,7 +15,6 @@
 package com.ghostwalker18.scheduledesktop;
 
 import com.formdev.flatlaf.FlatLaf;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -42,7 +41,7 @@ public class Application{
     private final ScheduleRepository repository;
     private ResourceBundle strings;
     private ResourceBundle platformStrings;
-    private final static Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
+    private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final JFrame frame;
 
     /**
@@ -65,7 +64,7 @@ public class Application{
         frame.setIconImage(Toolkit.getDefaultToolkit()
                 .createImage(Application.class.getResource("/images/favicon.png")));
         MainForm mainForm = new MainForm();
-        frame.setContentPane(mainForm.mainPanel);
+        frame.setContentPane(mainForm.getMainPanel());
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         //This shit is important: listeners are called in order they are added!!!
         frame.addWindowListener(mainForm);
@@ -156,9 +155,7 @@ public class Application{
             builder.start();
             System.exit(0);
         }
-        catch (URISyntaxException | IOException e){
-            System.out.println(e.getMessage());
-        }
+        catch (URISyntaxException | IOException ignored ){ /*ignored*/}
     }
 
     /**

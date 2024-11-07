@@ -48,7 +48,7 @@ public class WeekdayButton
     private boolean isOpened = false;
     private final JPanel tablePanel = new JPanel();
     private  final JButton button = new JButton();
-    private final ScheduleRepository repository = ScheduleRepository.getRepository();
+    private final transient ScheduleRepository repository = ScheduleRepository.getRepository();
 
     private final String[] tableColumnNames = new String[]{
             strings.getString("number"), strings.getString("times"), strings.getString("subject"),
@@ -60,7 +60,7 @@ public class WeekdayButton
     private String teacher = null;
     private String group = null;
     private Calendar date;
-    private List<Lesson> lessons;
+    private transient List<Lesson> lessons;
 
     public WeekdayButton(int year, int week, String dayOfWeek) {
         super();

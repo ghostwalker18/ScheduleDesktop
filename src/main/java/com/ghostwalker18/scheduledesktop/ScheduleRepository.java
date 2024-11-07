@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -336,54 +337,30 @@ public class ScheduleRepository {
         }
     }
 
+    /**
+     * Этот метод используется для обновления БД приложения занятиями для первого корпуса
+     */
     private void updateFirstCorpus(){
-        List<String> scheduleLinks = getLinksForFirstCorpusSchedule();
-        if(scheduleLinks.size() == 0)
-            status.onNext(new Status(strings.getString("schedule_download_error"), 0));
-        for(String link : scheduleLinks){
-            status.onNext(new Status(strings.getString("schedule_download_status"), 10));
-            api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if(response.body() != null){
-                        status.onNext(new Status(strings.getString("schedule_parsing_status"),
-                                33));
-                        try(InputStream stream = response.body().byteStream()){
-                            File scheduleFile = Files
-                                    .createTempFile(null, ".tmp")
-                                    .toFile();
-                            scheduleFile.deleteOnExit();
-                            Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                            scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
-                            ZipSecureFile.setMinInflateRatio(0.0075);
-                            Workbook excelFile = StreamingReader.builder()
-                                    .rowCacheSize(10)
-                                    .bufferSize(4096)
-                                    .open(scheduleFile);
-                            List<Lesson> lessons = converter.convertFirstCorpus(excelFile);
-                            excelFile.close();
-                            db.insertMany(lessons);
-                            status.onNext(new Status(strings.getString("processing_completed_status"),
-                                    100));
-                        }
-                        catch (Exception e){
-                            status.onNext(new Status(strings.getString("schedule_parsing_error"),
-                                    0));
-                        }
-                        response.body().close();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    status.onNext(new Status(strings.getString("schedule_download_error"), 0));
-                }
-            });
-        }
+        updateSchedule(this::getLinksForFirstCorpusSchedule, file -> converter.convertFirstCorpus(file));
     }
 
+    /**
+     * Этот метод используется для обновления БД приложения занятиями для второго корпуса
+     */
     private void updateSecondCorpus(){
-        List<String> scheduleLinks = getLinksForSecondCorpusSchedule();
+        updateSchedule(this::getLinksForSecondCorpusSchedule, file -> converter.convertSecondCorpus(file));
+    }
+
+    /**
+     * Этот метод используется для обновления БД приложения занятиями
+     * @param linksGetter метод для получения ссылок на файлы расписания
+     * @param parser парсер файлов расписания
+     */
+    private void updateSchedule(Callable<List<String>> linksGetter, IConverter.IConversion parser){
+        List<String> scheduleLinks = new ArrayList<>();
+        try{
+            scheduleLinks = linksGetter.call();
+        } catch (Exception ignored) {/*Not required*/}
         if(scheduleLinks.size() == 0)
             status.onNext(new Status(strings.getString("schedule_download_error"), 0));
         for(String link : scheduleLinks){
@@ -406,7 +383,7 @@ public class ScheduleRepository {
                                     .rowCacheSize(10)
                                     .bufferSize(4096)
                                     .open(scheduleFile);
-                            List<Lesson> lessons = converter.convertSecondCorpus(excelFile);
+                            List<Lesson> lessons = parser.convert(excelFile);
                             excelFile.close();
                             db.insertMany(lessons);
                             status.onNext(new Status(strings.getString("processing_completed_status"),
@@ -427,6 +404,4 @@ public class ScheduleRepository {
             });
         }
     }
-
-
 }

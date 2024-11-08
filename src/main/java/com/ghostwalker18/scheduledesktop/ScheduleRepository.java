@@ -20,6 +20,8 @@ import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -102,9 +104,16 @@ public class ScheduleRepository {
 
     private ScheduleRepository(){
         db = AppDatabaseHibernate.getInstance();
+        long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
+        Cache cache = new Cache(new File(this.getClass().getResource("/cache/http").getPath()), SIZE_OF_CACHE);
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .cache(cache)
+                .addInterceptor(new CacheInterceptor())
+                .build();
         api = new Retrofit.Builder()
                 .baseUrl(BASE_URI)
                 .callbackExecutor(Executors.newSingleThreadExecutor())
+                .client(client)
                 .build()
                 .create(IScheduleNetworkAPI.class);
     }

@@ -9,19 +9,19 @@
         ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.*/
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.guardsquare:proguard-gradle:7.6.0'
+    }
+}
 
 plugins {
     id 'java'
     id 'application'
 }
-
-tasks.withType(AbstractCopyTask).all {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-group = 'com.ghostwalker18.scheduledesktop'
-version = '2.2'
-sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
@@ -35,13 +35,24 @@ dependencies {
     implementation "org.jsoup:jsoup:1.12.2"
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.github.pjfanning:excel-streaming-reader:5.0.2"
+    implementation("org.apache.xmlbeans:xmlbeans:3.1.0")
+    implementation("javax.xml.stream:stax-api:1.0")
+    implementation("com.fasterxml:aalto-xml:1.2.2")
     implementation "org.xerial:sqlite-jdbc:3.42.0.0"
     implementation "com.github.gwenn:sqlite-dialect:0.1.4"
     implementation "org.hibernate:hibernate-core:5.4.33.Final"
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    runtimeOnly 'com.guardsquare:proguard-gradle:7.6.0'
 }
 
+tasks.withType(AbstractCopyTask).all {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+group = 'com.ghostwalker18.scheduledesktop'
+version = '2.3'
+sourceCompatibility = '1.8'
 
 application {
     mainClass = 'com.ghostwalker18.scheduledesktop.Application'
@@ -62,4 +73,29 @@ jar {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.register('proguard', proguard.gradle.ProGuardTask) {
+    configuration file('proguard-rules.pro')
+
+    injars(tasks.named('jar', Jar).flatMap { it.archiveFile })
+
+    // Automatically handle the Java version of this build.
+    if (System.getProperty('java.version').startsWith('1.')) {
+        // Before Java 9, the runtime classes were packaged in a single jar file.
+        libraryjars "${System.getProperty('java.home')}/lib/rt.jar"
+    } else {
+        // As of Java 9, the runtime classes are packaged in modular jmod files.
+        libraryjars "${System.getProperty('java.home')}/jmods/java.base.jmod", jarfilter: '!**.jar', filter: '!module-info.class'
+        //libraryjars "${System.getProperty('java.home')}/jmods/....."
+    }
+    keep access: 'public',
+            name:   'com.ghostwalker18.scheduledesktop.Application', {
+        method access:     'public static',
+                type:       'void',
+                name:       'main',
+                parameters: 'java.lang.String[]'
+    }
+
+    outjars(layout.buildDirectory.file("libs/${group}-minified.jar"))
 }

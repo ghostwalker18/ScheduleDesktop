@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import org.jsoup.nodes.Document;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -32,7 +33,7 @@ public interface IScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(ScheduleRepository.MONDAY_TIMES_URL)
+    @GET(Application.MONDAY_TIMES_URL)
     Call<ResponseBody> getMondayTimes();
 
     /**
@@ -40,7 +41,7 @@ public interface IScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(ScheduleRepository.OTHER_TIMES_URL)
+    @GET(Application.OTHER_TIMES_URL)
     Call<ResponseBody> getOtherTimes();
 
     /**
@@ -50,4 +51,7 @@ public interface IScheduleNetworkAPI {
      */
     @GET
     Call<ResponseBody> getScheduleFile(@Url String url);
+
+    @GET(Application.BASE_URI)
+    Call<Document> getMainPage();
 }

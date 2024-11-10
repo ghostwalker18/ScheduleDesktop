@@ -20,20 +20,16 @@ import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.javatuples.Pair;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -54,11 +50,6 @@ import java.util.prefs.Preferences;
  * @author  Ипатов Никита
  */
 public class ScheduleRepository {
-    public static final String MONDAY_TIMES_URL =
-            "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
-    public static final String OTHER_TIMES_URL =
-            "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
-    private static final String BASE_URI = "https://ptgh.onego.ru/9006/";
     private static final String MAIN_SELECTOR = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     public static final String MONDAY_TIMES_PATH = "mondayTimes.jpg";
     public static final String OTHER_TIMES_PATH = "otherTimes.jpg";
@@ -69,7 +60,7 @@ public class ScheduleRepository {
             new XMLBundleControl());
     private final IScheduleNetworkAPI api;
     private final IAppDatabase db;
-    private IConverter converter = new XMLStoLessonsConverter();
+    private final IConverter converter = new XMLStoLessonsConverter();
     private final Preferences preferences = Application.getPreferences();
     private final List<Pair<String, File>> scheduleFiles = new LinkedList<>();
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
@@ -104,18 +95,7 @@ public class ScheduleRepository {
 
     private ScheduleRepository(){
         db = AppDatabaseHibernate.getInstance();
-        long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
-        Cache cache = new Cache(new File(this.getClass().getResource("/cache/http").getPath()), SIZE_OF_CACHE);
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .cache(cache)
-                .addInterceptor(new CacheInterceptor())
-                .build();
-        api = new Retrofit.Builder()
-                .baseUrl(BASE_URI)
-                .callbackExecutor(Executors.newSingleThreadExecutor())
-                .client(client)
-                .build()
-                .create(IScheduleNetworkAPI.class);
+        api = new NetworkService(Application.BASE_URI).getScheduleAPI();
     }
 
     /**
@@ -215,7 +195,7 @@ public class ScheduleRepository {
     public  List<String> getLinksForSecondCorpusSchedule(){
         List<String> links = new ArrayList<>();
         try{
-            Document doc = Jsoup.connect(BASE_URI).get();
+            Document doc = api.getMainPage().execute().body();
             Elements linkElements = doc.select(MAIN_SELECTOR).get(0)
                     .select("tr").get(1)
                     .select("td").get(1)
@@ -240,7 +220,7 @@ public class ScheduleRepository {
     public List<String> getLinksForFirstCorpusSchedule(){
         List<String> links = new ArrayList<>();
         try{
-            Document doc = Jsoup.connect(BASE_URI).get();
+            Document doc = api.getMainPage().execute().body();
             Elements linkElements = doc.select(MAIN_SELECTOR).get(0)
                     .select("tr").get(1)
                     .select("td").get(0)

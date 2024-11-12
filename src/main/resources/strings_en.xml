@@ -51,4 +51,7 @@
     <entry key="processing_completed_status">Schedule successfully updated</entry>
     <entry key="schedule_download_status">Schedule download</entry>
     <entry key="schedule">Schedule</entry>
+    <entry key="network_settings">Network</entry>
+    <entry key="option_enable_caching">Enable caching</entry>
+    <entry key="option_download_for">Download schedule for</entry>
 </properties>

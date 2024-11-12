@@ -51,4 +51,7 @@
     <entry key="processing_completed_status">Расклад паспяхова абноўлены</entry>
     <entry key="schedule_download_status">Запампоўванне раскладу</entry>
     <entry key="schedule">Расклад</entry>
+    <entry key="network_settings">Сетка</entry>
+    <entry key="option_enable_caching">Ўключыць кэшаванне</entry>
+    <entry key="option_download_for">Спампоўваць расклад для</entry>
 </properties>

@@ -168,7 +168,7 @@ public class MainForm
             JFrame frame = new JFrame(strings.getString("settings"));
             frame.setIconImage(Toolkit.getDefaultToolkit()
                     .createImage(Application.class.getResource("/images/baseline_settings_black_36dp.png")));
-            frame.setPreferredSize(new Dimension(500, 300));
+            frame.setPreferredSize(new Dimension(500, 400));
             frame.setContentPane(new SettingsForm().getMainPanel());
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.pack();

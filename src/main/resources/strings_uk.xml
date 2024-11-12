@@ -51,4 +51,7 @@
     <entry key="processing_completed_status">Розклад успішно оновлено</entry>
     <entry key="schedule_download_status">Скачування розкладу</entry>
     <entry key="schedule">Розклад</entry>
+    <entry key="network_settings">Мережа</entry>
+    <entry key="option_enable_caching">Увімкнути кешування</entry>
+    <entry key="option_download_for">Завантажувати розклад для</entry>
 </properties>

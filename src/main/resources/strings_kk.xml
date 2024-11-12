@@ -51,4 +51,7 @@
     <entry key="processing_completed_status">Кесте сәтті жаңартылды</entry>
     <entry key="schedule_download_status">Кестені жүктеу</entry>
     <entry key="schedule">Кесте</entry>
+    <entry key="network_settings">Желі</entry>
+    <entry key="option_enable_caching">Кэштеуді қосыңыз</entry>
+    <entry key="option_download_for">Кестені жүктеу</entry>
 </properties>

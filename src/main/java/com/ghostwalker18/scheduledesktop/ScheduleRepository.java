@@ -134,14 +134,17 @@ public class ScheduleRepository {
      * Требуется интернет соединение.
      */
     public void update(){
+        String downloadFor = preferences.get("downloadFor", "all");
         boolean allJobsDone = true;
         for(Future<?> future : updateFutures){
             allJobsDone &= future.isDone();
         }
         if(allJobsDone){
             updateFutures.clear();
-            updateFutures.add(updateExecutorService.submit(this::updateFirstCorpus));
-            updateFutures.add(updateExecutorService.submit(this::updateSecondCorpus));
+            if(downloadFor.equals("all") || downloadFor.equals("first"))
+                updateFutures.add(updateExecutorService.submit(this::updateFirstCorpus));
+            if(downloadFor.equals("all") || downloadFor.equals("second"))
+                updateFutures.add(updateExecutorService.submit(this::updateSecondCorpus));
             updateFutures.add(updateExecutorService.submit(this::updateTimes));
         }
     }

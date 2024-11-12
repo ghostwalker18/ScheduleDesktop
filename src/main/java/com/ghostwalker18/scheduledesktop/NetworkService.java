@@ -16,31 +16,48 @@ package com.ghostwalker18.scheduledesktop;
 
 import java.io.File;
 import java.util.concurrent.Executors;
+import java.util.prefs.Preferences;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
+/**
+ * Этот класс используется для предоставления приложению услуг доступа к сети.
+ *
+ * @author Ipatov Nikita
+ * @since 2.3
+ */
 public class NetworkService {
     private static final long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
     private final String baseUri;
+    private final Preferences preferences = Application.getPreferences();
 
     public NetworkService(String baseUri){
         this.baseUri = baseUri;
     }
 
+    /**
+     * Этот метод позволяет получить API сайта ПТГХ.
+     * @return API сайта для доступа к скачиванию файлов расписания
+     */
     public IScheduleNetworkAPI getScheduleAPI(){
-        Cache cache = new Cache(new File(this.getClass().getResource("/cache/http").getPath()), SIZE_OF_CACHE);
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .cache(cache)
-                .addInterceptor(new CacheInterceptor())
-                .build();
-        IScheduleNetworkAPI api = new Retrofit.Builder()
+        Retrofit.Builder apiBuilder = new Retrofit.Builder()
                 .baseUrl(baseUri)
                 .callbackExecutor(Executors.newFixedThreadPool(4))
-                .client(client)
-                .addConverterFactory(new JsoupConverterFactory())
+                .addConverterFactory(new JsoupConverterFactory());
+
+        boolean isCachingEnabled = preferences.getBoolean("isCachingEnabled", true);
+        if(isCachingEnabled){
+            Cache cache = new Cache(new File(this.getClass().getResource("/cache/http").getPath()), SIZE_OF_CACHE);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .cache(cache)
+                    .addInterceptor(new CacheInterceptor())
+                    .build();
+            apiBuilder.client(client);
+        }
+
+        return apiBuilder
                 .build()
                 .create(IScheduleNetworkAPI.class);
-        return api;
     }
 }

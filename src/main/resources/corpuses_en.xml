@@ -14,7 +14,7 @@
   -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="all">For all corpuses</entry>
-    <entry key="first">For first corpus</entry>
-    <entry key="second">For second corpus</entry>
+    <entry key="all">All corpuses</entry>
+    <entry key="first">First corpus</entry>
+    <entry key="second">Second corpus</entry>
 </properties>

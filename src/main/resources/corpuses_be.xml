@@ -14,7 +14,7 @@
   -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="all">Для ўсіх карпусоў</entry>
-    <entry key="first">Для першага корпуса</entry>
-    <entry key="second">Для другога корпуса</entry>
+    <entry key="all">Ўсіх карпусоў</entry>
+    <entry key="first">Першага корпуса</entry>
+    <entry key="second">Другога корпуса</entry>
 </properties>

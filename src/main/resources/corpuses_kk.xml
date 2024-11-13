@@ -14,7 +14,7 @@
   -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="all">Барлық корпустар үшін</entry>
-    <entry key="first">Бірінші корпус үшін</entry>
-    <entry key="second">Екінші корпус үшін</entry>
+    <entry key="all">Барлық корпустар</entry>
+    <entry key="first">Бірінші корпус</entry>
+    <entry key="second">Екінші корпус</entry>
 </properties>

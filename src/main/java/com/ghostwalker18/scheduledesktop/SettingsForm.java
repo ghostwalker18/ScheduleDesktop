@@ -39,9 +39,9 @@ public class SettingsForm {
             new XMLBundleControl());
     private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    public static final Map<String, String> languagesCodes = new HashMap<>();
-    public static final Map<String, String> themesCodes = new HashMap<>();
-    public static final Map<String, String> corpusesCodes = new HashMap<>();
+    private static final Map<String, String> languagesCodes = new HashMap<>();
+    private static final Map<String, String> themesCodes = new HashMap<>();
+    private static final Map<String, String> corpusesCodes = new HashMap<>();
 
     static {
         languagesCodes.put(languages.getString("ru"), "ru");
@@ -223,7 +223,7 @@ public class SettingsForm {
         gbc.gridy = 3;
         mainPanel.add(downloadForL, gbc);
 
-        downloadForComboBox = new JComboBox<>();
+        downloadForComboBox = new JComboBox<String>();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 3;
@@ -269,7 +269,7 @@ public class SettingsForm {
         gbc.insets = new Insets(0, 10, 0, 0);
         mainPanel.add(languageLabel, gbc);
         
-        languageComboBox = new JComboBox();
+        languageComboBox = new JComboBox<String>();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 6;
@@ -290,7 +290,7 @@ public class SettingsForm {
         gbc.insets = new Insets(0, 10, 0, 0);
         mainPanel.add(themeLabel, gbc);
         
-        themeComboBox = new JComboBox();
+        themeComboBox = new JComboBox<String>();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 7;

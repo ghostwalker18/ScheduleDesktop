@@ -80,7 +80,7 @@ public class WeekdayButton
 
         table.setFocusable(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         table.setDefaultRenderer(Object.class, centerRenderer);
 
         JTableHeader tableHeader = table.getTableHeader();

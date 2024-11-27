@@ -317,7 +317,7 @@ public class ScheduleRepository {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {}
+                public void onFailure(Call<ResponseBody> call, Throwable t) {/*Not required*/}
             });
         }
         else {

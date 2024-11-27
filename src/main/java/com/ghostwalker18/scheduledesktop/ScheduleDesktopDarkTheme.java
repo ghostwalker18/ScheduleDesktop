@@ -16,6 +16,11 @@ package com.ghostwalker18.scheduledesktop;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
+/**
+ * Этот класс используется для задания темной темы приложения
+ *
+ * @author Ипатов Никита
+ */
 public class ScheduleDesktopDarkTheme
         extends FlatDarkLaf {
     public static final String NAME = "ScheduleDesktopDarkTheme";

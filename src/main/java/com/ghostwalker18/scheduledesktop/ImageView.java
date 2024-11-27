@@ -20,13 +20,15 @@ import java.util.ResourceBundle;
 
 /**
  * Этот класс используется для отображения в графическом интерфейсе буферизированных изображений
+ *
+ * @author Ипатов Никита
  */
 public class ImageView
         extends JPanel {
     private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    private JProgressBar placeholder;
-    private JLabel imageLabel;
+    private final JProgressBar placeholder;
+    private final JLabel imageLabel;
 
     public ImageView(){
         placeholder = new JProgressBar();

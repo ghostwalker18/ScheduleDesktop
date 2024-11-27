@@ -182,9 +182,9 @@ public class Lesson {
                 return false;
             LessonPK that = (LessonPK) o;
             return this.date == that.date
-                    && this.lessonNumber == that.lessonNumber
-                    && this.subject == that.subject
-                    && this.groupName == that.groupName;
+                    && Objects.equals(this.lessonNumber, that.lessonNumber)
+                    && Objects.equals(this.subject, that.subject)
+                    && Objects.equals(this.groupName, that.groupName);
         }
 
         @Override

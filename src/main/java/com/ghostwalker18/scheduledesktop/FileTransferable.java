@@ -16,23 +16,25 @@ package com.ghostwalker18.scheduledesktop;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+
+/**
+ * Этот класс используется для передачи файлов в системный буфер обмена.
+ *
+ * @author Ипатов Никита
+ */
 public class FileTransferable
         implements Transferable {
-    private List<File> listOfFiles = new LinkedList<File>();
+    private List<File> listOfFiles = new LinkedList<>();
 
     public FileTransferable(List<File> listOfFiles) {
         this.listOfFiles = listOfFiles;
     }
 
-    public FileTransferable(){
-
-    }
+    public FileTransferable(){}
 
     public FileTransferable add(File file){
         listOfFiles.add(file);
@@ -50,8 +52,7 @@ public class FileTransferable
     }
 
     @Override
-    public Object getTransferData(DataFlavor flavor)
-            throws UnsupportedFlavorException, IOException {
+    public Object getTransferData(DataFlavor flavor) {
         return listOfFiles;
     }
 }

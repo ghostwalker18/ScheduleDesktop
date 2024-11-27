@@ -175,19 +175,13 @@ public class MainForm
             frame.setVisible(true);
         });
 
-        downloadScheduleButton.addActionListener(e -> {
-            downloadSchedule();
-        });
+        downloadScheduleButton.addActionListener(e -> downloadSchedule());
 
-        refreshButton.addActionListener( e -> {
-            repository.update();
-        });
+        refreshButton.addActionListener( e -> repository.update());
 
-        repository.getMondayTimes().subscribe(image ->
-                mondayTimes.setImage(image));
+        repository.getMondayTimes().subscribe(image -> mondayTimes.setImage(image));
 
-        repository.getOtherTimes().subscribe(image ->
-                otherTimes.setImage(image));
+        repository.getOtherTimes().subscribe(image -> otherTimes.setImage(image));
 
         repository.getStatus().subscribe(status -> {
             updateStatus.setText(status.text);

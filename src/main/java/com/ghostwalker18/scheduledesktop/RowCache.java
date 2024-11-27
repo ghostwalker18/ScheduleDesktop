@@ -52,7 +52,7 @@ public class RowCache {
      * Этот метод служит для получения строки листа
      * @param row номер строки
      * @return строка
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException недопустимый индекс
      */
     public Row getRow(int row) throws IndexOutOfBoundsException {
         if(row <= lowBoundary - size)
@@ -95,7 +95,7 @@ public class RowCache {
         /**
          * Этот метод задает размер кэша.
          * @param size размер кэша в строках
-         * @return
+         * @return строитель
          */
         public Builder setSize(int size){
             this.size = size;
@@ -105,7 +105,7 @@ public class RowCache {
         /**
          * Этот метод задает лист для кэша.
          * @param sheet лист
-         * @return
+         * @return строитель
          */
         public Builder setSheet(Sheet sheet){
             this.sheet = sheet;

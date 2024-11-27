@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.sun.istack.NotNull;
 import okhttp3.ResponseBody;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,14 +28,16 @@ import java.lang.reflect.Type;
 public class JsoupConverterFactory
         extends Converter.Factory {
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+    public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type,
+                                                            @NotNull Annotation[] annotations,
+                                                            @NotNull Retrofit retrofit) {
         if(type == Document.class){
             return new JsoupConverter(retrofit.baseUrl().toString());
         }
         return null;
     }
 
-    private class JsoupConverter implements Converter<ResponseBody, Document> {
+    private static class JsoupConverter implements Converter<ResponseBody, Document> {
         private final String baseUri;
 
         JsoupConverter(String baseUri){

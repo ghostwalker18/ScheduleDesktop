@@ -52,6 +52,11 @@ public interface IScheduleNetworkAPI {
     @GET
     Call<ResponseBody> getScheduleFile(@Url String url);
 
+    /**
+     * Получение страницы сайта техникума с расписанием
+     *
+     * @return асинхронный ответ сервера
+     */
     @GET(Application.BASE_URI)
     Call<Document> getMainPage();
 }

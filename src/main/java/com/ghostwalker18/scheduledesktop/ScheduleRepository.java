@@ -277,43 +277,30 @@ public class ScheduleRepository {
         File mondayTimesFile = new File(MONDAY_TIMES_PATH);
         File otherTimesFile = new File(OTHER_TIMES_PATH);
         if(!preferences.getBoolean("doNotUpdateTimes", true)
-                || !mondayTimesFile.exists()
-                || !otherTimesFile.exists()){
-            Call<ResponseBody> mondayTimesResponse = api.getMondayTimes();
-            mondayTimesResponse.enqueue(new Callback<ResponseBody>() {
+                || !mondayTimesFile.exists() || !otherTimesFile.exists()){
+            api.getMondayTimes().enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if(response.body() != null){
-                        try{
-                            BufferedImage image = ImageIO.read(response.body().byteStream());
-                            mondayTimes.onNext(image);
-                            ImageIO.write(image, "jpg", mondayTimesFile);
-                        }
-                        catch (Exception ignored){/*Not required*/}
-                        finally {
-                            response.body().close();
-                        }
+                    try(ResponseBody body = response.body()){
+                        BufferedImage image = ImageIO.read(body.byteStream());
+                        mondayTimes.onNext(image);
+                        ImageIO.write(image, "jpg", mondayTimesFile);
                     }
+                    catch (Exception ignored){/*Not required*/}
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {}
             });
-            Call<ResponseBody> otherTimesResponse = api.getOtherTimes();
-            otherTimesResponse.enqueue(new Callback<ResponseBody>() {
+            api.getOtherTimes().enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if(response.body() != null){
-                        try{
-                            BufferedImage image = ImageIO.read(response.body().byteStream());
-                            otherTimes.onNext(image);
-                            ImageIO.write(image, "jpg", otherTimesFile);
-                        }
-                        catch (Exception ignored){/*Not required*/}
-                        finally {
-                            response.body().close();
-                        }
+                    try(ResponseBody body = response.body()){
+                        BufferedImage image = ImageIO.read(body.byteStream());
+                        otherTimes.onNext(image);
+                        ImageIO.write(image, "jpg", otherTimesFile);
                     }
+                    catch (Exception ignored){/*Not required*/}
                 }
 
                 @Override
@@ -362,32 +349,26 @@ public class ScheduleRepository {
             api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if(response.body() != null){
-                        status.onNext(new Status(strings.getString("schedule_parsing_status"),
-                                33));
-                        try(InputStream stream = response.body().byteStream()){
-                            File scheduleFile = Files
-                                    .createTempFile(null, ".tmp")
-                                    .toFile();
-                            scheduleFile.deleteOnExit();
-                            Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                            scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
-                            ZipSecureFile.setMinInflateRatio(0.0075);
-                            Workbook excelFile = StreamingReader.builder()
-                                    .rowCacheSize(10)
-                                    .bufferSize(4096)
-                                    .open(scheduleFile);
-                            List<Lesson> lessons = parser.convert(excelFile);
-                            excelFile.close();
-                            db.insertMany(lessons);
-                            status.onNext(new Status(strings.getString("processing_completed_status"),
-                                    100));
-                        }
-                        catch (Exception e){
-                            status.onNext(new Status(strings.getString("schedule_parsing_error"),
-                                    0));
-                        }
-                        response.body().close();
+                    try(ResponseBody body = response.body();
+                        InputStream stream = body.byteStream();
+                        Workbook excelFile = StreamingReader.builder()
+                                .rowCacheSize(10)
+                                .bufferSize(4096)
+                                .open(stream)
+                    ){
+                        status.onNext(new Status(strings.getString("schedule_parsing_status"), 33));
+                        File scheduleFile = Files.createTempFile(null, ".tmp").toFile();
+                        scheduleFile.deleteOnExit();
+                        Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
+                        ZipSecureFile.setMinInflateRatio(0.0075);
+                        List<Lesson> lessons = parser.convert(excelFile);
+                        excelFile.close();
+                        db.insertMany(lessons);
+                        status.onNext(new Status(strings.getString("processing_completed_status"), 100));
+                    }
+                    catch (Exception e){
+                        status.onNext(new Status(strings.getString("schedule_parsing_error"), 0));
                     }
                 }
 

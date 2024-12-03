@@ -74,28 +74,3 @@ jar {
 test {
     useJUnitPlatform()
 }
-
-tasks.register('proguard', proguard.gradle.ProGuardTask) {
-    configuration file('proguard-rules.pro')
-
-    injars(tasks.named('jar', Jar).flatMap { it.archiveFile })
-
-    // Automatically handle the Java version of this build.
-    if (System.getProperty('java.version').startsWith('1.')) {
-        // Before Java 9, the runtime classes were packaged in a single jar file.
-        libraryjars "${System.getProperty('java.home')}/lib/rt.jar"
-    } else {
-        // As of Java 9, the runtime classes are packaged in modular jmod files.
-        libraryjars "${System.getProperty('java.home')}/jmods/java.base.jmod", jarfilter: '!**.jar', filter: '!module-info.class'
-        //libraryjars "${System.getProperty('java.home')}/jmods/....."
-    }
-    keep access: 'public',
-            name:   'com.ghostwalker18.scheduledesktop.Application', {
-        method access:     'public static',
-                type:       'void',
-                name:       'main',
-                parameters: 'java.lang.String[]'
-    }
-
-    outjars(layout.buildDirectory.file("libs/${group}-minified.jar"))
-}

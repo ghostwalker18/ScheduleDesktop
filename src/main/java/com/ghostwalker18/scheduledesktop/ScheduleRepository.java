@@ -349,11 +349,12 @@ public class ScheduleRepository {
             api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    ZipSecureFile.setMinInflateRatio(0.005);
                     try(ResponseBody body = response.body();
                         InputStream stream = body.byteStream();
                         Workbook excelFile = StreamingReader.builder()
                                 .rowCacheSize(10)
-                                .bufferSize(4096)
+                                .bufferSize(10485670)
                                 .open(stream)
                     ){
                         status.onNext(new Status(strings.getString("schedule_parsing_status"), 33));
@@ -361,7 +362,6 @@ public class ScheduleRepository {
                         scheduleFile.deleteOnExit();
                         Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
-                        ZipSecureFile.setMinInflateRatio(0.0075);
                         List<Lesson> lessons = parser.convert(excelFile);
                         excelFile.close();
                         db.insertMany(lessons);

@@ -263,16 +263,6 @@ public class ScheduleRepository {
         return preferences.get("savedGroup", platformStrings.getString("combox_placeholder"));
     }
 
-    /**
-     * Этот метод позволяет получить имя скачиваемого файла из ссылки на него.
-     * @param link ссылка на файл
-     * @return имя файла
-     */
-    private String getNameFromLink(String link){
-        String[] parts = link.split("/");
-        return parts[parts.length - 1];
-    }
-
     private void updateTimes(){
         File mondayTimesFile = new File(MONDAY_TIMES_PATH);
         File otherTimesFile = new File(OTHER_TIMES_PATH);
@@ -361,7 +351,7 @@ public class ScheduleRepository {
                         File scheduleFile = Files.createTempFile(null, ".tmp").toFile();
                         scheduleFile.deleteOnExit();
                         Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        scheduleFiles.add(new Pair<>(getNameFromLink(link), scheduleFile));
+                        scheduleFiles.add(new Pair<>(Utils.getNameFromLink(link), scheduleFile));
                         List<Lesson> lessons = parser.convert(excelFile);
                         excelFile.close();
                         db.insertMany(lessons);

@@ -66,7 +66,7 @@ public class WeekdayButton
         super();
         this.dayOfWeek = dayOfWeek;
         date = new Calendar.Builder().setWeekDate(year, week, weekdaysNumbers.get(dayOfWeek)).build();
-        if(isDateToday(date)){
+        if(Utils.isDateToday(date)){
             isOpened = true;
         }
         button.setToolTipText(platformStrings.getString("weekday_tooltip"));
@@ -133,37 +133,12 @@ public class WeekdayButton
      * @param dayOfWeek день недели
      * @return заголовок
      */
-    private String generateTitle(Calendar date,  String dayOfWeek){
-        //Month is a number in 0 - 11
-        int month = date.get(Calendar.MONTH) + 1;
-        //Formatting month number with leading zero
-        String monthString = String.valueOf(month);
-        if(month < 10){
-            monthString = "0" + monthString;
-        }
-        int day = date.get(Calendar.DAY_OF_MONTH);
-        String dayString = String.valueOf(day);
-        //Formatting day number with leading zero
-        if(day < 10){
-            dayString = "0" + dayString;
-        }
-        String label = dayOfWeek + " (" + dayString  + "/" + monthString + ")";
-        if(isDateToday(date)){
+    private String generateTitle(Calendar date,   String dayOfWeek){
+        String label = dayOfWeek + " (" + Utils.generateDateForTitle(date) + ")";
+        if(Utils.isDateToday(date)){
             label = label + " - " + strings.getString("today");
         }
         return label;
-    }
-
-    /**
-     * Этот метод проверяет является ли заданная дата сегодняшним днем.
-     * @param date заданная дата
-     * @return сегодня ли
-     */
-    private boolean isDateToday(Calendar date){
-        Calendar rightNow = Calendar.getInstance();
-        return rightNow.get(Calendar.YEAR) == date.get(Calendar.YEAR)
-                && rightNow.get(Calendar.MONTH) == date.get(Calendar.MONTH)
-                && rightNow.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH);
     }
 
     /**

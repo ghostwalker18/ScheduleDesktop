@@ -41,4 +41,5 @@
     <entry key="folderNameLabelText">Тэчка</entry>
     <entry key="saveButtonText">Захаваць</entry>
     <entry key="cancelButtonText">Адмена</entry>
+    <entry key="availability_column">Даступнасьць</entry>
 </properties>

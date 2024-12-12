@@ -41,4 +41,5 @@
     <entry key="folderNameLabelText">Папка</entry>
     <entry key="saveButtonText">Сохранить</entry>
     <entry key="cancelButtonText">Отмена</entry>
+    <entry key="availability_column">Доступность</entry>
 </properties>

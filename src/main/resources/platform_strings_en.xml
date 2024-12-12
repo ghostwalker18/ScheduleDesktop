@@ -41,4 +41,5 @@
     <entry key="folderNameLabelText">Folder</entry>
     <entry key="saveButtonText">Save</entry>
     <entry key="cancelButtonText">Cancel</entry>
+    <entry key="availability_column">Availability</entry>
 </properties>

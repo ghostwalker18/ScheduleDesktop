@@ -41,4 +41,5 @@
     <entry key="folderNameLabelText">Папка</entry>
     <entry key="saveButtonText">Зберігши</entry>
     <entry key="cancelButtonText">Скасування</entry>
+    <entry key="availability_column">Доступність</entry>
 </properties>

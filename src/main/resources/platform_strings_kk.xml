@@ -41,4 +41,5 @@
     <entry key="folderNameLabelText">Қалта</entry>
     <entry key="saveButtonText">Сақтау</entry>
     <entry key="cancelButtonText">Бас тарту</entry>
+    <entry key="availability_column">Қол жетімділік</entry>
 </properties>

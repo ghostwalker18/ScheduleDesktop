@@ -51,11 +51,19 @@ public class WeekdayButton
     private final transient ScheduleRepository repository = ScheduleRepository.getRepository();
 
     private final String[] tableColumnNames = new String[]{
+            platformStrings.getString("availability_column"),
             strings.getString("number"), strings.getString("times"), strings.getString("subject"),
             strings.getString("teacher"), strings.getString("room")
     };
     private final MultilineTableCellRenderer renderer = new MultilineTableCellRenderer();
-    private final JTable table = new JTable(0,5);
+    private final JTable table = new JTable(0,5){
+        @Override
+        public Class<?> getColumnClass(int column) {
+            if(column == 0)
+                return ImageIcon.class;
+            return super.getColumnClass(column);
+        }
+    };
     private final String dayOfWeek;
     private String teacher = null;
     private String group = null;
@@ -151,7 +159,8 @@ public class WeekdayButton
             return;
         }
         table.setModel(makeDataModel(lessons));
-        table.getColumnModel().getColumn(2).setCellRenderer(renderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(renderer);
+        table.getColumn(0).setMaxWidth(100);
     }
 
     /**
@@ -163,7 +172,24 @@ public class WeekdayButton
         DefaultTableModel tableModel = new DefaultTableModel(tableColumnNames, 0);
         if(lessons != null){
             for(Lesson lesson : lessons){
+                ImageIcon availabilityIcon = null;
+                if(Utils.isLessonAvailable(lesson.getDate(), lesson.getTimes()) != null)
+                    switch (Utils.isLessonAvailable(lesson.getDate(), lesson.getTimes())){
+                        case ENDED:
+                            availabilityIcon = new ImageIcon(getClass()
+                                    .getResource("/images/event_busy_24dp.png"));
+                            break;
+                        case STARTED:
+                            availabilityIcon = new ImageIcon(getClass()
+                                    .getResource("/images/schedule_24dp.png"));
+                            break;
+                        case NOT_STARTED:
+                            availabilityIcon = new ImageIcon(getClass()
+                                    .getResource("/images/event_available_24dp.png"));
+                            break;
+                    }
                 tableModel.addRow(new Object[]{
+                        availabilityIcon,
                         lesson.getLessonNumber(),
                         lesson.getTimes(),
                         lesson.getSubject(),

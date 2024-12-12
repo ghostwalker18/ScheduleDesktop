@@ -42,14 +42,16 @@
     <entry key="teacher">Викладач.</entry>
     <entry key="schedule_style">Режим відображення розкладу</entry>
     <entry key="option_do_not_update_times">Не оновлювати дзвінки</entry>
-    <entry key="download_schedule">Завантажити файл розкладу</entry>
+    <entry key="download_schedule">Завантажити файли розкладу</entry>
     <entry key="schedule_settings">Розклад</entry>
     <entry key="option_language">Мова</entry>
     <entry key="schedule_download_error">Помилка при скачуванні розкладу</entry>
+    <entry key="schedule_opening_error">Помилка при відкритті файлу розкладу</entry>
     <entry key="schedule_parsing_error">Помилка при обробці розкладу</entry>
     <entry key="schedule_parsing_status">Обробка розкладу</entry>
     <entry key="processing_completed_status">Розклад успішно оновлено</entry>
     <entry key="schedule_download_status">Скачування розкладу</entry>
+    <entry key="schedule_opening_status">Відкриття файлу розкладу</entry>
     <entry key="schedule">Розклад</entry>
     <entry key="network_settings">Мережа</entry>
     <entry key="option_enable_caching">Увімкнути кешування</entry>

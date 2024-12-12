@@ -15,6 +15,9 @@
 package com.ghostwalker18.scheduledesktop;
 
 import com.github.pjfanning.xlsx.StreamingReader;
+import com.github.pjfanning.xlsx.exceptions.OpenException;
+import com.github.pjfanning.xlsx.exceptions.ParseException;
+import com.github.pjfanning.xlsx.exceptions.ReadException;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import io.reactivex.rxjava3.core.Observable;
@@ -340,6 +343,7 @@ public class ScheduleRepository {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     ZipSecureFile.setMinInflateRatio(0.005);
+                    status.onNext(new Status(strings.getString("schedule_opening_status"), 33));
                     try(ResponseBody body = response.body();
                         InputStream stream = body.byteStream();
                         Workbook excelFile = StreamingReader.builder()
@@ -347,7 +351,7 @@ public class ScheduleRepository {
                                 .bufferSize(10485670)
                                 .open(stream)
                     ){
-                        status.onNext(new Status(strings.getString("schedule_parsing_status"), 33));
+                        status.onNext(new Status(strings.getString("schedule_parsing_status"), 50));
                         File scheduleFile = Files.createTempFile(null, ".tmp").toFile();
                         scheduleFile.deleteOnExit();
                         Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -356,6 +360,9 @@ public class ScheduleRepository {
                         excelFile.close();
                         db.insertMany(lessons);
                         status.onNext(new Status(strings.getString("processing_completed_status"), 100));
+                    }
+                    catch(OpenException | ReadException | ParseException e){
+                        status.onNext(new Status(strings.getString("schedule_opening_error"), 0));
                     }
                     catch (Exception e){
                         status.onNext(new Status(strings.getString("schedule_parsing_error"), 0));

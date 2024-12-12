@@ -43,12 +43,14 @@
     <entry key="teacher">Препод.</entry>
     <entry key="schedule_style">Режим отображения расписания</entry>
     <entry key="option_do_not_update_times">Не обновлять звонки</entry>
-    <entry key="download_schedule">Скачать файл расписания</entry>
+    <entry key="download_schedule">Скачать файлы расписания</entry>
     <entry key="schedule_settings">Расписание</entry>
     <entry key="option_language">Язык</entry>
     <entry key="schedule_download_error">Ошибка при скачивании расписания</entry>
+    <entry key="schedule_opening_error">Ошибка при открытии файла расписания</entry>
     <entry key="schedule_parsing_error">Ошибка при обработке расписания</entry>
     <entry key="schedule_download_status">Скачивание расписания</entry>
+    <entry key="schedule_opening_status">Открытие файла расписания</entry>
     <entry key="schedule_parsing_status">Обработка расписания</entry>
     <entry key="processing_completed_status">Расписание успешно обновлено</entry>
     <entry key="network_settings">Сеть</entry>

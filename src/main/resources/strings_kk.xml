@@ -42,14 +42,16 @@
     <entry key="teacher">Мұғалім</entry>
     <entry key="schedule_style">Кестені көрсету режимі</entry>
     <entry key="option_do_not_update_times">Қоңырауларды жаңартпаңыз</entry>
-    <entry key="download_schedule">Кесте файлын жүктеп алыңыз</entry>
+    <entry key="download_schedule">Кесте файлдарын жүктеп алыңыз</entry>
     <entry key="schedule_settings">Кесте</entry>
     <entry key="option_language">Тіл</entry>
     <entry key="schedule_download_error">Кестені жүктеу кезінде қате</entry>
+    <entry key="schedule_opening_error">Кесте файлын ашу қатесі</entry>
     <entry key="schedule_parsing_error">Кестені өңдеу кезінде қате</entry>
     <entry key="schedule_parsing_status">Кестені өңдеу</entry>
     <entry key="processing_completed_status">Кесте сәтті жаңартылды</entry>
     <entry key="schedule_download_status">Кестені жүктеу</entry>
+    <entry key="schedule_opening_status">Кесте файлын ашу</entry>
     <entry key="schedule">Кесте</entry>
     <entry key="network_settings">Желі</entry>
     <entry key="option_enable_caching">Кэштеуді қосыңыз</entry>

@@ -50,6 +50,11 @@ public class AppDatabaseHibernate
         return instance;
     }
 
+    @Override
+    public NoteDao noteDao() {
+        return null;
+    }
+
     private AppDatabaseHibernate(){
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure("hibernate.cfg.xml")

@@ -62,4 +62,6 @@ public interface IAppDatabase {
      * @return список занятий
      */
     Observable<List<Lesson>> getLessonsForTeacher(@NotNull Calendar date, @NotNull String teacher);
+
+    NoteDao noteDao();
 }

@@ -41,7 +41,7 @@ import java.util.Vector;
 public class MainForm
         implements WindowListener {
     private final ScheduleState state = new ScheduleState(new Date());
-    private final ScheduleRepository repository = ScheduleRepository.getRepository();
+    private final ScheduleRepository repository = Application.getInstance().getScheduleRepository();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",

@@ -48,7 +48,7 @@ public class WeekdayButton
     private boolean isOpened = false;
     private final JPanel tablePanel = new JPanel();
     private  final JButton button = new JButton();
-    private final transient ScheduleRepository repository = ScheduleRepository.getRepository();
+    private final transient ScheduleRepository repository = Application.getInstance().getScheduleRepository();
 
     private final String[] tableColumnNames = new String[]{
             platformStrings.getString("availability_column"),

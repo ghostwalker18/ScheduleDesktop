@@ -43,7 +43,8 @@ public class Application {
             "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
     public static final String BASE_URI = "https://ptgh.onego.ru/9006/";
     private static Application instance = null;
-    private final ScheduleRepository repository;
+    private final ScheduleRepository scheduleRepository;
+    private final NotesRepository notesRepository;
     private ResourceBundle strings;
     private ResourceBundle platformStrings;
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
@@ -84,8 +85,11 @@ public class Application {
         });
         frame.pack();
         frame.setVisible(true);
-        repository = ScheduleRepository.getRepository();
-        repository.update();
+        IAppDatabase db = AppDatabaseHibernate.getInstance();
+        scheduleRepository = new ScheduleRepository(db,
+                new NetworkService(BASE_URI));
+        notesRepository = new NotesRepository(db);
+        scheduleRepository.update();
     }
 
     /**
@@ -169,6 +173,14 @@ public class Application {
      */
     public static Preferences getPreferences(){
         return preferences;
+    }
+
+    public ScheduleRepository getScheduleRepository(){
+        return scheduleRepository;
+    }
+
+    public NotesRepository getNotesRepository(){
+        return notesRepository;
     }
 
     /**

@@ -56,7 +56,6 @@ public class ScheduleRepository {
     private static final String MAIN_SELECTOR = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
     public static final String MONDAY_TIMES_PATH = "mondayTimes.jpg";
     public static final String OTHER_TIMES_PATH = "otherTimes.jpg";
-    private static ScheduleRepository repository = null;
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
@@ -85,20 +84,9 @@ public class ScheduleRepository {
         }
     }
 
-    /**
-     * Этот метод используется для получения доступа к репозиторию.
-     *
-     * @return синглтон репозитория приложения
-     */
-    public static ScheduleRepository getRepository(){
-        if(repository == null)
-                repository = new ScheduleRepository();
-        return repository;
-    }
-
-    private ScheduleRepository(){
-        db = AppDatabaseHibernate.getInstance();
-        api = new NetworkService(Application.BASE_URI).getScheduleAPI();
+    public ScheduleRepository(IAppDatabase db, NetworkService networkService){
+        this.db = db;
+        api = networkService.getScheduleAPI();
     }
 
     /**
@@ -168,6 +156,15 @@ public class ScheduleRepository {
      */
     public Observable<List<String>> getGroups(){
         return db.getGroups();
+    }
+
+    /**
+     * Этот метод позволяет получить список всех предметов в расписании для заданной группы.
+     * @param group группа
+     * @return список предметов
+     */
+    public Observable<String[]> getSubjects(String group) {
+        return null;
     }
 
     /**

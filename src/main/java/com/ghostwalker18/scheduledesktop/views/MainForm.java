@@ -12,8 +12,10 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.views;
 
+import com.ghostwalker18.scheduledesktop.*;
+import com.ghostwalker18.scheduledesktop.viewmodels.ScheduleState;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;

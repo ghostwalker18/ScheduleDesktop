@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.viewmodels;
 
 import java.util.Calendar;
 import java.util.Date;

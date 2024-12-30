@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.views;
 
 /**
  * Этот класс представляет собой экран редактирования или добавления новой заметки

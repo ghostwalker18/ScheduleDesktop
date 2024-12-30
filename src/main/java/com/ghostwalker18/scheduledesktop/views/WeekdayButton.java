@@ -12,7 +12,10 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.views;
+
+import com.ghostwalker18.scheduledesktop.*;
+import com.ghostwalker18.scheduledesktop.viewmodels.ScheduleState;
 
 import javax.swing.*;
 import javax.swing.table.*;

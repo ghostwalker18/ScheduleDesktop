@@ -15,6 +15,8 @@
 package com.ghostwalker18.scheduledesktop;
 
 import com.formdev.flatlaf.FlatLaf;
+import com.ghostwalker18.scheduledesktop.views.MainForm;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;

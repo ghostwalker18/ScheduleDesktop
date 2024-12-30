@@ -12,8 +12,13 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.viewmodels;
 
+import com.ghostwalker18.scheduledesktop.Application;
+import com.ghostwalker18.scheduledesktop.Note;
+import com.ghostwalker18.scheduledesktop.NotesRepository;
+import com.ghostwalker18.scheduledesktop.ScheduleRepository;
+import com.ghostwalker18.scheduledesktop.views.EditNoteForm;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;

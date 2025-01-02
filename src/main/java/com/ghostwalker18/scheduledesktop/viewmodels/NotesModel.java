@@ -40,7 +40,7 @@ public class NotesModel {
     private String keyword;
     private Observable<Note[]> notesMediator = BehaviorSubject.create();
 
-    NotesModel(){
+    public NotesModel(){
         setGroup(Application.getInstance().getScheduleRepository().getSavedGroup());
     }
 

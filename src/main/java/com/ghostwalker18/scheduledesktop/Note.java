@@ -21,13 +21,10 @@
  */
 package com.ghostwalker18.scheduledesktop;
 
-import com.sun.jndi.toolkit.url.Uri;
 import io.reactivex.rxjava3.annotations.NonNull;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 @Entity
@@ -47,5 +44,5 @@ public class Note {
     @NonNull
     public String text;
     @Column(name="notePhotoIDs")
-    public ArrayList<Uri> photoIDs;
+    public String photoIDs;
 }

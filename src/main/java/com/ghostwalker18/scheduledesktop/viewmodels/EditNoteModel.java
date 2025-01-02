@@ -45,7 +45,7 @@ public class EditNoteModel {
     private final BehaviorSubject<String> group = BehaviorSubject.createDefault(scheduleRepository.getSavedGroup());
     private boolean isEdited = false;
 
-    EditNoteModel(){
+    public EditNoteModel(){
         noteThemesMediator.subscribe((Consumer<String[]>) scheduleRepository.getSubjects(
                 scheduleRepository.getSavedGroup()));
     }

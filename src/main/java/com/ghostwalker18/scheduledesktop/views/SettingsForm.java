@@ -14,9 +14,8 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
-import com.ghostwalker18.scheduledesktop.Application;
+import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -65,7 +64,7 @@ public class SettingsForm {
         corpusesCodes.put(corpuses.getString("second"), "second");
     }
 
-    private final Preferences preferences = Application.getPreferences();
+    private final Preferences preferences = ScheduleApp.getPreferences();
     private JPanel mainPanel;
     private JLabel scheduleSettingsL;
     private JLabel doNotUpdateTimesL;
@@ -131,7 +130,7 @@ public class SettingsForm {
 
         saveButton.addActionListener(e -> {
             save();
-            Application.restartApplication();
+            ScheduleApp.restartApplication();
             SwingUtilities.getWindowAncestor(getMainPanel()).dispose();
         });
     }

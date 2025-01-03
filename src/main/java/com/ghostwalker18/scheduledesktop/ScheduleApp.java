@@ -16,7 +16,6 @@ package com.ghostwalker18.scheduledesktop;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -38,13 +37,8 @@ import java.util.prefs.Preferences;
  * @author  Ипатов Никита
  * @version  1.0
  */
-public class Application {
-    public static final String MONDAY_TIMES_URL =
-            "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
-    public static final String OTHER_TIMES_URL =
-            "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
-    public static final String BASE_URI = "https://ptgh.onego.ru/9006/";
-    private static Application instance = null;
+public class ScheduleApp {
+    private static ScheduleApp instance = null;
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;
     private ResourceBundle strings;
@@ -56,13 +50,13 @@ public class Application {
      * Этот метод используется для создания экземпляра приложения
      * @return синглтон приложения
      */
-    public static Application getInstance(){
+    public static ScheduleApp getInstance(){
         if(instance == null)
-            instance = new Application();
+            instance = new ScheduleApp();
         return instance;
     }
 
-    private Application(){
+    private ScheduleApp(){
         setupTheme();
         setupLanguage();
         frame = new JFrame(strings.getString("app_name"));
@@ -70,7 +64,7 @@ public class Application {
                 preferences.getInt("main_form_width", 800),
                 preferences.getInt("main_form_height", 500)));
         frame.setIconImage(Toolkit.getDefaultToolkit()
-                .createImage(Application.class.getResource("/images/favicon.png")));
+                .createImage(ScheduleApp.class.getResource("/images/favicon.png")));
         MainForm mainForm = new MainForm();
         frame.setContentPane(mainForm.getMainPanel());
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -89,7 +83,7 @@ public class Application {
         frame.setVisible(true);
         IAppDatabase db = AppDatabaseHibernate.getInstance();
         scheduleRepository = new ScheduleRepository(db,
-                new NetworkService(BASE_URI));
+                new NetworkService(ScheduleRepository.BASE_URI));
         notesRepository = new NotesRepository(db);
         scheduleRepository.update();
     }
@@ -150,7 +144,7 @@ public class Application {
     public static void restartApplication(){
         try{
             final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-            final File currentJar = new File(Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            final File currentJar = new File(ScheduleApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
             /* is it a jar file? */
             if(!currentJar.getName().endsWith(".jar"))
@@ -191,6 +185,6 @@ public class Application {
      */
     public static void main(String[] args){
         System.setProperty("sun.java2d.uiScale", "1");
-        Application app = Application.getInstance();
+        ScheduleApp app = ScheduleApp.getInstance();
     }
 }

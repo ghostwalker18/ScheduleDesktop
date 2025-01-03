@@ -26,14 +26,14 @@ import retrofit2.http.Url;
  *
  * @author  Ипатов Никита
  */
-public interface IScheduleNetworkAPI {
+public interface ScheduleNetworkAPI {
 
     /**
      * Получение файла расписания звонков на понедельник
      *
      * @return асинхронный ответ сервера
      */
-    @GET(Application.MONDAY_TIMES_URL)
+    @GET(ScheduleRepository.MONDAY_TIMES_URL)
     Call<ResponseBody> getMondayTimes();
 
     /**
@@ -41,7 +41,7 @@ public interface IScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(Application.OTHER_TIMES_URL)
+    @GET(ScheduleRepository.OTHER_TIMES_URL)
     Call<ResponseBody> getOtherTimes();
 
     /**
@@ -57,6 +57,6 @@ public interface IScheduleNetworkAPI {
      *
      * @return асинхронный ответ сервера
      */
-    @GET(Application.BASE_URI)
+    @GET(ScheduleRepository.BASE_URI)
     Call<Document> getMainPage();
 }

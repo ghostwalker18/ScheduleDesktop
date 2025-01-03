@@ -43,7 +43,7 @@ import java.util.Vector;
 public class MainForm
         implements WindowListener {
     private final ScheduleState state = new ScheduleState(new Date());
-    private final ScheduleRepository repository = Application.getInstance().getScheduleRepository();
+    private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
@@ -169,7 +169,7 @@ public class MainForm
         settingsButton.addActionListener(e -> {
             JFrame frame = new JFrame(strings.getString("settings"));
             frame.setIconImage(Toolkit.getDefaultToolkit()
-                    .createImage(Application.class.getResource("/images/baseline_settings_black_36dp.png")));
+                    .createImage(ScheduleApp.class.getResource("/images/baseline_settings_black_36dp.png")));
             frame.setPreferredSize(new Dimension(500, 400));
             frame.setContentPane(new SettingsForm().getMainPanel());
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

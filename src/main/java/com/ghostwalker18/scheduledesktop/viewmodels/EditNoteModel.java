@@ -14,7 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.viewmodels;
 
-import com.ghostwalker18.scheduledesktop.Application;
+import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.Note;
 import com.ghostwalker18.scheduledesktop.NotesRepository;
 import com.ghostwalker18.scheduledesktop.ScheduleRepository;
@@ -34,8 +34,8 @@ import java.util.List;
  * @see ScheduleRepository
  */
 public class EditNoteModel {
-    private final ScheduleRepository scheduleRepository = Application.getInstance().getScheduleRepository();
-    private final NotesRepository notesRepository = Application.getInstance().getNotesRepository();
+    private final ScheduleRepository scheduleRepository = ScheduleApp.getInstance().getScheduleRepository();
+    private final NotesRepository notesRepository = ScheduleApp.getInstance().getNotesRepository();
     private final BehaviorSubject<Note> note = BehaviorSubject.createDefault(new Note());
     private final BehaviorSubject<String[]> noteThemesMediator = BehaviorSubject.create();
     private Observable<String[]> themes = BehaviorSubject.create();

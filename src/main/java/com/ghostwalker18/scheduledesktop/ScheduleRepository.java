@@ -53,17 +53,22 @@ import java.util.prefs.Preferences;
  * @author  Ипатов Никита
  */
 public class ScheduleRepository {
+    public static final String BASE_URI = "https://ptgh.onego.ru/9006/";
     private static final String MAIN_SELECTOR = "h2:contains(Расписание занятий и объявления:) + div > table > tbody";
+    public static final String MONDAY_TIMES_URL =
+            "https://r1.nubex.ru/s1748-17b/47698615b7_fit-in~1280x800~filters:no_upscale()__f44488_08.jpg";
+    public static final String OTHER_TIMES_URL =
+            "https://r1.nubex.ru/s1748-17b/320e9d2d69_fit-in~1280x800~filters:no_upscale()__f44489_bb.jpg";
     public static final String MONDAY_TIMES_PATH = "mondayTimes.jpg";
     public static final String OTHER_TIMES_PATH = "otherTimes.jpg";
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    private final IScheduleNetworkAPI api;
+    private final ScheduleNetworkAPI api;
     private final IAppDatabase db;
     private final IConverter converter = new XMLStoLessonsConverter();
-    private final Preferences preferences = Application.getPreferences();
+    private final Preferences preferences = ScheduleApp.getPreferences();
     private final List<Pair<String, File>> scheduleFiles = new LinkedList<>();
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();

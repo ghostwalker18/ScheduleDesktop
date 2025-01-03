@@ -30,7 +30,7 @@ import retrofit2.Retrofit;
 public class NetworkService {
     private static final long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
     private final String baseUri;
-    private final Preferences preferences = Application.getPreferences();
+    private final Preferences preferences = ScheduleApp.getPreferences();
 
     public NetworkService(String baseUri){
         this.baseUri = baseUri;
@@ -40,7 +40,7 @@ public class NetworkService {
      * Этот метод позволяет получить API сайта ПТГХ.
      * @return API сайта для доступа к скачиванию файлов расписания
      */
-    public IScheduleNetworkAPI getScheduleAPI(){
+    public ScheduleNetworkAPI getScheduleAPI(){
         Retrofit.Builder apiBuilder = new Retrofit.Builder()
                 .baseUrl(baseUri)
                 .callbackExecutor(Executors.newFixedThreadPool(4))
@@ -58,6 +58,6 @@ public class NetworkService {
 
         return apiBuilder
                 .build()
-                .create(IScheduleNetworkAPI.class);
+                .create(ScheduleNetworkAPI.class);
     }
 }

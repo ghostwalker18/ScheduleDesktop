@@ -14,7 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.viewmodels;
 
-import com.ghostwalker18.scheduledesktop.Application;
+import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.Note;
 import com.ghostwalker18.scheduledesktop.NotesRepository;
 import com.ghostwalker18.scheduledesktop.views.NotesForm;
@@ -32,7 +32,7 @@ import java.util.List;
  * @see NotesForm
  */
 public class NotesModel {
-    private final NotesRepository repository = Application.getInstance().getNotesRepository();
+    private final NotesRepository repository = ScheduleApp.getInstance().getNotesRepository();
     private final BehaviorSubject<Note[]> notes = BehaviorSubject.create();
     private final BehaviorSubject<Calendar> startDate = BehaviorSubject.createDefault(Calendar.getInstance());
     private final BehaviorSubject<Calendar> endDate = BehaviorSubject.createDefault(Calendar.getInstance());
@@ -41,7 +41,7 @@ public class NotesModel {
     private Observable<Note[]> notesMediator = BehaviorSubject.create();
 
     public NotesModel(){
-        setGroup(Application.getInstance().getScheduleRepository().getSavedGroup());
+        setGroup(ScheduleApp.getInstance().getScheduleRepository().getSavedGroup());
     }
 
     /**

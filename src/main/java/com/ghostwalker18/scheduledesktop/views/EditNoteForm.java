@@ -14,12 +14,14 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
+import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.EditNoteModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ResourceBundle;
 
 /**
  * Этот класс представляет собой экран редактирования или добавления новой заметки
@@ -28,6 +30,10 @@ import java.awt.*;
  */
 public class EditNoteForm {
     private EditNoteModel model = new EditNoteModel();
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
     private JButton saveButton;
     private JButton discardButton;
     private JTextField groupField;
@@ -42,6 +48,14 @@ public class EditNoteForm {
 
     public EditNoteForm(){
         $$$setupUI$$$();
+        setupLanguage();
+    }
+
+    /**
+     * Этот метод используется для настройки всех надписей на экране, используя строковые ресурсы.
+     */
+    private void setupLanguage() {
+
     }
 
     /**

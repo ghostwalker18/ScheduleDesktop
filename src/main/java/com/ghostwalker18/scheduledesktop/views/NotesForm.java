@@ -14,12 +14,14 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
+import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.NotesModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ResourceBundle;
 
 /**
  * Этот классс представляет собой экран приложения, на котором отображаются заметки к занятиям.
@@ -28,6 +30,10 @@ import java.awt.*;
  */
 public class NotesForm {
     private final NotesModel model = new NotesModel();
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
     private JButton addNoteButton;
     private JList notesList;
     private JTextField searchField;
@@ -35,6 +41,14 @@ public class NotesForm {
 
     public NotesForm(){
         $$$setupUI$$$();
+        setupLanguage();
+    }
+
+    /**
+     * Этот метод используется для настройки всех надписей на экране, используя строковые ресурсы.
+     */
+    private void setupLanguage() {
+
     }
 
     /**

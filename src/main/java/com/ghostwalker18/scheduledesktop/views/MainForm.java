@@ -41,6 +41,7 @@ import java.util.Vector;
  * @author Ипатов Никита
  */
 public class MainForm
+        extends Form
         implements WindowListener {
     private final ScheduleState state = new ScheduleState(new Date());
     private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
@@ -48,12 +49,10 @@ public class MainForm
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    private JPanel mainPanel;
     private JComboBox<String> groupComboBox;
     private JButton clearGroupButton;
     private JComboBox<String> teacherComboBox;
     private JButton clearTeacherButton;
-    private JPanel headerPanel;
     private JLabel chooseGroupLabel;
     private JLabel chooseTeacherLabel;
     private JButton backwardButton;
@@ -63,47 +62,20 @@ public class MainForm
     private WeekdayButton wednesdayButton;
     private WeekdayButton thursdayButton;
     private WeekdayButton fridayButton;
-    private JPanel schedulePanel;
-    private JScrollPane scheduleScroll;
     private JTabbedPane tabs;
-    private JPanel schedule;
-    private JPanel times;
     private JButton shareButton;
     private JButton settingsButton;
     private JButton downloadScheduleButton;
     private ImageView mondayTimes;
     private ImageView otherTimes;
     private JProgressBar updateProgress;
-    private JPanel statusPanel;
     private JLabel updateStatus;
     private JButton refreshButton;
 
-    /**
-     * Этот метод используется для создания кастомных UI компоненетов.
-     */
-    private void createUIComponents() {
-        mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
-        state.addObserver(mondayButton);
-        tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("tuesday"));
-        state.addObserver(tuesdayButton);
-        wednesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("wednesday"));
-        state.addObserver(wednesdayButton);
-        thursdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("thursday"));
-        state.addObserver(thursdayButton);
-        fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("friday"));
-        state.addObserver(fridayButton);
-        mondayTimes = new ImageView();
-        otherTimes = new ImageView();
-    }
-
     public MainForm() {
-        createUIComponents();
-        $$$setupUI$$$();
-        setupLanguage();
+        super();
         setupGroupSearch();
         setupTeacherSearch();
-
-        scheduleScroll.getVerticalScrollBar().setUnitIncrement(6);
 
         clearGroupButton.addActionListener(e -> {
             groupComboBox.setSelectedIndex(0);
@@ -191,45 +163,6 @@ public class MainForm
         });
 
         groupComboBox.requestFocusInWindow();
-    }
-
-    /**
-     * Этот метод используется для настройки всех надписей на экране, используя строковые ресурсы.
-     */
-    private void setupLanguage() {
-        tabs.setTitleAt(0, strings.getString("days_tab"));
-        tabs.setTitleAt(1, strings.getString("times_tab"));
-
-        shareButton.setText(strings.getString("share"));
-        shareButton.setToolTipText(platformStrings.getString("share_tooltip"));
-
-        settingsButton.setText(strings.getString("settings"));
-        settingsButton.setToolTipText(platformStrings.getString("settings_tooltip"));
-
-        downloadScheduleButton.setText(strings.getString("download_schedule"));
-        downloadScheduleButton.setToolTipText(platformStrings.getString("download_tooltip"));
-
-        backwardButton.setText(strings.getString("back"));
-        backwardButton.setToolTipText(platformStrings.getString("backward_tooltip"));
-
-        forwardButton.setText(strings.getString("forward"));
-        forwardButton.setToolTipText(platformStrings.getString("forward_tooltip"));
-
-        chooseGroupLabel.setText(strings.getString("group_choice_text"));
-
-        groupComboBox.setToolTipText(platformStrings.getString("groups_tooltip"));
-
-        clearGroupButton.setText(platformStrings.getString("clear"));
-
-        chooseTeacherLabel.setText(strings.getString("teacher_choice_text"));
-
-        teacherComboBox.setToolTipText(platformStrings.getString("teachers_tooltip"));
-
-        clearTeacherButton.setText(platformStrings.getString("clear"));
-
-        updateStatus.setText(platformStrings.getString("downloading"));
-
-        refreshButton.setToolTipText(platformStrings.getString("update_tooltip"));
     }
 
     /**
@@ -328,6 +261,9 @@ public class MainForm
         return scheduleText;
     }
 
+    /**
+     * Этот метод используется для скачивания расписания в выбранную пользователем директорию.
+     */
     private void downloadSchedule(){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -353,24 +289,72 @@ public class MainForm
         }
     }
 
-    /**
-     * Method generated by IntelliJ IDEA GUI Designer
-     *
-     * @noinspection ALL
-     */
-    private void $$$setupUI$$$() {
-        createUIComponents();
+    @Override
+    protected void createUIComponents() {
+        mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
+        state.addObserver(mondayButton);
+        tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("tuesday"));
+        state.addObserver(tuesdayButton);
+        wednesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("wednesday"));
+        state.addObserver(wednesdayButton);
+        thursdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("thursday"));
+        state.addObserver(thursdayButton);
+        fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("friday"));
+        state.addObserver(fridayButton);
+        mondayTimes = new ImageView();
+        otherTimes = new ImageView();
+    }
+
+    @Override
+    protected void setupLanguage() {
+        tabs.setTitleAt(0, strings.getString("days_tab"));
+        tabs.setTitleAt(1, strings.getString("times_tab"));
+
+        shareButton.setText(strings.getString("share"));
+        shareButton.setToolTipText(platformStrings.getString("share_tooltip"));
+
+        settingsButton.setText(strings.getString("settings"));
+        settingsButton.setToolTipText(platformStrings.getString("settings_tooltip"));
+
+        downloadScheduleButton.setText(strings.getString("download_schedule"));
+        downloadScheduleButton.setToolTipText(platformStrings.getString("download_tooltip"));
+
+        backwardButton.setText(strings.getString("back"));
+        backwardButton.setToolTipText(platformStrings.getString("backward_tooltip"));
+
+        forwardButton.setText(strings.getString("forward"));
+        forwardButton.setToolTipText(platformStrings.getString("forward_tooltip"));
+
+        chooseGroupLabel.setText(strings.getString("group_choice_text"));
+
+        groupComboBox.setToolTipText(platformStrings.getString("groups_tooltip"));
+
+        clearGroupButton.setText(platformStrings.getString("clear"));
+
+        chooseTeacherLabel.setText(strings.getString("teacher_choice_text"));
+
+        teacherComboBox.setToolTipText(platformStrings.getString("teachers_tooltip"));
+
+        clearTeacherButton.setText(platformStrings.getString("clear"));
+
+        updateStatus.setText(platformStrings.getString("downloading"));
+
+        refreshButton.setToolTipText(platformStrings.getString("update_tooltip"));
+    }
+
+    @Override
+    protected void setupUI() {
         setMainPanel(new JPanel());
         getMainPanel().setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabs = new JTabbedPane();
         tabs.setTabPlacement(1);
         getMainPanel().add(tabs, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
-        schedule = new JPanel();
+        JPanel schedule = new JPanel();
         schedule.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
         schedule.setMaximumSize(new Dimension(-1, -1));
         schedule.setMinimumSize(new Dimension(-1, -1));
         tabs.addTab("Расписание", schedule);
-        headerPanel = new JPanel();
+        JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new GridLayoutManager(1, 6, new Insets(0, 10, 0, 10), -1, -1));
         schedule.add(headerPanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
         chooseGroupLabel = new JLabel();
@@ -390,14 +374,15 @@ public class MainForm
         headerPanel.add(teacherComboBox, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearTeacherButton = new JButton();
         headerPanel.add(clearTeacherButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        schedulePanel = new JPanel();
+        JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));
         schedule.add(schedulePanel, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(24, 105), null, 0, false));
         backwardButton = new JButton();
         schedulePanel.add(backwardButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         forwardButton = new JButton();
         schedulePanel.add(forwardButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        scheduleScroll = new JScrollPane();
+        JScrollPane scheduleScroll = new JScrollPane();
+        scheduleScroll.getVerticalScrollBar().setUnitIncrement(6);
         schedulePanel.add(scheduleScroll, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(34, 244), null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, 10));
@@ -407,7 +392,7 @@ public class MainForm
         panel1.add(wednesdayButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(thursdayButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(fridayButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        statusPanel = new JPanel();
+        JPanel statusPanel = new JPanel();
         statusPanel.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
         schedule.add(statusPanel, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, new Dimension(-1, 50), new Dimension(-1, 80), null, 0, false));
         final Spacer spacer1 = new Spacer();
@@ -425,7 +410,7 @@ public class MainForm
         refreshButton.setIcon(new ImageIcon(getClass()
                 .getResource("/images/baseline_refresh_black_24dp.png")));
         statusPanel.add(refreshButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        times = new JPanel();
+        JPanel times = new JPanel();
         times.setLayout(new GridLayoutManager(1, 2, new Insets(10, 20, 20, 20), -1, -1));
         times.setMaximumSize(new Dimension(-1, -1));
         times.setMinimumSize(new Dimension(-1, -1));
@@ -483,12 +468,4 @@ public class MainForm
 
     @Override
     public void windowDeactivated(WindowEvent e) {/*Not required*/}
-
-    public JPanel getMainPanel() {
-        return mainPanel;
-    }
-
-    public void setMainPanel(JPanel mainPanel) {
-        this.mainPanel = mainPanel;
-    }
 }

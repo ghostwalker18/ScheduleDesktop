@@ -56,9 +56,80 @@ public class ScheduleApp {
         return instance;
     }
 
+    /**
+     * Этот метод используется для перезапуска приложения. Работает только для приложения,
+     * упакованного в jar.
+     */
+    public static void restartApplication(){
+        try{
+            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            final File currentJar = new File(ScheduleApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            /* is it a jar file? */
+            if(!currentJar.getName().endsWith(".jar"))
+                return;
+
+            /* Build command: java -jar application.jar */
+            final ArrayList<String> command = new ArrayList<>();
+            command.add(javaBin);
+            command.add("-jar");
+            command.add(currentJar.getPath());
+
+            final ProcessBuilder builder = new ProcessBuilder(command);
+            builder.start();
+            System.exit(0);
+        }
+        catch (URISyntaxException | IOException ignored ){ /*ignored*/}
+    }
+
+    /**
+     * Этот метод используется для получения настроек приложения.
+     * @return настройки приложения
+     */
+    public static Preferences getPreferences(){
+        return preferences;
+    }
+
+    /**
+     * Этот метод используется для получения репозитория расписания приложения.
+     * @return синглтон репозитория расписания
+     */
+    public ScheduleRepository getScheduleRepository(){
+        return scheduleRepository;
+    }
+
+    /**
+     * Этот метод используется для получения репозитория заметок приложения.
+     * @return синглтон репозитория заметок
+     */
+    public NotesRepository getNotesRepository(){
+        return notesRepository;
+    }
+
+    /**
+     * Этот метод используется для отображения новой формы на экране
+     */
+    public void startActivity(Class<? extends Form> form){
+
+    }
+
+    /**
+     * Точка входа в приложение.
+     * @param args аргументы командной строки
+     */
+    public static void main(String[] args){
+        System.setProperty("sun.java2d.uiScale", "1");
+        ScheduleApp app = ScheduleApp.getInstance();
+    }
+
     private ScheduleApp(){
         setupTheme();
         setupLanguage();
+        IAppDatabase db = AppDatabaseHibernate.getInstance();
+        scheduleRepository = new ScheduleRepository(db,
+                new NetworkService(ScheduleRepository.BASE_URI));
+        notesRepository = new NotesRepository(db);
+        scheduleRepository.update();
         frame = new JFrame(strings.getString("app_name"));
         frame.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),
@@ -81,11 +152,6 @@ public class ScheduleApp {
         });
         frame.pack();
         frame.setVisible(true);
-        IAppDatabase db = AppDatabaseHibernate.getInstance();
-        scheduleRepository = new ScheduleRepository(db,
-                new NetworkService(ScheduleRepository.BASE_URI));
-        notesRepository = new NotesRepository(db);
-        scheduleRepository.update();
     }
 
     /**
@@ -135,56 +201,5 @@ public class ScheduleApp {
                 platformStrings.getString("saveButtonText"));
         UIManager.put("FileChooser.cancelButtonText",
                 platformStrings.getString("cancelButtonText"));
-    }
-
-    /**
-     * Этот метод используется для перезапуска приложения. Работает только для приложения,
-     * упакованного в jar.
-     */
-    public static void restartApplication(){
-        try{
-            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-            final File currentJar = new File(ScheduleApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-
-            /* is it a jar file? */
-            if(!currentJar.getName().endsWith(".jar"))
-                return;
-
-            /* Build command: java -jar application.jar */
-            final ArrayList<String> command = new ArrayList<>();
-            command.add(javaBin);
-            command.add("-jar");
-            command.add(currentJar.getPath());
-
-            final ProcessBuilder builder = new ProcessBuilder(command);
-            builder.start();
-            System.exit(0);
-        }
-        catch (URISyntaxException | IOException ignored ){ /*ignored*/}
-    }
-
-    /**
-     * Этот метод используется для получения настроек приложения.
-     * @return настройки приложения
-     */
-    public static Preferences getPreferences(){
-        return preferences;
-    }
-
-    public ScheduleRepository getScheduleRepository(){
-        return scheduleRepository;
-    }
-
-    public NotesRepository getNotesRepository(){
-        return notesRepository;
-    }
-
-    /**
-     * Точка входа в приложение.
-     * @param args аргументы командной строки
-     */
-    public static void main(String[] args){
-        System.setProperty("sun.java2d.uiScale", "1");
-        ScheduleApp app = ScheduleApp.getInstance();
     }
 }

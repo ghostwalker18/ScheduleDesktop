@@ -42,4 +42,6 @@
     <entry key="saveButtonText">Сохранить</entry>
     <entry key="cancelButtonText">Отмена</entry>
     <entry key="availability_column">Доступность</entry>
+    <entry key="notes_filter">Фильтр</entry>
+    <entry key="date_choice">Выбрать дату</entry>
 </properties>

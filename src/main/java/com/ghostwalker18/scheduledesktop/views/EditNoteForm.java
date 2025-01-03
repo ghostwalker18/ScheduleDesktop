@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
-import com.ghostwalker18.scheduledesktop.Form;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.EditNoteModel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -41,7 +40,7 @@ public class EditNoteForm
     private JTextField groupField;
     private JTextField themeField;
     private JTextField textField;
-    private JButton clearButton;
+    private JButton groupClear;
     private JButton themeClear;
     private JButton textClear;
     private JButton chooseDate;
@@ -54,7 +53,14 @@ public class EditNoteForm
 
     @Override
     protected void setupLanguage() {
-
+        setTitle(strings.getString("edit_note_activity"));
+        dateLabel.setText(strings.getString("date"));
+        chooseDate.setText(platformStrings.getString("date_choice"));
+        groupClear.setText(platformStrings.getString("clear"));
+        themeClear.setText(platformStrings.getString("clear"));
+        textClear.setText(platformStrings.getString("clear"));
+        saveButton.setText(platformStrings.getString("saveButtonText"));
+        discardButton.setText(platformStrings.getString("cancelButtonText"));
     }
 
     @Override
@@ -83,9 +89,9 @@ public class EditNoteForm
         panel2.add(panel4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         groupField = new JTextField();
         panel4.add(groupField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        clearButton = new JButton();
-        clearButton.setText("Очистить");
-        panel4.add(clearButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        groupClear = new JButton();
+        groupClear.setText("Очистить");
+        panel4.add(groupClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel2.add(panel5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

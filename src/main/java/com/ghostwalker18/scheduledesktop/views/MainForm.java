@@ -307,6 +307,8 @@ public class MainForm
 
     @Override
     protected void setupLanguage() {
+        setTitle(strings.getString("app_name"));
+
         tabs.setTitleAt(0, strings.getString("days_tab"));
         tabs.setTitleAt(1, strings.getString("times_tab"));
 

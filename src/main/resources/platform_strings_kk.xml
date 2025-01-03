@@ -42,4 +42,6 @@
     <entry key="saveButtonText">Сақтау</entry>
     <entry key="cancelButtonText">Бас тарту</entry>
     <entry key="availability_column">Қол жетімділік</entry>
+    <entry key="notes_filter">Сүзгі</entry>
+    <entry key="date_choice">Күнді таңдаңыз</entry>
 </properties>

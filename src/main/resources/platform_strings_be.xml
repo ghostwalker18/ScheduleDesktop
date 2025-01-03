@@ -42,4 +42,6 @@
     <entry key="saveButtonText">Захаваць</entry>
     <entry key="cancelButtonText">Адмена</entry>
     <entry key="availability_column">Даступнасьць</entry>
+    <entry key="notes_filter">Фільтр</entry>
+    <entry key="date_choice">Выбраць дату</entry>
 </properties>

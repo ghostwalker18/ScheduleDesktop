@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
-import com.ghostwalker18.scheduledesktop.Form;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.NotesModel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -47,7 +46,9 @@ public class NotesForm
 
     @Override
     protected void setupLanguage() {
-
+        setTitle(strings.getString("notes_activity"));
+        filterButton.setText(platformStrings.getString("notes_filter"));
+        addNoteButton.setText(strings.getString("add_note`"));
     }
 
     @Override

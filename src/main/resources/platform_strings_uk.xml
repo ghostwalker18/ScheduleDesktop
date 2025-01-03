@@ -42,4 +42,6 @@
     <entry key="saveButtonText">Зберігши</entry>
     <entry key="cancelButtonText">Скасування</entry>
     <entry key="availability_column">Доступність</entry>
+    <entry key="notes_filter">Фільтр</entry>
+    <entry key="date_choice">Вибрати дату</entry>
 </properties>

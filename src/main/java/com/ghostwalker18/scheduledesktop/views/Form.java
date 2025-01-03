@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.views;
 
 import javax.swing.*;
 
@@ -22,7 +22,8 @@ import javax.swing.*;
  * @author  Ипатов Никита
  */
 public abstract class Form {
-    private JPanel mainPanel;
+    private JPanel mainPanel = new JPanel();
+    private String title = "Form";
 
     /**
      * Этот метод используется для получения основной (корневой) панели формы,
@@ -38,6 +39,22 @@ public abstract class Form {
      */
     public void setMainPanel(JPanel mainPanel) {
         this.mainPanel = mainPanel;
+    }
+
+    /**
+     * Этот метод возвращает заголовок формы.
+     * @return заголовок формы
+     */
+    public String getTitle(){
+        return title;
+    }
+
+    /**
+     * Этот метод устанавливает заголовок формы
+     * @param title заголовок формы
+     */
+    public void setTitle(String title){
+        this.title = title;
     }
 
     protected Form(){

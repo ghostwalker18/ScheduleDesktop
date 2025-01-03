@@ -15,6 +15,7 @@
 package com.ghostwalker18.scheduledesktop;
 
 import com.formdev.flatlaf.FlatLaf;
+import com.ghostwalker18.scheduledesktop.views.Form;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import javax.swing.*;
 import java.awt.*;
@@ -41,8 +42,6 @@ public class ScheduleApp {
     private static ScheduleApp instance = null;
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;
-    private ResourceBundle strings;
-    private ResourceBundle platformStrings;
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final JFrame frame;
 
@@ -84,7 +83,7 @@ public class ScheduleApp {
 
     /**
      * Этот метод используется для получения настроек приложения.
-     * @return настройки приложения
+     * @return синглтон настроек приложения
      */
     public static Preferences getPreferences(){
         return preferences;
@@ -109,7 +108,7 @@ public class ScheduleApp {
     /**
      * Этот метод используется для отображения новой формы на экране
      */
-    public void startActivity(Class<? extends Form> form){
+    public void startActivity(Class<? extends Form> formType){
 
     }
 
@@ -130,13 +129,16 @@ public class ScheduleApp {
                 new NetworkService(ScheduleRepository.BASE_URI));
         notesRepository = new NotesRepository(db);
         scheduleRepository.update();
-        frame = new JFrame(strings.getString("app_name"));
+
+
+        MainForm mainForm = new MainForm();
+        frame = new JFrame();
+        frame.setTitle(mainForm.getTitle());
         frame.setPreferredSize(new Dimension(
                 preferences.getInt("main_form_width", 800),
                 preferences.getInt("main_form_height", 500)));
         frame.setIconImage(Toolkit.getDefaultToolkit()
                 .createImage(ScheduleApp.class.getResource("/images/favicon.png")));
-        MainForm mainForm = new MainForm();
         frame.setContentPane(mainForm.getMainPanel());
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         //This shit is important: listeners are called in order they are added!!!
@@ -176,9 +178,7 @@ public class ScheduleApp {
     private void setupLanguage(){
         Locale locale = new Locale(preferences.get("language", "ru"));
         Locale.setDefault(locale);
-        strings = ResourceBundle.getBundle("strings",
-                new XMLBundleControl());
-        platformStrings = ResourceBundle.getBundle("platform_strings",
+        ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
                 new XMLBundleControl());
         //localization of file chooser
         UIManager.put("FileChooser.lookInLabelText",

@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
+import com.ghostwalker18.scheduledesktop.Bundle;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import javax.swing.*;
@@ -81,8 +82,8 @@ public class SettingsForm
     private JComboBox<String> themeComboBox;
     private JButton saveButton;
 
-    public SettingsForm() {
-        super();
+    public SettingsForm(Bundle bundle) {
+        super(bundle);
 
         languageComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(languagesCodes
                 .keySet()
@@ -157,7 +158,7 @@ public class SettingsForm
     /**
      * Этот метод используется для настройки всех надписей на экране, используя строковые ресурсы.
      */
-    protected void setupLanguage() {
+    protected void onSetupLanguage() {
         scheduleSettingsL.setText(strings.getString("schedule_settings"));
         doNotUpdateTimesL.setText(strings.getString("option_do_not_update_times"));
         networkSettingsL.setText(strings.getString("network_settings"));
@@ -171,7 +172,7 @@ public class SettingsForm
     }
 
     @Override
-    protected void setupUI() {
+    protected void onCreateUI() {
         setMainPanel(new JPanel());
         getMainPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc;

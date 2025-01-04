@@ -26,7 +26,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,13 +40,12 @@ import java.util.Vector;
  * @author Ипатов Никита
  */
 public class MainForm
-        extends Form
-        implements WindowListener {
-    private final ScheduleState state = new ScheduleState(new Date());
+        extends Form {
     private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
-    private final ResourceBundle strings = ResourceBundle.getBundle("strings",
+    private ScheduleState state;
+    private ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
-    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+    private ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private JComboBox<String> groupComboBox;
     private JButton clearGroupButton;
@@ -72,8 +70,8 @@ public class MainForm
     private JLabel updateStatus;
     private JButton refreshButton;
 
-    public MainForm() {
-        super();
+    public MainForm(Bundle bundle) {
+        super(bundle);
         setupGroupSearch();
         setupTeacherSearch();
 
@@ -143,7 +141,7 @@ public class MainForm
             frame.setIconImage(Toolkit.getDefaultToolkit()
                     .createImage(ScheduleApp.class.getResource("/images/baseline_settings_black_36dp.png")));
             frame.setPreferredSize(new Dimension(500, 400));
-            frame.setContentPane(new SettingsForm().getMainPanel());
+            frame.setContentPane(new SettingsForm(null).getMainPanel());
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);
@@ -290,7 +288,16 @@ public class MainForm
     }
 
     @Override
-    protected void createUIComponents() {
+    protected void onCreate(Bundle bundle){
+        state = new ScheduleState(new Date());
+        strings = ResourceBundle.getBundle("strings",
+                new XMLBundleControl());
+        platformStrings = ResourceBundle.getBundle("platform_strings",
+                new XMLBundleControl());
+    }
+
+    @Override
+    protected void onCreateUIComponents() {
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
         state.addObserver(mondayButton);
         tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("tuesday"));
@@ -306,7 +313,7 @@ public class MainForm
     }
 
     @Override
-    protected void setupLanguage() {
+    protected void onSetupLanguage() {
         setTitle(strings.getString("app_name"));
 
         tabs.setTitleAt(0, strings.getString("days_tab"));
@@ -345,7 +352,7 @@ public class MainForm
     }
 
     @Override
-    protected void setupUI() {
+    protected void onCreateUI() {
         setMainPanel(new JPanel());
         getMainPanel().setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabs = new JTabbedPane();
@@ -361,7 +368,7 @@ public class MainForm
         schedule.add(headerPanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(634, 55), null, 0, false));
         chooseGroupLabel = new JLabel();
         headerPanel.add(chooseGroupLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        groupComboBox = new JComboBox<String>();
+        groupComboBox = new JComboBox<>();
         groupComboBox.setEditable(false);
         groupComboBox.setPopupVisible(false);
         groupComboBox.setToolTipText("");
@@ -371,7 +378,7 @@ public class MainForm
         headerPanel.add(clearGroupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chooseTeacherLabel = new JLabel();
         headerPanel.add(chooseTeacherLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        teacherComboBox = new JComboBox<String>();
+        teacherComboBox = new JComboBox<>();
         teacherComboBox.setEditable(false);
         headerPanel.add(teacherComboBox, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearTeacherButton = new JButton();
@@ -441,9 +448,6 @@ public class MainForm
         toolBar1.add(settingsButton);
     }
 
-    @Override
-    public void windowOpened(WindowEvent e) {/*Not required*/}
-
     /**
      * Этот метод используется для реакции на событие закрытия окна. Сохранаяет текущею выбранную группу.
      * @param e the event to be processed
@@ -455,19 +459,4 @@ public class MainForm
             repository.saveGroup(savedGroup);
         } catch (Exception ignored) {/*Not required*/}
     }
-
-    @Override
-    public void windowClosed(WindowEvent e) {/*Not required*/}
-
-    @Override
-    public void windowIconified(WindowEvent e) {/*Not required*/}
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {/*Not required*/}
-
-    @Override
-    public void windowActivated(WindowEvent e) {/*Not required*/}
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {/*Not required*/}
 }

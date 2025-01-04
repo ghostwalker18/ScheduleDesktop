@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
+import com.ghostwalker18.scheduledesktop.Bundle;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.EditNoteModel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -47,12 +48,12 @@ public class EditNoteForm
     private JLabel dateField;
     private JLabel dateLabel;
 
-    public EditNoteForm(){
-        super();
+    public EditNoteForm(Bundle bundle){
+        super(bundle);
     }
 
     @Override
-    protected void setupLanguage() {
+    protected void onSetupLanguage() {
         setTitle(strings.getString("edit_note_activity"));
         dateLabel.setText(strings.getString("date"));
         chooseDate.setText(platformStrings.getString("date_choice"));
@@ -64,7 +65,7 @@ public class EditNoteForm
     }
 
     @Override
-    protected void setupUI() {
+    protected void onCreateUI() {
         final JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel2 = new JPanel();

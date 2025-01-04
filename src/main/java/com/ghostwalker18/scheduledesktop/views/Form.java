@@ -14,14 +14,21 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
+import com.ghostwalker18.scheduledesktop.Bundle;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 /**
  * Этот класс является базовым для всех экранных форм
  *
  * @author  Ипатов Никита
  */
-public abstract class Form {
+public abstract class Form
+        implements WindowListener {
+    protected Bundle bundle;
+    protected Dimension preferredSize = new Dimension(800, 500);
     private JPanel mainPanel = new JPanel();
     private String title = "Form";
 
@@ -57,17 +64,27 @@ public abstract class Form {
         this.title = title;
     }
 
-    protected Form(){
-        onCreate();
+    /**
+     * Этот метод возвращает предпочитаемый размер экранного окна для данной формы.
+     * @return предпочитаемый размер формы
+     */
+    public Dimension getPreferredSize(){
+        return preferredSize;
+    }
+
+    protected Form(Bundle bundle){
+        this.bundle = bundle;
+        onCreate(bundle);
         onCreateUIComponents();
         onCreateUI();
         onSetupLanguage();
+        onCreatedUI();
     }
 
     /**
      * Этот метод используется для начальной инициализации формы.
      */
-    protected void onCreate(){/*To be overridden*/}
+    protected void onCreate(Bundle bundle){/*To be overridden*/}
 
     /**
      * Этот метод используется для создания кастомных UI компоненетов формы.
@@ -83,5 +100,30 @@ public abstract class Form {
      * Этот метод используется для настройки всех надписей UI интерфейса
      * с использованием строковых ресурсов.
      */
-    protected void onSetupLanguage(){/*To be overridden*/};
+    protected void onSetupLanguage(){/*To be overridden*/}
+
+    /**
+     * Этот метод используется для настройки поведения формы после создания UI.
+     */
+    protected void onCreatedUI(){/*To be overridden*/}
+    @Override
+    public void windowOpened(WindowEvent e) {/*To be overridden*/}
+
+    @Override
+    public void windowClosing(WindowEvent e) {/*To be overridden*/}
+
+    @Override
+    public void windowClosed(WindowEvent e) {/*To be overridden*/}
+
+    @Override
+    public void windowIconified(WindowEvent e) {/*To be overridden*/}
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {/*To be overridden*/}
+
+    @Override
+    public void windowActivated(WindowEvent e) {/*To be overridden*/}
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {/*To be overridden*/}
 }

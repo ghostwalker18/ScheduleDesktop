@@ -19,8 +19,6 @@ import com.ghostwalker18.scheduledesktop.views.Form;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -44,6 +42,8 @@ public class ScheduleApp {
     private final NotesRepository notesRepository;
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final JFrame frame;
+    private final JPanel panel;
+    private Form currentForm;
 
     /**
      * Этот метод используется для создания экземпляра приложения
@@ -109,7 +109,19 @@ public class ScheduleApp {
      * Этот метод используется для отображения новой формы на экране
      */
     public void startActivity(Class<? extends Form> formType, Bundle bundle){
-
+        Form newForm;
+        try{
+            newForm = formType.getConstructor(Bundle.class).newInstance(bundle);
+        } catch (Exception e){
+            newForm = new MainForm(bundle);
+        }
+        frame.setTitle(newForm.getTitle());
+        frame.setPreferredSize(newForm.getPreferredSize());
+        frame.addWindowListener(newForm);
+        frame.removeWindowListener(currentForm);
+        panel.remove(0);
+        panel.add(newForm.getMainPanel());
+        currentForm = newForm;
     }
 
     /**
@@ -131,7 +143,7 @@ public class ScheduleApp {
         scheduleRepository.update();
 
 
-        MainForm mainForm = new MainForm();
+        /*MainForm mainForm = new MainForm();
         frame = new JFrame();
         frame.setTitle(mainForm.getTitle());
         frame.setPreferredSize(new Dimension(
@@ -152,6 +164,21 @@ public class ScheduleApp {
                 System.exit(0);
             }
         });
+        frame.pack();
+        frame.setVisible(true);*/
+
+        frame = new JFrame();
+        panel = new JPanel();
+        MainForm initialForm = new MainForm(null);
+        currentForm = initialForm;
+        frame.setIconImage(Toolkit.getDefaultToolkit()
+                .createImage(ScheduleApp.class.getResource("/images/favicon.png")));
+        frame.setContentPane(panel);
+        frame.setTitle(initialForm.getTitle());
+        frame.setPreferredSize(initialForm.getPreferredSize());
+        panel.add(initialForm.getMainPanel());
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.addWindowListener(initialForm);
         frame.pack();
         frame.setVisible(true);
     }

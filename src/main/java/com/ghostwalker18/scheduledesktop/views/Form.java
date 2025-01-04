@@ -58,24 +58,30 @@ public abstract class Form {
     }
 
     protected Form(){
-        createUIComponents();
-        setupUI();
-        setupLanguage();
+        onCreate();
+        onCreateUIComponents();
+        onCreateUI();
+        onSetupLanguage();
     }
+
+    /**
+     * Этот метод используется для начальной инициализации формы.
+     */
+    protected void onCreate(){/*To be overridden*/}
 
     /**
      * Этот метод используется для создания кастомных UI компоненетов формы.
      */
-    protected void createUIComponents(){/*To be overridden*/}
+    protected void onCreateUIComponents(){/*To be overridden*/}
 
     /**
      * Этот метод используется для создания UI интерфейса формы.
      */
-    abstract protected void setupUI();
+    abstract protected void onCreateUI();
 
     /**
      * Этот метод используется для настройки всех надписей UI интерфейса
      * с использованием строковых ресурсов.
      */
-    protected void setupLanguage(){/*To be overridden*/};
+    protected void onSetupLanguage(){/*To be overridden*/};
 }

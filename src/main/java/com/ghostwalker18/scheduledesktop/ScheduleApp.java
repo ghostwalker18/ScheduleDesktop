@@ -108,7 +108,7 @@ public class ScheduleApp {
     /**
      * Этот метод используется для отображения новой формы на экране
      */
-    public void startActivity(Class<? extends Form> formType){
+    public void startActivity(Class<? extends Form> formType, Bundle bundle){
 
     }
 

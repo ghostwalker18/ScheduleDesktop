@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
-import com.ghostwalker18.scheduledesktop.Bundle;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import javax.swing.*;
@@ -41,7 +40,7 @@ public class SettingsForm
             new XMLBundleControl());
     private static final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
-    private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+    private static final  ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private static final Map<String, String> languagesCodes = new HashMap<>();
     private static final Map<String, String> themesCodes = new HashMap<>();
@@ -53,19 +52,14 @@ public class SettingsForm
         languagesCodes.put(languages.getString("be"), "be");
         languagesCodes.put(languages.getString("uk"), "uk");
         languagesCodes.put(languages.getString("kk"), "kk");
-    }
 
-    static {
         themesCodes.put(themes.getString("dark"), "dark");
         themesCodes.put(themes.getString("light"), "light");
-    }
-    
-    static {
+
         corpusesCodes.put(corpuses.getString("all"), "all");
         corpusesCodes.put(corpuses.getString("first"), "first");
         corpusesCodes.put(corpuses.getString("second"), "second");
     }
-
     private final Preferences preferences = ScheduleApp.getPreferences();
     private JLabel scheduleSettingsL;
     private JLabel doNotUpdateTimesL;
@@ -82,9 +76,28 @@ public class SettingsForm
     private JComboBox<String> themeComboBox;
     private JButton saveButton;
 
-    public SettingsForm(Bundle bundle) {
-        super(bundle);
+    /**
+     * Этот метод используется для сохранения выбранных настроек
+     */
+    private void save() {
+        boolean doNotUpdateTimes = doNotUpdateTimesCB.isSelected();
+        preferences.putBoolean("doNotUpdateTimes", doNotUpdateTimes);
 
+        String selectedLanguage = languageComboBox.getSelectedItem().toString();
+        preferences.put("language", languagesCodes.get(selectedLanguage));
+
+        String selectedTheme = themeComboBox.getSelectedItem().toString();
+        preferences.put("theme", themesCodes.get(selectedTheme));
+
+        String selectedDownloadFor = downloadForComboBox.getSelectedItem().toString();
+        preferences.put("downloadFor", corpusesCodes.get(selectedDownloadFor));
+
+        boolean enableCaching = enableCachingCB.isSelected();
+        preferences.putBoolean("enableCaching", enableCaching);
+    }
+
+    @Override
+    public void onCreatedUI() {
         languageComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(languagesCodes
                 .keySet()
                 .stream()
@@ -135,30 +148,8 @@ public class SettingsForm
         });
     }
 
-    /**
-     * Этот метод используется для сохранения выбранных настроек
-     */
-    private void save() {
-        boolean doNotUpdateTimes = doNotUpdateTimesCB.isSelected();
-        preferences.putBoolean("doNotUpdateTimes", doNotUpdateTimes);
-
-        String selectedLanguage = languageComboBox.getSelectedItem().toString();
-        preferences.put("language", languagesCodes.get(selectedLanguage));
-
-        String selectedTheme = themeComboBox.getSelectedItem().toString();
-        preferences.put("theme", themesCodes.get(selectedTheme));
-
-        String selectedDownloadFor = downloadForComboBox.getSelectedItem().toString();
-        preferences.put("downloadFor", corpusesCodes.get(selectedDownloadFor));
-
-        boolean enableCaching = enableCachingCB.isSelected();
-        preferences.putBoolean("enableCaching", enableCaching);
-    }
-
-    /**
-     * Этот метод используется для настройки всех надписей на экране, используя строковые ресурсы.
-     */
-    protected void onSetupLanguage() {
+    public void onSetupLanguage() {
+        setTitle(strings.getString("settings"));
         scheduleSettingsL.setText(strings.getString("schedule_settings"));
         doNotUpdateTimesL.setText(strings.getString("option_do_not_update_times"));
         networkSettingsL.setText(strings.getString("network_settings"));
@@ -172,7 +163,7 @@ public class SettingsForm
     }
 
     @Override
-    protected void onCreateUI() {
+    public void onCreateUI() {
         setMainPanel(new JPanel());
         getMainPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc;

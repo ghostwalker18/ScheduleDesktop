@@ -34,7 +34,7 @@ public class EditNoteForm
     private final EditNoteModel model = new EditNoteModel();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
-    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+    private ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private JButton saveButton;
     private JButton discardButton;
@@ -48,12 +48,18 @@ public class EditNoteForm
     private JLabel dateField;
     private JLabel dateLabel;
 
-    public EditNoteForm(Bundle bundle){
-        super(bundle);
+    @Override
+    public void onCreate(Bundle bundle) {
+
     }
 
     @Override
-    protected void onSetupLanguage() {
+    public void onCreatedUI() {
+
+    }
+
+    @Override
+    public void onSetupLanguage() {
         setTitle(strings.getString("edit_note_activity"));
         dateLabel.setText(strings.getString("date"));
         chooseDate.setText(platformStrings.getString("date_choice"));
@@ -65,7 +71,7 @@ public class EditNoteForm
     }
 
     @Override
-    protected void onCreateUI() {
+    public void onCreateUI() {
         final JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel2 = new JPanel();

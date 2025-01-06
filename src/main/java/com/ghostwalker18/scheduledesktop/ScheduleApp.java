@@ -37,12 +37,11 @@ import java.util.prefs.Preferences;
  * @version  1.0
  */
 public class ScheduleApp {
+    private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private static ScheduleApp instance = null;
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;
-    private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final JFrame frame;
-    private final JPanel panel;
     private Form currentForm;
 
     /**
@@ -109,19 +108,15 @@ public class ScheduleApp {
      * Этот метод используется для отображения новой формы на экране
      */
     public void startActivity(Class<? extends Form> formType, Bundle bundle){
-        Form newForm;
-        try{
-            newForm = formType.getConstructor(Bundle.class).newInstance(bundle);
-        } catch (Exception e){
-            newForm = new MainForm(bundle);
+        Form newForm = new Form.FormFactory().createForm(formType, bundle);
+        if(newForm != null){
+            frame.setTitle(newForm.getTitle());
+            frame.setPreferredSize(newForm.getPreferredSize());
+            frame.addWindowListener(newForm);
+            frame.removeWindowListener(currentForm);
+            frame.setContentPane(newForm.getMainPanel());
+            currentForm = newForm;
         }
-        frame.setTitle(newForm.getTitle());
-        frame.setPreferredSize(newForm.getPreferredSize());
-        frame.addWindowListener(newForm);
-        frame.removeWindowListener(currentForm);
-        panel.remove(0);
-        panel.add(newForm.getMainPanel());
-        currentForm = newForm;
     }
 
     /**
@@ -134,49 +129,22 @@ public class ScheduleApp {
     }
 
     private ScheduleApp(){
+        instance = this;
         setupTheme();
         setupLanguage();
         IAppDatabase db = AppDatabaseHibernate.getInstance();
         scheduleRepository = new ScheduleRepository(db,
                 new NetworkService(ScheduleRepository.BASE_URI));
         notesRepository = new NotesRepository(db);
-        scheduleRepository.update();
-
-
-        /*MainForm mainForm = new MainForm();
+        //scheduleRepository.update();
         frame = new JFrame();
-        frame.setTitle(mainForm.getTitle());
-        frame.setPreferredSize(new Dimension(
-                preferences.getInt("main_form_width", 800),
-                preferences.getInt("main_form_height", 500)));
-        frame.setIconImage(Toolkit.getDefaultToolkit()
-                .createImage(ScheduleApp.class.getResource("/images/favicon.png")));
-        frame.setContentPane(mainForm.getMainPanel());
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        //This shit is important: listeners are called in order they are added!!!
-        frame.addWindowListener(mainForm);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                preferences.putInt("main_form_width", frame.getWidth());
-                preferences.putInt("main_form_height", frame.getHeight());
-                frame.dispose();
-                System.exit(0);
-            }
-        });
-        frame.pack();
-        frame.setVisible(true);*/
-
-        frame = new JFrame();
-        panel = new JPanel();
-        MainForm initialForm = new MainForm(null);
+        Form initialForm = new Form.FormFactory().createForm(MainForm.class, null);
         currentForm = initialForm;
         frame.setIconImage(Toolkit.getDefaultToolkit()
                 .createImage(ScheduleApp.class.getResource("/images/favicon.png")));
-        frame.setContentPane(panel);
+        frame.setContentPane(initialForm.getMainPanel());
         frame.setTitle(initialForm.getTitle());
         frame.setPreferredSize(initialForm.getPreferredSize());
-        panel.add(initialForm.getMainPanel());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.addWindowListener(initialForm);
         frame.pack();

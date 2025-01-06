@@ -31,36 +31,30 @@ import java.util.ResourceBundle;
  */
 public class NotesForm
         extends Form {
-    private NotesModel model;
-    private ResourceBundle strings;
-    private ResourceBundle platformStrings;
+    private final NotesModel model = new NotesModel();
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());;
     private JButton addNoteButton;
     private JList notesList;
     private JTextField searchField;
     private JButton filterButton;
 
-    public NotesForm(Bundle bundle){
-        super(bundle);
+    @Override
+    public void onCreatedUI() {
+        super.onCreatedUI();
     }
 
     @Override
-    protected void onCreate(Bundle bundle){
-        model = new NotesModel();
-        strings = ResourceBundle.getBundle("strings",
-                new XMLBundleControl());
-        platformStrings = ResourceBundle.getBundle("platform_strings",
-                new XMLBundleControl());
-    }
-
-    @Override
-    protected void onSetupLanguage() {
+    public void onSetupLanguage() {
         setTitle(strings.getString("notes_activity"));
         filterButton.setText(platformStrings.getString("notes_filter"));
         addNoteButton.setText(strings.getString("add_note`"));
     }
 
     @Override
-    protected void onCreateUI() {
+    public void onCreateUI() {
         final JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel2 = new JPanel();

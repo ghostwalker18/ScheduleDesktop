@@ -27,7 +27,6 @@ import java.awt.event.WindowListener;
  */
 public abstract class Form
         implements WindowListener {
-    protected Bundle bundle;
     protected Dimension preferredSize = new Dimension(800, 500);
     private JPanel mainPanel = new JPanel();
     private String title = "Form";
@@ -72,40 +71,31 @@ public abstract class Form
         return preferredSize;
     }
 
-    protected Form(Bundle bundle){
-        this.bundle = bundle;
-        onCreate(bundle);
-        onCreateUIComponents();
-        onCreateUI();
-        onSetupLanguage();
-        onCreatedUI();
-    }
-
     /**
      * Этот метод используется для начальной инициализации формы.
      */
-    protected void onCreate(Bundle bundle){/*To be overridden*/}
+    public void onCreate(Bundle bundle){/*To be overridden*/}
 
     /**
      * Этот метод используется для создания кастомных UI компоненетов формы.
      */
-    protected void onCreateUIComponents(){/*To be overridden*/}
+    public void onCreateUIComponents(){/*To be overridden*/}
 
     /**
      * Этот метод используется для создания UI интерфейса формы.
      */
-    abstract protected void onCreateUI();
+    public abstract void onCreateUI();
 
     /**
      * Этот метод используется для настройки всех надписей UI интерфейса
      * с использованием строковых ресурсов.
      */
-    protected void onSetupLanguage(){/*To be overridden*/}
+    public void onSetupLanguage(){/*To be overridden*/}
 
     /**
      * Этот метод используется для настройки поведения формы после создания UI.
      */
-    protected void onCreatedUI(){/*To be overridden*/}
+    public void onCreatedUI(){/*To be overridden*/}
     @Override
     public void windowOpened(WindowEvent e) {/*To be overridden*/}
 
@@ -126,4 +116,32 @@ public abstract class Form
 
     @Override
     public void windowDeactivated(WindowEvent e) {/*To be overridden*/}
+
+    /**
+     * Этот класс используется для создания форм заданного типа.
+     *
+     * @author Ипатов Никита
+     */
+    public static class FormFactory {
+
+        /**
+         * Этот метод возвращает сконфигурированную форму заданного типа.
+         * @param formType тип формы
+         * @param bundle передаваемые в форму данные
+         * @return сконфигурированная форма
+         */
+        public Form createForm(Class<? extends Form> formType, Bundle bundle){
+            try{
+                Form newForm = formType.getConstructor().newInstance();
+                newForm.onCreate(bundle);
+                newForm.onCreateUIComponents();
+                newForm.onCreateUI();
+                newForm.onSetupLanguage();
+                newForm.onCreatedUI();
+                return newForm;
+            } catch (Exception e){
+                return null;
+            }
+        }
+    }
 }

@@ -29,23 +29,14 @@ import java.util.ResourceBundle;
  */
 public class ShareAppForm
         extends Form {
-    private ResourceBundle platformStrings;
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
     private JLabel QRLabel;
     private JLabel OrLabel;
     private JButton shareButton;
 
-    protected ShareAppForm(Bundle bundle) {
-        super(bundle);
-    }
-
     @Override
-    protected void onCreate(Bundle bundle) {
-        platformStrings = ResourceBundle.getBundle("platform_strings",
-                new XMLBundleControl());
-    }
-
-    @Override
-    protected void onCreateUI() {
+    public void onCreateUI() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         QRLabel = new JLabel();
@@ -61,14 +52,14 @@ public class ShareAppForm
     }
 
     @Override
-    protected void onSetupLanguage() {
+    public void onSetupLanguage() {
         QRLabel.setText(platformStrings.getString("scan_qr_code"));
         OrLabel.setText(platformStrings.getString("or"));
         shareButton.setText(platformStrings.getString("share_link"));
     }
 
     @Override
-    protected void onCreatedUI() {
+    public void onCreatedUI() {
         shareButton.addActionListener(e -> shareLink());
     }
 

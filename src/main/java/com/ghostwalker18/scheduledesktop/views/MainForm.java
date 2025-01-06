@@ -42,10 +42,10 @@ import java.util.Vector;
 public class MainForm
         extends Form {
     private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
-    private ScheduleState state;
-    private ResourceBundle strings = ResourceBundle.getBundle("strings",
+    private final ScheduleState state = new ScheduleState(new Date());
+    private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
-    private ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private JComboBox<String> groupComboBox;
     private JButton clearGroupButton;
@@ -69,99 +69,6 @@ public class MainForm
     private JProgressBar updateProgress;
     private JLabel updateStatus;
     private JButton refreshButton;
-
-    public MainForm(Bundle bundle) {
-        super(bundle);
-        setupGroupSearch();
-        setupTeacherSearch();
-
-        clearGroupButton.addActionListener(e -> {
-            groupComboBox.setSelectedIndex(0);
-            state.setGroup(null);
-        });
-
-        clearTeacherButton.addActionListener(e -> {
-            teacherComboBox.setSelectedIndex(0);
-            state.setTeacher(null);
-        });
-
-        backwardButton.addActionListener(e ->
-                state.goPreviousWeek());
-        backwardButton.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    state.goPreviousWeek();
-                }
-            }
-        });
-
-        forwardButton.addActionListener(e ->
-                state.goNextWeek());
-        forwardButton.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    state.goNextWeek();
-                }
-            }
-        });
-
-        shareButton.addActionListener(e -> {
-            switch (tabs.getSelectedIndex()){
-                case 0:
-                    shareSchedule();
-                    break;
-                case 1:
-                    shareTimes();
-                    break;
-            }
-        });
-        shareButton.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    switch (tabs.getSelectedIndex()){
-                        case 0:
-                            shareSchedule();
-                            break;
-                        case 1:
-                            shareTimes();
-                            break;
-                    }
-                }
-            }
-        });
-
-        settingsButton.addActionListener(e -> {
-            JFrame frame = new JFrame(strings.getString("settings"));
-            frame.setIconImage(Toolkit.getDefaultToolkit()
-                    .createImage(ScheduleApp.class.getResource("/images/baseline_settings_black_36dp.png")));
-            frame.setPreferredSize(new Dimension(500, 400));
-            frame.setContentPane(new SettingsForm(null).getMainPanel());
-            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
-        });
-
-        downloadScheduleButton.addActionListener(e -> downloadSchedule());
-
-        refreshButton.addActionListener( e -> repository.update());
-
-        repository.getMondayTimes().subscribe(image -> mondayTimes.setImage(image));
-
-        repository.getOtherTimes().subscribe(image -> otherTimes.setImage(image));
-
-        repository.getStatus().subscribe(status -> {
-            updateStatus.setText(status.text);
-            updateProgress.setValue(status.progress);
-        });
-
-        groupComboBox.requestFocusInWindow();
-    }
 
     /**
      * Этот метод используется для настройки поля выбора группы.
@@ -288,16 +195,101 @@ public class MainForm
     }
 
     @Override
-    protected void onCreate(Bundle bundle){
-        state = new ScheduleState(new Date());
-        strings = ResourceBundle.getBundle("strings",
-                new XMLBundleControl());
-        platformStrings = ResourceBundle.getBundle("platform_strings",
-                new XMLBundleControl());
+    public void onCreatedUI() {
+        setupGroupSearch();
+        setupTeacherSearch();
+
+        clearGroupButton.addActionListener(e -> {
+            groupComboBox.setSelectedIndex(0);
+            state.setGroup(null);
+        });
+
+        clearTeacherButton.addActionListener(e -> {
+            teacherComboBox.setSelectedIndex(0);
+            state.setTeacher(null);
+        });
+
+        backwardButton.addActionListener(e ->
+                state.goPreviousWeek());
+        backwardButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    state.goPreviousWeek();
+                }
+            }
+        });
+
+        forwardButton.addActionListener(e ->
+                state.goNextWeek());
+        forwardButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    state.goNextWeek();
+                }
+            }
+        });
+
+        shareButton.addActionListener(e -> {
+            switch (tabs.getSelectedIndex()){
+                case 0:
+                    shareSchedule();
+                    break;
+                case 1:
+                    shareTimes();
+                    break;
+            }
+        });
+        shareButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    switch (tabs.getSelectedIndex()){
+                        case 0:
+                            shareSchedule();
+                            break;
+                        case 1:
+                            shareTimes();
+                            break;
+                    }
+                }
+            }
+        });
+
+        settingsButton.addActionListener(e -> {
+            /*JFrame frame = new JFrame(strings.getString("settings"));
+            frame.setIconImage(Toolkit.getDefaultToolkit()
+                    .createImage(ScheduleApp.class.getResource("/images/baseline_settings_black_36dp.png")));
+            frame.setPreferredSize(new Dimension(500, 400));
+            frame.setContentPane(new SettingsForm().getMainPanel());
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);*/
+            ScheduleApp.getInstance().startActivity(SettingsForm.class, null);
+        });
+
+        downloadScheduleButton.addActionListener(e -> downloadSchedule());
+
+        refreshButton.addActionListener( e -> repository.update());
+
+        repository.getMondayTimes().subscribe(image -> mondayTimes.setImage(image));
+
+        repository.getOtherTimes().subscribe(image -> otherTimes.setImage(image));
+
+        repository.getStatus().subscribe(status -> {
+            updateStatus.setText(status.text);
+            updateProgress.setValue(status.progress);
+        });
+
+        groupComboBox.requestFocusInWindow();
     }
 
     @Override
-    protected void onCreateUIComponents() {
+    public void onCreateUIComponents() {
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
         state.addObserver(mondayButton);
         tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("tuesday"));
@@ -313,7 +305,7 @@ public class MainForm
     }
 
     @Override
-    protected void onSetupLanguage() {
+    public void onSetupLanguage() {
         setTitle(strings.getString("app_name"));
 
         tabs.setTitleAt(0, strings.getString("days_tab"));
@@ -352,7 +344,7 @@ public class MainForm
     }
 
     @Override
-    protected void onCreateUI() {
+    public void onCreateUI() {
         setMainPanel(new JPanel());
         getMainPanel().setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabs = new JTabbedPane();

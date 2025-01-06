@@ -260,17 +260,9 @@ public class MainForm
             }
         });
 
-        settingsButton.addActionListener(e -> {
-            /*JFrame frame = new JFrame(strings.getString("settings"));
-            frame.setIconImage(Toolkit.getDefaultToolkit()
-                    .createImage(ScheduleApp.class.getResource("/images/baseline_settings_black_36dp.png")));
-            frame.setPreferredSize(new Dimension(500, 400));
-            frame.setContentPane(new SettingsForm().getMainPanel());
-            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);*/
-            ScheduleApp.getInstance().startActivity(SettingsForm.class, null);
-        });
+        settingsButton.addActionListener(e -> ScheduleApp.getInstance()
+                .startActivity(SettingsForm.class, null)
+        );
 
         downloadScheduleButton.addActionListener(e -> downloadSchedule());
 

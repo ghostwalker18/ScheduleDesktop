@@ -15,6 +15,8 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.Bundle;
+import com.ghostwalker18.scheduledesktop.DateConverters;
+import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.EditNoteModel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -34,7 +36,7 @@ public class EditNoteForm
     private final EditNoteModel model = new EditNoteModel();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
-    private ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private JButton saveButton;
     private JButton discardButton;
@@ -50,12 +52,32 @@ public class EditNoteForm
 
     @Override
     public void onCreate(Bundle bundle) {
+        if(bundle != null){
+            if(bundle.getInt("noteID") != 0){
+                model.setNoteID(bundle.getInt("noteID"));
+                setTitle(platformStrings.getString("edit_note"));
+            }
 
+            if(bundle.getString("group") != null)
+                model.setGroup(bundle.getString("group"));
+            if(bundle.getString("date") != null)
+                model.setDate(new DateConverters().convertToEntityAttribute(bundle.getString("date")));
+        }
     }
 
     @Override
     public void onCreatedUI() {
-
+        model.getDate().subscribe(
+                date -> dateField.setText(new DateConverters().convertToDatabaseColumn(date))
+        );
+        model.getGroup().subscribe(group -> groupField.setText(group));
+        model.getTheme().subscribe(theme -> themeField.setText(theme));
+        model.getText().subscribe(text -> textField.setText(text));
+        groupClear.addActionListener(e -> model.setGroup(""));
+        themeClear.addActionListener(e -> model.setTheme(""));
+        textClear.addActionListener(e -> model.setText(""));
+        saveButton.addActionListener(e -> saveNote());
+        discardButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(NotesForm.class, null));
     }
 
     @Override
@@ -98,6 +120,7 @@ public class EditNoteForm
         panel4.add(groupField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         groupClear = new JButton();
         groupClear.setText("Очистить");
+        groupClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
         panel4.add(groupClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
@@ -106,6 +129,7 @@ public class EditNoteForm
         panel5.add(themeField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         themeClear = new JButton();
         themeClear.setText("Очистить");
+        themeClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
         panel5.add(themeClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
@@ -114,6 +138,7 @@ public class EditNoteForm
         panel6.add(textField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         textClear = new JButton();
         textClear.setText("Очистить");
+        textClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
         panel6.add(textClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel7 = new JPanel();
         panel7.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
@@ -127,5 +152,22 @@ public class EditNoteForm
         final Spacer spacer2 = new Spacer();
         mainPanel.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         setMainPanel(mainPanel);
+    }
+
+    /**
+     * Этот метод сохраняет заметку в репозитории и закрывает активность.
+     */
+    private void saveNote(){
+        model.setTheme(themeField.getText().toString());
+        model.setText(textField.getText().toString());
+        model.saveNote();
+        ScheduleApp.getInstance().startActivity(NotesForm.class, null);
+    }
+
+    /**
+     * Этот метод открывает окно для выбора и установки даты.
+     */
+    private void showDateDialog(){
+
     }
 }

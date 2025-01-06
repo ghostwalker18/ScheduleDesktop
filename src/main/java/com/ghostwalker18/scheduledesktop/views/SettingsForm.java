@@ -75,6 +75,8 @@ public class SettingsForm
     private JLabel themeLabel;
     private JComboBox<String> themeComboBox;
     private JButton saveButton;
+    private JButton shareButton;
+    private JButton backButton;
 
     /**
      * Этот метод используется для сохранения выбранных настроек
@@ -98,6 +100,8 @@ public class SettingsForm
 
     @Override
     public void onCreatedUI() {
+        shareButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(ShareAppForm.class, null));
+
         languageComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(languagesCodes
                 .keySet()
                 .stream()
@@ -146,6 +150,8 @@ public class SettingsForm
             ScheduleApp.restartApplication();
             SwingUtilities.getWindowAncestor(getMainPanel()).dispose();
         });
+
+        backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
     }
 
     public void onSetupLanguage() {
@@ -160,6 +166,8 @@ public class SettingsForm
         languageLabel.setText(strings.getString("option_language"));
         saveButton.setText(platformStrings.getString("saveButtonText"));
         saveButton.setToolTipText(platformStrings.getString("save_button_tooltip"));
+        shareButton.setText(platformStrings.getString("share_app"));
+        backButton.setText(platformStrings.getString("back_button_text"));
     }
 
     @Override
@@ -294,13 +302,49 @@ public class SettingsForm
         saveButton.setEnabled(true);
         saveButton.setHideActionText(false);
         gbc = new GridBagConstraints();
-        gbc.gridx = 0;
+        gbc.gridx = 1;
         gbc.gridy = 8;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 10, 0, 10);
         getMainPanel().add(saveButton, gbc);
+
+        shareButton = new JButton();
+        shareButton.setEnabled(true);
+        saveButton.setHideActionText(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 10, 0, 10);
+        getMainPanel().add(shareButton, gbc);
+
+        final JLabel copyright = new JLabel();
+        copyright.setHorizontalAlignment(10);
+        copyright.setText("2024©");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 10, 0, 0);
+        getMainPanel().add(copyright, gbc);
+
+        final JToolBar toolBar1 = new JToolBar();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        getMainPanel().add(toolBar1, gbc);
+        backButton = new JButton();
+        backButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_arrow_back_36.png")));
+        toolBar1.add(backButton);
     }
 }

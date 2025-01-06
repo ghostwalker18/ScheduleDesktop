@@ -34,6 +34,7 @@ public class ShareAppForm
     private JLabel QRLabel;
     private JLabel OrLabel;
     private JButton shareButton;
+    private JButton backButton;
 
     @Override
     public void onCreateUI() {
@@ -48,6 +49,11 @@ public class ShareAppForm
         mainPanel.add(OrLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         shareButton = new JButton();
         mainPanel.add(shareButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JToolBar toolBar1 = new JToolBar();
+        mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        backButton = new JButton();
+        backButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_arrow_back_36.png")));
+        toolBar1.add(backButton);
         setMainPanel(mainPanel);
     }
 
@@ -61,6 +67,7 @@ public class ShareAppForm
     @Override
     public void onCreatedUI() {
         shareButton.addActionListener(e -> shareLink());
+        backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(SettingsForm.class, null));
     }
 
     /**
@@ -72,7 +79,7 @@ public class ShareAppForm
                 .getSystemClipboard()
                 .setContents(new StringSelection(platformStrings.getString("github_link")), null);
 
-        Toast message = new Toast(shareButton, platformStrings.getString("share_times_completed"));
+        Toast message = new Toast(shareButton, platformStrings.getString("share_link_completed"));
         message.display();
     }
 }

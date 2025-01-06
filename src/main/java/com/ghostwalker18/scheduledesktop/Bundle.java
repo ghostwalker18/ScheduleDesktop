@@ -39,7 +39,7 @@ public final class Bundle
      * @param key ключ для сохранения
      * @param integer число для сохранения
      */
-    public void putInteger(@NotNull String key, @Nullable Integer integer){
+    public void putInt(@NotNull String key, @Nullable Integer integer){
         put(key, integer);
     }
 
@@ -72,7 +72,7 @@ public final class Bundle
      * @return сохраненное число
      */
     @Nullable
-    public Integer getInteger(@NotNull String key){
+    public Integer getInt(@NotNull String key){
         Object o = get("key");
         if(o instanceof Integer)
             return (Integer) o;

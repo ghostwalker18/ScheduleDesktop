@@ -48,5 +48,7 @@
     <entry key="scan_qr_code">Отсканируйте QR код</entry>
     <entry key="or">Или</entry>
     <entry key="share_link">Поделитесь ссылкой</entry>
+    <entry key="share_link_completed">Ссылка была скопирована в буфер обмена</entry>
     <entry key="github_link">https://github.com/ghostwalker18/ScheduleDesktop/releases/latest</entry>
+    <entry key="back_button_text">Назад</entry>
 </properties>

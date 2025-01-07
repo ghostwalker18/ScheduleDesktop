@@ -176,11 +176,22 @@ public class SettingsForm
         getMainPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc;
 
+        final JToolBar toolBar1 = new JToolBar();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        getMainPanel().add(toolBar1, gbc);
+        backButton = new JButton();
+        backButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_arrow_back_36.png")));
+        toolBar1.add(backButton);
+
         scheduleSettingsL = new JLabel();
         scheduleSettingsL.setHorizontalAlignment(SwingConstants.CENTER);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -191,13 +202,13 @@ public class SettingsForm
         doNotUpdateTimesL = new JLabel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         getMainPanel().add(doNotUpdateTimesL, gbc);
 
         doNotUpdateTimesCB = new JCheckBox();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(0, 0, 0, 10);
         getMainPanel().add(doNotUpdateTimesCB, gbc);
@@ -206,7 +217,7 @@ public class SettingsForm
         networkSettingsL.setHorizontalAlignment(SwingConstants.CENTER);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -217,13 +228,13 @@ public class SettingsForm
         downloadForL = new JLabel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         getMainPanel().add(downloadForL, gbc);
 
         downloadForComboBox = new JComboBox<>();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -234,13 +245,13 @@ public class SettingsForm
         enableCachingL = new JLabel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         getMainPanel().add(enableCachingL, gbc);
 
         enableCachingCB = new JCheckBox();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(0, 0, 0, 10);
         getMainPanel().add(enableCachingCB, gbc);
@@ -249,7 +260,7 @@ public class SettingsForm
         appSettingsL.setHorizontalAlignment(SwingConstants.CENTER);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -260,7 +271,7 @@ public class SettingsForm
         languageLabel = new JLabel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 10, 0, 0);
@@ -269,7 +280,7 @@ public class SettingsForm
         languageComboBox = new JComboBox<>();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -281,7 +292,7 @@ public class SettingsForm
         themeLabel.setHorizontalAlignment(10);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 10, 0, 0);
@@ -290,7 +301,7 @@ public class SettingsForm
         themeComboBox = new JComboBox<>();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -303,7 +314,7 @@ public class SettingsForm
         saveButton.setHideActionText(false);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 8;
+        gbc.gridy = 9;
         gbc.gridwidth = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -316,7 +327,7 @@ public class SettingsForm
         saveButton.setHideActionText(false);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = 10;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -329,22 +340,11 @@ public class SettingsForm
         copyright.setText("2024©");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 10;
+        gbc.gridy = 11;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 10, 0, 0);
         getMainPanel().add(copyright, gbc);
-
-        final JToolBar toolBar1 = new JToolBar();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        getMainPanel().add(toolBar1, gbc);
-        backButton = new JButton();
-        backButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_arrow_back_36.png")));
-        toolBar1.add(backButton);
     }
 }

@@ -49,8 +49,9 @@ public class WeekdayButton
 
     private boolean isOpened = false;
     private final JPanel tablePanel = new JPanel();
-    private  final JButton button = new JButton();
-    private final transient ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
+    private  final JButton scheduleButton = new JButton();
+    private final JButton notesButton = new JButton();
+    private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
 
     private final String[] tableColumnNames = new String[]{
             platformStrings.getString("availability_column"),
@@ -79,12 +80,12 @@ public class WeekdayButton
         if(Utils.isDateToday(date)){
             isOpened = true;
         }
-        button.setToolTipText(platformStrings.getString("weekday_tooltip"));
+        scheduleButton.setToolTipText(platformStrings.getString("weekday_tooltip"));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new GridLayout(1,3));
         buttonContainer.add(new JPanel());
-        buttonContainer.add(button);
+        buttonContainer.add(scheduleButton);
         buttonContainer.add(new JPanel());
         add(buttonContainer);
 
@@ -97,15 +98,22 @@ public class WeekdayButton
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
         tablePanel.add(tableHeader);
         tablePanel.add(table);
+
+        notesButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_notes_36.png")));
+        notesButton.setBackground(null);
+        notesButton.setBorder(null);
+        notesButton.addActionListener(e -> openNotesActivity());
+        tablePanel.add(notesButton);
+
         tablePanel.setVisible(isOpened);
         add(tablePanel);
 
-        button.setIcon(new ImageIcon(getClass()
+        scheduleButton.setIcon(new ImageIcon(getClass()
                 .getResource("/images/baseline_arrow_drop_down_black_36dp.png")));
-        button.setText(generateTitle(date, this.dayOfWeek));
-        button.addActionListener(e -> setTableVisible());
+        scheduleButton.setText(generateTitle(date, this.dayOfWeek));
+        scheduleButton.addActionListener(e -> setTableVisible());
 
-        button.addKeyListener(new KeyAdapter() {
+        scheduleButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
@@ -128,11 +136,11 @@ public class WeekdayButton
         isOpened = !isOpened;
         tablePanel.setVisible(isOpened);
         if(isOpened){
-            button.setIcon(new ImageIcon(getClass()
+            scheduleButton.setIcon(new ImageIcon(getClass()
                     .getResource("/images/baseline_arrow_drop_up_black_36dp.png")));
         }
         else{
-            button.setIcon(new ImageIcon(getClass()
+            scheduleButton.setIcon(new ImageIcon(getClass()
                     .getResource("/images/baseline_arrow_drop_down_black_36dp.png")));
         }
     }
@@ -240,6 +248,16 @@ public class WeekdayButton
     }
 
     /**
+     * Этот метод окрывает экран с заметками для этого дня.
+     */
+    private void openNotesActivity() {
+        Bundle bundle = new Bundle();
+        bundle.putString("group", group);
+        bundle.putString("date", new DateConverters().convertToDatabaseColumn(date));
+        ScheduleApp.getInstance().startActivity(NotesForm.class, bundle);
+    }
+
+    /**
      * Этот метод позволяет узнать, открыто ли расписание для промотра.
      * @return открыто ли расписание
      */
@@ -262,7 +280,7 @@ public class WeekdayButton
                 .build();
         teacher = state.getTeacher();
         group = state.getGroup();
-        button.setText(generateTitle(date, this.dayOfWeek));
+        scheduleButton.setText(generateTitle(date, this.dayOfWeek));
         repository.getSchedule(date, teacher, group).subscribe(lessonsList -> {
             lessons = lessonsList;
             updateTableGUI(lessonsList);

@@ -358,6 +358,7 @@ public class MainForm
         groupComboBox.setToolTipText("");
         headerPanel.add(groupComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearGroupButton = new JButton();
+        clearGroupButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
         clearGroupButton.setEnabled(true);
         headerPanel.add(clearGroupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chooseTeacherLabel = new JLabel();
@@ -366,6 +367,7 @@ public class MainForm
         teacherComboBox.setEditable(false);
         headerPanel.add(teacherComboBox, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearTeacherButton = new JButton();
+        clearTeacherButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
         headerPanel.add(clearTeacherButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));

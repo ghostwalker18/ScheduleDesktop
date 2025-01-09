@@ -16,6 +16,8 @@ package com.ghostwalker18.scheduledesktop.models;
 
 import com.ghostwalker18.scheduledesktop.*;
 import com.ghostwalker18.scheduledesktop.database.AppDatabase;
+import com.ghostwalker18.scheduledesktop.network.NetworkService;
+import com.ghostwalker18.scheduledesktop.network.ScheduleNetworkAPI;
 import com.github.pjfanning.xlsx.StreamingReader;
 import com.github.pjfanning.xlsx.exceptions.OpenException;
 import com.github.pjfanning.xlsx.exceptions.ParseException;

@@ -19,6 +19,7 @@ import com.ghostwalker18.scheduledesktop.database.AppDatabase;
 import com.ghostwalker18.scheduledesktop.database.AppDatabaseHibernateImpl;
 import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
+import com.ghostwalker18.scheduledesktop.network.NetworkService;
 import com.ghostwalker18.scheduledesktop.views.Form;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import javax.swing.*;

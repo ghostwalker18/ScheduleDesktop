@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.network;
 
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import org.jsoup.nodes.Document;

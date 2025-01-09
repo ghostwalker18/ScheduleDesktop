@@ -12,7 +12,9 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.models;
+
+import com.ghostwalker18.scheduledesktop.DateConverters;
 
 import javax.persistence.*;
 import java.io.Serializable;

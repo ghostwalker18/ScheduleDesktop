@@ -13,14 +13,15 @@
  */
 
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.database;
 
+import com.ghostwalker18.scheduledesktop.Query;
+import com.ghostwalker18.scheduledesktop.models.Note;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Calendar;
 
 /**
  * Интерфейс DAO для работы с таблицой БД, содержащей сведения о заметках к занятиям.
- * Используется Room для генерации.
  *
  * @author  Ипатов Никита
  * @see Note

@@ -1,5 +1,7 @@
 package com.ghostwalker18.scheduledesktop;
 
+import com.ghostwalker18.scheduledesktop.database.NoteDao;
+import com.ghostwalker18.scheduledesktop.models.Lesson;
 import com.sun.istack.NotNull;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Calendar;

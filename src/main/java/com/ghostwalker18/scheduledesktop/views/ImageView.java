@@ -15,7 +15,6 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
-
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.util.ResourceBundle;

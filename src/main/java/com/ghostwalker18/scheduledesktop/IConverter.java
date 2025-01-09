@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.ghostwalker18.scheduledesktop.models.Lesson;
 import org.apache.poi.ss.usermodel.Workbook;
 import java.util.List;
 

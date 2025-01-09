@@ -12,8 +12,10 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.models;
 
+import com.ghostwalker18.scheduledesktop.*;
+import com.ghostwalker18.scheduledesktop.database.AppDatabase;
 import com.github.pjfanning.xlsx.StreamingReader;
 import com.github.pjfanning.xlsx.exceptions.OpenException;
 import com.github.pjfanning.xlsx.exceptions.ParseException;
@@ -66,7 +68,7 @@ public class ScheduleRepository {
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private final ScheduleNetworkAPI api;
-    private final IAppDatabase db;
+    private final AppDatabase db;
     private final IConverter converter = new XMLStoLessonsConverter();
     private final Preferences preferences = ScheduleApp.getPreferences();
     private final List<Pair<String, File>> scheduleFiles = new LinkedList<>();
@@ -89,7 +91,7 @@ public class ScheduleRepository {
         }
     }
 
-    public ScheduleRepository(IAppDatabase db, NetworkService networkService){
+    public ScheduleRepository(AppDatabase db, NetworkService networkService){
         this.db = db;
         api = networkService.getScheduleAPI();
     }
@@ -151,7 +153,7 @@ public class ScheduleRepository {
      * @return список учителей
      */
     public Observable<List<String>> getTeachers(){
-        return db.getTeachers();
+        return db.lessonDao().getTeachers();
     }
 
     /**
@@ -160,7 +162,7 @@ public class ScheduleRepository {
      * @return список групп
      */
     public Observable<List<String>> getGroups(){
-        return db.getGroups();
+        return db.lessonDao().getGroups();
     }
 
     /**
@@ -168,8 +170,8 @@ public class ScheduleRepository {
      * @param group группа
      * @return список предметов
      */
-    public Observable<String[]> getSubjects(String group) {
-        return null;
+    public Observable<List<String>> getSubjects(String group) {
+        return db.lessonDao().getSubjectsForGroup(group);
     }
 
     /**
@@ -185,11 +187,11 @@ public class ScheduleRepository {
     @NotNull
     public Observable<List<Lesson>> getSchedule(Calendar date, @Nullable String teacher, @Nullable String group){
         if (teacher != null && group != null)
-            return db.getLessonsForGroupWithTeacher(date, group, teacher);
+            return db.lessonDao().getLessonsForGroupWithTeacher(date, group, teacher);
         else if (teacher != null)
-            return db.getLessonsForTeacher(date, teacher);
+            return db.lessonDao().getLessonsForTeacher(date, teacher);
         else if (group != null)
-            return db.getLessonsForGroup(date, group);
+            return db.lessonDao().getLessonsForGroup(date, group);
         else return BehaviorSubject.createDefault(new LinkedList<>());
     }
 
@@ -360,7 +362,7 @@ public class ScheduleRepository {
                         scheduleFiles.add(new Pair<>(Utils.getNameFromLink(link), scheduleFile));
                         List<Lesson> lessons = parser.convert(excelFile);
                         excelFile.close();
-                        db.insertMany(lessons);
+                        db.lessonDao().insertMany(lessons);
                         status.onNext(new Status(strings.getString("processing_completed_status"), 100));
                     }
                     catch(OpenException | ReadException | ParseException e){

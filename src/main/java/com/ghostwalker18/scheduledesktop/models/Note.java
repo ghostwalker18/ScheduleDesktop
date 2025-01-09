@@ -19,7 +19,7 @@
  *
  * @author  Ипатов Никита
  */
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.models;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import javax.persistence.Column;
@@ -27,6 +27,13 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Calendar;
 
+/**
+ * Этот класс используется для описания единичной сущности заметок.
+ * Используется в ORM.
+ * Содержит поля для даты, группы, темы, текста, идентификатора фото.
+ *
+ * @author  Ипатов Никита
+ */
 @Entity
 @Table(name="tblNote")
 public class Note {

@@ -15,6 +15,8 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.*;
+import com.ghostwalker18.scheduledesktop.models.Lesson;
+import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.viewmodels.ScheduleState;
 import javax.swing.*;
 import javax.swing.table.*;

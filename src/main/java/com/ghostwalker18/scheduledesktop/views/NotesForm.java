@@ -15,6 +15,7 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.Bundle;
+import com.ghostwalker18.scheduledesktop.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.NotesModel;
@@ -23,16 +24,17 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 /**
- * Этот классс представляет собой экран приложения, на котором отображаются заметки к занятиям.
+ * Этот класс представляет собой экран приложения, на котором отображаются заметки к занятиям.
  *
  * @author Ипатов Никита
  */
 public class NotesForm
         extends Form {
-    //private final NotesModel model = new NotesModel();
+    private final NotesModel model = new NotesModel();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
@@ -42,11 +44,26 @@ public class NotesForm
     private JTextField searchField;
     private JButton filterButton;
     private JButton backButton;
+    private String group;
+    private Calendar startDate;
+    private Calendar endDate;
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        group = bundle.getString("group");
+        startDate = new DateConverters().convertToEntityAttribute(bundle.getString("date"));
+        endDate = startDate;
+        model.setGroup(group);
+        model.setStartDate(startDate);
+        model.setEndDate(endDate);
+    }
 
     @Override
     public void onCreatedUI() {
         addNoteButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(EditNoteForm.class, null));
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
+        model.getNotes().subscribe(notes -> {
+        });
     }
 
     @Override

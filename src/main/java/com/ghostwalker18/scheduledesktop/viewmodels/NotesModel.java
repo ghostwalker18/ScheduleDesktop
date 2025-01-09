@@ -15,8 +15,8 @@
 package com.ghostwalker18.scheduledesktop.viewmodels;
 
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
-import com.ghostwalker18.scheduledesktop.Note;
-import com.ghostwalker18.scheduledesktop.NotesRepository;
+import com.ghostwalker18.scheduledesktop.models.Note;
+import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.views.NotesForm;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;

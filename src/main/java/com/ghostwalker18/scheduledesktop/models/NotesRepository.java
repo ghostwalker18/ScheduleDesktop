@@ -18,17 +18,18 @@
  * @author Ипатов Никита
  * @see NoteDao
  */
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.models;
 
+import com.ghostwalker18.scheduledesktop.database.AppDatabase;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Calendar;
 import java.util.Collection;
 
 public class NotesRepository {
-    private final IAppDatabase db;
+    private final AppDatabase db;
 
-    public NotesRepository(IAppDatabase db){
+    public NotesRepository(AppDatabase db){
         this.db = db;
     }
 

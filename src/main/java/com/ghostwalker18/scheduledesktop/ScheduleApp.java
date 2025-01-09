@@ -15,6 +15,10 @@
 package com.ghostwalker18.scheduledesktop;
 
 import com.formdev.flatlaf.FlatLaf;
+import com.ghostwalker18.scheduledesktop.database.AppDatabase;
+import com.ghostwalker18.scheduledesktop.database.AppDatabaseHibernateImpl;
+import com.ghostwalker18.scheduledesktop.models.NotesRepository;
+import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.views.Form;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import javax.swing.*;
@@ -132,7 +136,7 @@ public class ScheduleApp {
         instance = this;
         setupTheme();
         setupLanguage();
-        IAppDatabase db = AppDatabaseHibernate.getInstance();
+        AppDatabase db = AppDatabase.getInstance(AppDatabaseHibernateImpl.class);
         scheduleRepository = new ScheduleRepository(db,
                 new NetworkService(ScheduleRepository.BASE_URI));
         notesRepository = new NotesRepository(db);

@@ -15,9 +15,9 @@
 package com.ghostwalker18.scheduledesktop.viewmodels;
 
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
-import com.ghostwalker18.scheduledesktop.Note;
-import com.ghostwalker18.scheduledesktop.NotesRepository;
-import com.ghostwalker18.scheduledesktop.ScheduleRepository;
+import com.ghostwalker18.scheduledesktop.models.Note;
+import com.ghostwalker18.scheduledesktop.models.NotesRepository;
+import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.views.EditNoteForm;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -38,7 +38,7 @@ public class EditNoteModel {
     private final NotesRepository notesRepository = ScheduleApp.getInstance().getNotesRepository();
     private final BehaviorSubject<Note> note = BehaviorSubject.createDefault(new Note());
     private final BehaviorSubject<String[]> noteThemesMediator = BehaviorSubject.create();
-    private Observable<String[]> themes = BehaviorSubject.create();
+    private Observable<List<String>> themes = BehaviorSubject.create();
     private final BehaviorSubject<String> theme = BehaviorSubject.createDefault("");
     private final BehaviorSubject<String> text = BehaviorSubject.createDefault("");
     private final BehaviorSubject<Calendar> date = BehaviorSubject.createDefault(Calendar.getInstance());

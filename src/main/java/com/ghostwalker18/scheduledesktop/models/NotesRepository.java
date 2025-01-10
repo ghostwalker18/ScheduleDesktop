@@ -25,6 +25,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 public class NotesRepository {
     private final AppDatabase db;
@@ -68,7 +69,7 @@ public class NotesRepository {
      * @param dates список дат для выдачи
      * @return заметки
      */
-    public Observable<Note[]> getNotes(@NonNull String group, @NonNull Calendar[] dates){
+    public Observable<List<Note>> getNotes(@NonNull String group, @NonNull Calendar[] dates){
         if(dates.length == 1)
             return db.noteDao().getNotes(dates[0], group);
         return db.noteDao().getNotesForDays(dates, group);
@@ -81,7 +82,7 @@ public class NotesRepository {
      * @param keyword ключевое слово
      * @return список заметок
      */
-    public Observable<Note[]> getNotes(@NonNull String group, @NonNull String keyword){
+    public Observable<List<Note>> getNotes(@NonNull String group, @NonNull String keyword){
         return db.noteDao().getNotesByKeyword(keyword, group);
     }
 

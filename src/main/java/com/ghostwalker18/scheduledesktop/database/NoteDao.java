@@ -19,6 +19,7 @@ import com.ghostwalker18.scheduledesktop.Query;
 import com.ghostwalker18.scheduledesktop.models.Note;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Интерфейс DAO для работы с таблицой БД, содержащей сведения о заметках к занятиям.
@@ -43,7 +44,7 @@ public interface NoteDao {
      * @return список заметок
      */
     @Query(sqlStatement = "SELECT * FROM tblNote WHERE noteDate = :date AND noteGroup = :group")
-    Observable<Note[]> getNotes(Calendar date, String group);
+    Observable<List<Note>> getNotes(Calendar date, String group);
 
     /**
      * Этот метод позволяет получить заметки для заданных группы и дней.
@@ -53,7 +54,7 @@ public interface NoteDao {
      */
     @Query(sqlStatement = "SELECT * FROM tblNote WHERE noteDate IN (:dates) AND noteGroup = :group " +
             "ORDER BY noteDate")
-    Observable<Note[]> getNotesForDays(Calendar[] dates, String group);
+    Observable<List<Note>> getNotesForDays(Calendar[] dates, String group);
 
     /**
      * Этот метод позволяет получить заметки, содержащие в теме или тексте заданное слова.
@@ -63,7 +64,7 @@ public interface NoteDao {
     @Query(sqlStatement = "SELECT * FROM tblNote WHERE (noteText LIKE '%' || :keyword || '%' OR " +
             "noteTheme LIKE '%' || :keyword || '%') AND noteGroup = :group " +
             "ORDER BY noteDate DESC")
-    Observable<Note[]> getNotesByKeyword(String keyword, String group);
+    Observable<List<Note>> getNotesByKeyword(String keyword, String group);
 
     /**
      * Этот метод позволяет внести заметку в БД.

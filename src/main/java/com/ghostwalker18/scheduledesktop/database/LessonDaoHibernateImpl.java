@@ -41,7 +41,7 @@ public class LessonDaoHibernateImpl
         this.db = db;
         //Trigger for database update
         //If was modified: redo all cashed queries
-        db.getInvalidationTracker().subscribe(e -> {
+        this.db.getInvalidationTracker().subscribe(e -> {
             getTeachers();
             getGroups();
             for(GetLessonsForGroupQuery.GetLessonsForGroupArgs args : GCache.getCache().keySet()){
@@ -174,7 +174,7 @@ public class LessonDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetLessonsForGroup
      */
     private static class GetLessonsForGroupQuery
-            extends QueryCache<GetLessonsForGroupQuery.GetLessonsForGroupArgs>{
+            extends QueryCache<GetLessonsForGroupQuery.GetLessonsForGroupArgs, List<Lesson>>{
 
         public static class GetLessonsForGroupArgs extends QueryCache.QueryArgs{
             public final Calendar date;
@@ -196,7 +196,7 @@ public class LessonDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetLessonsForTeacher
      */
     private static class GetLessonsForTeacherQuery
-            extends QueryCache<GetLessonsForTeacherQuery.GetLessonsForTeacherArgs> {
+            extends QueryCache<GetLessonsForTeacherQuery.GetLessonsForTeacherArgs, List<Lesson>> {
 
          public static class GetLessonsForTeacherArgs extends QueryCache.QueryArgs{
             public final Calendar date;
@@ -218,7 +218,7 @@ public class LessonDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetLessonsForGroupWithTeacher
      */
     private static class GetLessonsForGroupWithTeacherQuery
-            extends QueryCache<GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs>{
+            extends QueryCache<GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs, List<Lesson>>{
 
         public  static class GetLessonsForGroupWithTeacherArgs extends QueryCache.QueryArgs{
             public final Calendar date;

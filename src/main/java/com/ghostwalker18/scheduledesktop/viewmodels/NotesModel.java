@@ -33,12 +33,12 @@ import java.util.List;
  */
 public class NotesModel {
     private final NotesRepository repository = ScheduleApp.getInstance().getNotesRepository();
-    private final BehaviorSubject<Note[]> notes = BehaviorSubject.create();
+    private final BehaviorSubject<List<Note>> notes = BehaviorSubject.create();
     private final BehaviorSubject<Calendar> startDate = BehaviorSubject.createDefault(Calendar.getInstance());
     private final BehaviorSubject<Calendar> endDate = BehaviorSubject.createDefault(Calendar.getInstance());
     private String group;
     private String keyword;
-    private Observable<Note[]> notesMediator = BehaviorSubject.create();
+    private Observable<List<Note>> notesMediator = BehaviorSubject.create();
 
     public NotesModel(){
         setGroup(ScheduleApp.getInstance().getScheduleRepository().getSavedGroup());
@@ -48,7 +48,7 @@ public class NotesModel {
      * Этот метод выдает заметки для заданнной группы и временного интервала.
      * @return список заметок
      */
-    public Observable<Note[]> getNotes(){
+    public Observable<List<Note>> getNotes(){
         return notes;
     }
 
@@ -81,7 +81,7 @@ public class NotesModel {
                 notesMediator = repository.getNotes(group,
                         generateDateSequence(startDate.getValue(), endDate.getValue()));
         }
-        notes.subscribe((Consumer<Note[]>) notesMediator);
+        notes.subscribe((Consumer<List<Note>>) notesMediator);
     }
 
     /**
@@ -105,7 +105,7 @@ public class NotesModel {
                 notesMediator = repository.getNotes(group,
                         generateDateSequence(startDate.getValue(), endDate.getValue()));
         }
-        notes.subscribe((Consumer<Note[]>) notesMediator);
+        notes.subscribe((Consumer<List<Note>>) notesMediator);
     }
 
     /**
@@ -117,7 +117,7 @@ public class NotesModel {
         if(startDate.getValue() != null && endDate.getValue() != null && group != null)
             notesMediator = repository.getNotes(group,
                     generateDateSequence(startDate.getValue(), endDate.getValue()));
-        notes.subscribe((Consumer<Note[]>) notesMediator);
+        notes.subscribe((Consumer<List<Note>>) notesMediator);
     }
 
     /**
@@ -129,7 +129,7 @@ public class NotesModel {
         if(startDate.getValue() != null && endDate.getValue() != null && group != null)
             notesMediator = repository.getNotes(group,
                     generateDateSequence(startDate.getValue(), endDate.getValue()));
-        notes.subscribe((Consumer<Note[]>) notesMediator);
+        notes.subscribe((Consumer<List<Note>>) notesMediator);
     }
 
     /**

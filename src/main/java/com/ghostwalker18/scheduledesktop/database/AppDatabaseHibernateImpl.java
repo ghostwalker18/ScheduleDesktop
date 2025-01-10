@@ -16,6 +16,7 @@ package com.ghostwalker18.scheduledesktop.database;
 
 import com.ghostwalker18.scheduledesktop.*;
 import com.ghostwalker18.scheduledesktop.models.Lesson;
+import com.ghostwalker18.scheduledesktop.models.Note;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataBuilder;
@@ -51,7 +52,9 @@ public class AppDatabaseHibernateImpl
                 .build();
 
         MetadataSources sources = new MetadataSources(registry);
-        sources.addAnnotatedClass(Lesson.class)
+        sources
+                .addAnnotatedClass(Lesson.class)
+                .addAnnotatedClass(Note.class)
                 .addPackage(this.getClass().getPackage());
         MetadataBuilder metadataBuilder = sources.getMetadataBuilder();
         metadataBuilder.applyAttributeConverter(DateConverters.class);

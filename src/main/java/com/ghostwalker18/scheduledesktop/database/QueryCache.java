@@ -22,22 +22,22 @@ import java.util.*;
 /**
  * Этот класс является прототипом для создания кэшей запросов к БД.
  * @param <T> тип класса аргументов запроса к БД. Должен наследовать к QueryArgs.
- *
+ * @param <R> тип возращаемого запросом значения
  * @see QueryArgs
  * @author Ипатов Никита
  */
-public abstract class QueryCache<T extends QueryCache.QueryArgs> {
-    private final Map<T, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
+public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
+    private final Map<T, BehaviorSubject<R>> cachedResults = new HashMap<>();
 
     /**
      * Этот метод возвращает кэш запросов для данного типа запросов к БД, определяемых классом наследником.
      * @return кэщ запросов к БД
      */
-    public Map<T, BehaviorSubject<List<Lesson>>> getCache(){
+    public Map<T, BehaviorSubject<R>> getCache(){
         return cachedResults;
     }
 
-    public BehaviorSubject<List<Lesson>> cacheQuery(Class<T> clazz, Object... args){
+    public BehaviorSubject<R> cacheQuery(Class<T> clazz, Object... args){
         Class[] argsTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
         try{
             T key = clazz.getConstructor(argsTypes).newInstance(args);

@@ -14,8 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop.database;
 
-import com.ghostwalker18.scheduledesktop.database.AppDatabaseHibernateImpl;
-import com.ghostwalker18.scheduledesktop.database.LessonDao;
 import com.ghostwalker18.scheduledesktop.models.Lesson;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -88,10 +86,11 @@ public class LessonDaoHibernateImpl
                 query.setParameter("date", date);
                 query.setParameter("groupName", group);
                 query.setParameter("teacherName", "%" + teacher + "%");
+                List<Lesson> lessons = query.list();
                 queryResult.onNext(query.list());
             }
         });
-        return null;
+        return queryResult;
     }
 
     @Override
@@ -119,6 +118,7 @@ public class LessonDaoHibernateImpl
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
                 query.setParameter("teacherName", "%" + teacher + "%");
+                List<Lesson> lessons = query.list();
                 queryResult.onNext(query.list());
             }
         });
@@ -165,7 +165,6 @@ public class LessonDaoHibernateImpl
         });
     }
 
-    //TODO:optimize it (future hint: Reflexion API is a key)!!
     /**
      * Этот класс используется для кэширования запросов GetLessonsForGroup
      */
@@ -173,8 +172,8 @@ public class LessonDaoHibernateImpl
         public static final Map<GetLessonsForGroupArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
 
         private static class GetLessonsForGroupArgs extends QueryArgs{
-            public Calendar date;
-            public String group;
+            public final Calendar date;
+            public final String group;
 
             GetLessonsForGroupArgs(Calendar date, String group){
                 this.date = date;
@@ -183,12 +182,7 @@ public class LessonDaoHibernateImpl
 
             @Override
             public boolean equals(Object o){
-                if (this == o)
-                    return true;
-                if (o == null || getClass() != o.getClass())
-                    return false;
-                GetLessonsForGroupArgs that = (GetLessonsForGroupArgs) o;
-                return that.date == this.date && that.group.equals(this.group);
+                return super.<GetLessonsForGroupArgs>t_equals(o);
             }
         }
 
@@ -206,8 +200,8 @@ public class LessonDaoHibernateImpl
         public static final Map<GetLessonsForTeacherArgs, BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
 
         private static class GetLessonsForTeacherArgs extends QueryArgs{
-            public Calendar date;
-            public String teacher;
+            public final Calendar date;
+            public final String teacher;
 
             GetLessonsForTeacherArgs(Calendar date, String teacher){
                 this.date = date;
@@ -216,12 +210,7 @@ public class LessonDaoHibernateImpl
 
             @Override
             public boolean equals(Object o){
-                if (this == o)
-                    return true;
-                if (o == null || getClass() != o.getClass())
-                    return false;
-                GetLessonsForTeacherArgs that = (GetLessonsForTeacherArgs) o;
-                return that.date == this.date && that.teacher.equals(this.teacher);
+                return super.<GetLessonsForTeacherArgs>t_equals(o);
             }
         }
 
@@ -240,9 +229,9 @@ public class LessonDaoHibernateImpl
                 BehaviorSubject<List<Lesson>>> cachedResults = new HashMap<>();
 
         private static class GetLessonsForGroupWithTeacherArgs extends QueryArgs{
-            public Calendar date;
-            public String group;
-            public String teacher;
+            public final Calendar date;
+            public final String group;
+            public final String teacher;
 
             GetLessonsForGroupWithTeacherArgs(Calendar date, String group, String teacher){
                 this.date = date;
@@ -252,12 +241,7 @@ public class LessonDaoHibernateImpl
 
             @Override
             public boolean equals(Object o){
-                if (this == o)
-                    return true;
-                if (o == null || getClass() != o.getClass())
-                    return false;
-                GetLessonsForGroupWithTeacherArgs that = (GetLessonsForGroupWithTeacherArgs) o;
-                return that.date == this.date && that.group.equals(this.group) && that.teacher.equals(this.teacher);
+                return super.<GetLessonsForGroupWithTeacherArgs>t_equals(o);
             }
         }
 
@@ -268,13 +252,28 @@ public class LessonDaoHibernateImpl
         }
     }
 
-    private static class QueryArgs{
+    private abstract static class QueryArgs{
         private Object getFieldValue(Field field) {
             try{
                 return field.get(this);
             } catch (Exception e){
                 return null;
             }
+        }
+
+        protected  <T extends QueryArgs> boolean t_equals(Object o){
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            T that = (T) o;
+            boolean res = true;
+            Field[] fieldsThat = that.getClass().getFields();
+            Field[] fieldsThis = this.getClass().getFields();
+            for(int i = 0; i < fieldsThis.length; i++){
+                res &= getFieldValue(fieldsThis[i]).equals(getFieldValue(fieldsThat[i]));
+            }
+            return res;
         }
 
         @Override

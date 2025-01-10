@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.network;
 
 import com.sun.istack.NotNull;
 import okhttp3.ResponseBody;

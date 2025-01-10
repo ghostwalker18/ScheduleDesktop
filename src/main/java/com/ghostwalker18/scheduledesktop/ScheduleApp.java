@@ -141,7 +141,7 @@ public class ScheduleApp {
         scheduleRepository = new ScheduleRepository(db,
                 new NetworkService(ScheduleRepository.BASE_URI));
         notesRepository = new NotesRepository(db);
-        //scheduleRepository.update();
+        scheduleRepository.update();
         frame = new JFrame();
         Form initialForm = new Form.FormFactory().createForm(MainForm.class, null);
         currentForm = initialForm;

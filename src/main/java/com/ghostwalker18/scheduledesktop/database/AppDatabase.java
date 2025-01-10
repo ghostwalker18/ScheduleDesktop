@@ -30,7 +30,7 @@ public abstract class AppDatabase {
     public abstract LessonDao lessonDao();
     public abstract NoteDao noteDao();
     private static AppDatabase instance = null;
-    private final static String DATABASE_NAME = "database";
+    private static final  String DATABASE_NAME = "database";
     private final ExecutorService queryExecutorService = Executors.newCachedThreadPool();
     private final PublishSubject<Boolean> onDataBaseUpdated = PublishSubject.create();
 

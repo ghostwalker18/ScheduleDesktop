@@ -17,7 +17,7 @@ package com.ghostwalker18.scheduledesktop.network;
 import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
-import com.ghostwalker18.scheduledesktop.JsoupConverterFactory;
+
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;

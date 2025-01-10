@@ -21,10 +21,9 @@
  */
 package com.ghostwalker18.scheduledesktop.models;
 
+import com.ghostwalker18.scheduledesktop.DateConverters;
 import io.reactivex.rxjava3.annotations.NonNull;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Calendar;
 
 /**
@@ -37,18 +36,20 @@ import java.util.Calendar;
 @Entity
 @Table(name="tblNote")
 public class Note {
-    @NonNull
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Integer id;
-    @Column(name="noteDate")
     @NonNull
+    @Convert(converter = DateConverters.class)
+    @Column(name="noteDate")
     public Calendar date;
     @NonNull
     @Column(name="noteGroup")
     public String group;
     @Column(name="noteTheme")
     public String theme;
-    @Column(name="noteText")
     @NonNull
+    @Column(name="noteText")
     public String text;
     @Column(name="notePhotoIDs")
     public String photoIDs;

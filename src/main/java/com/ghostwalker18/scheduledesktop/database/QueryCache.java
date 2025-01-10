@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop.database;
 
-import com.ghostwalker18.scheduledesktop.models.Lesson;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import java.lang.reflect.Field;
 import java.util.*;

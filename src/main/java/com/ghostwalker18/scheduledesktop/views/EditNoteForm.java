@@ -54,9 +54,12 @@ public class EditNoteForm
     @Override
     public void onCreate(Bundle bundle) {
         if(bundle != null){
-            if(bundle.getInt("noteID") != 0){
+            if(bundle.getInt("noteID") != null){
                 model.setNoteID(bundle.getInt("noteID"));
-                setTitle(platformStrings.getString("edit_note"));
+                setTitle(strings.getString("edit_note"));
+            }
+            else {
+                setTitle(strings.getString("add_note"));
             }
 
             if(bundle.getString("group") != null)

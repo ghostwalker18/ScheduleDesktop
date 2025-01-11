@@ -349,7 +349,9 @@ public class ScheduleRepository {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     ZipSecureFile.setMinInflateRatio(0.005);
-                    status.onNext(new Status(strings.getString("schedule_opening_status"), 33));
+                    synchronized (status){
+                        status.onNext(new Status(strings.getString("schedule_opening_status"), 33));
+                    }
                     try(ResponseBody body = response.body();
                         InputStream stream = body.byteStream();
                         Workbook excelFile = StreamingReader.builder()
@@ -357,7 +359,9 @@ public class ScheduleRepository {
                                 .bufferSize(10485670)
                                 .open(stream)
                     ){
-                        status.onNext(new Status(strings.getString("schedule_parsing_status"), 50));
+                        synchronized (status){
+                            status.onNext(new Status(strings.getString("schedule_parsing_status"), 50));
+                        }
                         File scheduleFile = Files.createTempFile(null, ".tmp").toFile();
                         scheduleFile.deleteOnExit();
                         Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -365,13 +369,19 @@ public class ScheduleRepository {
                         List<Lesson> lessons = parser.convert(excelFile);
                         excelFile.close();
                         db.lessonDao().insertMany(lessons);
-                        status.onNext(new Status(strings.getString("processing_completed_status"), 100));
+                        synchronized (status){
+                            status.onNext(new Status(strings.getString("processing_completed_status"), 100));
+                        }
                     }
                     catch(OpenException | ReadException | ParseException e){
-                        status.onNext(new Status(strings.getString("schedule_opening_error"), 0));
+                        synchronized (status){
+                            status.onNext(new Status(strings.getString("schedule_opening_error"), 0));
+                        }
                     }
                     catch (Exception e){
-                        status.onNext(new Status(strings.getString("schedule_parsing_error"), 0));
+                        synchronized (status){
+                            status.onNext(new Status(strings.getString("schedule_parsing_error"), 0));
+                        }
                     }
                 }
 

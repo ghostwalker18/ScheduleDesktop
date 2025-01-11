@@ -19,6 +19,7 @@ import com.ghostwalker18.scheduledesktop.models.Note;
 import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.views.NotesForm;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class NotesModel {
                 notesMediator = repository.getNotes(group,
                         generateDateSequence(startDate.getValue(), endDate.getValue()));
         }
-        notes.subscribe((Consumer<List<Note>>) notesMediator);
+        notes.subscribe((Observer<? super List<Note>>)notesMediator);
     }
 
     /**
@@ -105,7 +106,7 @@ public class NotesModel {
                 notesMediator = repository.getNotes(group,
                         generateDateSequence(startDate.getValue(), endDate.getValue()));
         }
-        notes.subscribe((Consumer<List<Note>>) notesMediator);
+        notes.subscribe((Observer<? super List<Note>>) notesMediator);
     }
 
     /**
@@ -117,7 +118,7 @@ public class NotesModel {
         if(startDate.getValue() != null && endDate.getValue() != null && group != null)
             notesMediator = repository.getNotes(group,
                     generateDateSequence(startDate.getValue(), endDate.getValue()));
-        notes.subscribe((Consumer<List<Note>>) notesMediator);
+        notes.subscribe((Observer<? super List<Note>>) notesMediator);
     }
 
     /**
@@ -129,7 +130,7 @@ public class NotesModel {
         if(startDate.getValue() != null && endDate.getValue() != null && group != null)
             notesMediator = repository.getNotes(group,
                     generateDateSequence(startDate.getValue(), endDate.getValue()));
-        notes.subscribe((Consumer<List<Note>>) notesMediator);
+        notes.subscribe((Observer<? super List<Note>>)notesMediator);
     }
 
     /**

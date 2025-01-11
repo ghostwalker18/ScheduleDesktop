@@ -59,7 +59,7 @@ public final class Bundle
      */
     @Nullable
     public String getString(@NotNull String key){
-        Object o = get("key");
+        Object o = get(key);
         if(o instanceof String)
             return (String)o;
         else
@@ -73,7 +73,7 @@ public final class Bundle
      */
     @Nullable
     public Integer getInt(@NotNull String key){
-        Object o = get("key");
+        Object o = get(key);
         if(o instanceof Integer)
             return (Integer) o;
         else
@@ -87,7 +87,7 @@ public final class Bundle
      */
     @Nullable
     public Boolean getBoolean(@NotNull String key){
-        Object o = get("key");
+        Object o = get(key);
         if(o instanceof Boolean)
             return (Boolean) o;
         else

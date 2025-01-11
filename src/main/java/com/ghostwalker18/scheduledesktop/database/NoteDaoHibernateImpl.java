@@ -40,18 +40,20 @@ public class NoteDaoHibernateImpl
 
     public NoteDaoHibernateImpl(AppDatabaseHibernateImpl db){
         this.db = db;
-        this.db.getInvalidationTracker().subscribe(e -> {
-            for(GetNoteQuery.GetNoteArgs args : getNoteCache.getCache().keySet()){
-                getNote(args.id);
-            }
-            for(GetNotesQuery.GetNotesArgs args : getNotesCache.getCache().keySet()){
-                getNotes(args.date, args.group);
-            }
-            for(GetNotesForDatesQuery.GetNotesForDatesArgs args : getNotesForDatesCache.getCache().keySet()){
-                getNotesForDays(args.dates, args.group);
-            }
-            for(GetNotesByKeywordQuery.GetNotesByKeywordArgs args : getNotesByKeywordCache.getCache().keySet()){
-                getNotesByKeyword(args.keyword, args.group);
+        this.db.getInvalidationTracker().subscribe(changed -> {
+            if(changed){
+                for(GetNoteQuery.GetNoteArgs args : getNoteCache.getCache().keySet()){
+                    getNote(args.id);
+                }
+                for(GetNotesQuery.GetNotesArgs args : getNotesCache.getCache().keySet()){
+                    getNotes(args.date, args.group);
+                }
+                for(GetNotesForDatesQuery.GetNotesForDatesArgs args : getNotesForDatesCache.getCache().keySet()){
+                    getNotesForDays(args.dates, args.group);
+                }
+                for(GetNotesByKeywordQuery.GetNotesByKeywordArgs args : getNotesByKeywordCache.getCache().keySet()){
+                    getNotesByKeyword(args.keyword, args.group);
+                }
             }
         });
     }
@@ -209,7 +211,7 @@ public class NoteDaoHibernateImpl
             public final Calendar[] dates;
             public final String group;
 
-            public GetNotesForDatesArgs(GregorianCalendar[] dates, String group){
+            public GetNotesForDatesArgs(Calendar[] dates, String group){
                 this.dates = dates;
                 this.group = group;
             }

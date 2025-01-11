@@ -12,13 +12,6 @@
  * limitations under the License.
  */
 
-/**
- * Этот класс используется для описания единичной сущности заметок.
- * Используется в ORM.
- * Содержит поля для даты, группы, темы, текста, идентификатора фото.
- *
- * @author  Ипатов Никита
- */
 package com.ghostwalker18.scheduledesktop.models;
 
 import com.ghostwalker18.scheduledesktop.DateConverters;

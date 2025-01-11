@@ -41,17 +41,19 @@ public class LessonDaoHibernateImpl
         this.db = db;
         //Trigger for database update
         //If was modified: redo all cashed queries
-        this.db.getInvalidationTracker().subscribe(e -> {
-            getTeachers();
-            getGroups();
-            for(GetLessonsForGroupQuery.GetLessonsForGroupArgs args : GCache.getCache().keySet()){
-                getLessonsForGroup(args.date, args.group);
-            }
-            for(GetLessonsForTeacherQuery.GetLessonsForTeacherArgs args : TCache.getCache().keySet()){
-                getLessonsForTeacher(args.date, args.teacher);
-            }
-            for(GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs args : GTCache.getCache().keySet()){
-                getLessonsForGroupWithTeacher(args.date, args.group, args.teacher);
+        this.db.getInvalidationTracker().subscribe(changed -> {
+            if(changed){
+                getTeachers();
+                getGroups();
+                for(GetLessonsForGroupQuery.GetLessonsForGroupArgs args : GCache.getCache().keySet()){
+                    getLessonsForGroup(args.date, args.group);
+                }
+                for(GetLessonsForTeacherQuery.GetLessonsForTeacherArgs args : TCache.getCache().keySet()){
+                    getLessonsForTeacher(args.date, args.teacher);
+                }
+                for(GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs args : GTCache.getCache().keySet()){
+                    getLessonsForGroupWithTeacher(args.date, args.group, args.teacher);
+                }
             }
         });
     }
@@ -83,14 +85,14 @@ public class LessonDaoHibernateImpl
     public Observable<List<Lesson>> getLessonsForGroupWithTeacher(Calendar date, String group, String teacher) {
         BehaviorSubject<List<Lesson>>  queryResult = GTCache.cacheQuery(
                 GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs.class, date, group, teacher);
-        String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date order by lessonTimes";
+        String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date" +
+                "order by lessonTimes";
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
                 query.setParameter("groupName", group);
                 query.setParameter("teacherName", "%" + teacher + "%");
-                List<Lesson> lessons = query.list();
                 queryResult.onNext(query.list());
             }
         });
@@ -123,7 +125,6 @@ public class LessonDaoHibernateImpl
                 Query<Lesson> query = session.createQuery(hql, Lesson.class);
                 query.setParameter("date", date);
                 query.setParameter("teacherName", "%" + teacher + "%");
-                List<Lesson> lessons = query.list();
                 queryResult.onNext(query.list());
             }
         });

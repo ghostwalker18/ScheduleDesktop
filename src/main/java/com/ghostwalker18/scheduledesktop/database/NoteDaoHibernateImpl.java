@@ -67,7 +67,7 @@ public class NoteDaoHibernateImpl
                 Query<Note> query = session.createQuery(hql, Note.class);
                 query.setParameter("id", id);
                 queryResult.onNext(query.list().get(0));
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
@@ -84,7 +84,7 @@ public class NoteDaoHibernateImpl
                 query.setParameter("date", date);
                 query.setParameter("group", group);
                 queryResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
@@ -101,7 +101,7 @@ public class NoteDaoHibernateImpl
                 query.setParameterList("dates", Arrays.asList(dates));
                 query.setParameter("group", group);
                 queryResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
@@ -119,7 +119,7 @@ public class NoteDaoHibernateImpl
                 query.setParameter("keyword", "%" + keyword + "%");
                 query.setParameter("group", group);
                 queryResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
@@ -132,7 +132,7 @@ public class NoteDaoHibernateImpl
                 transaction.begin();
                 transaction.commit();
                 db.getInvalidationTracker().onNext(true);
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
     }
 
@@ -145,7 +145,7 @@ public class NoteDaoHibernateImpl
                 session.update(note);
                 transaction.commit();
                 db.getInvalidationTracker().onNext(true);
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
     }
 
@@ -158,7 +158,7 @@ public class NoteDaoHibernateImpl
                 session.remove(note);
                 transaction.commit();
                 db.getInvalidationTracker().onNext(true);
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
     }
 

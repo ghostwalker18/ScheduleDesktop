@@ -32,6 +32,7 @@ public class LessonDaoHibernateImpl
     private final AppDatabaseHibernateImpl db;
     private final BehaviorSubject<List<String>> getTeachersResult = BehaviorSubject.create();
     private final BehaviorSubject<List<String>> getGroupsResult = BehaviorSubject.create();
+    private final BehaviorSubject<List<String>> getSubjectsResult = BehaviorSubject.create();
     private final GetLessonsForGroupQuery GCache = new GetLessonsForGroupQuery();
     private final GetLessonsForTeacherQuery TCache = new GetLessonsForTeacherQuery();
     private final GetLessonsForGroupWithTeacherQuery GTCache = new GetLessonsForGroupWithTeacherQuery();
@@ -64,7 +65,7 @@ public class LessonDaoHibernateImpl
             try(Session session = db.getSessionFactory().openSession()){
                 Query<String> query = session.createQuery(hql, String.class);
                 getTeachersResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return getTeachersResult;
     }
@@ -76,7 +77,7 @@ public class LessonDaoHibernateImpl
             try(Session session = db.getSessionFactory().openSession()){
                 Query<String> query = session.createQuery(hql, String.class);
                 getGroupsResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return getGroupsResult;
     }
@@ -94,7 +95,7 @@ public class LessonDaoHibernateImpl
                 query.setParameter("groupName", group);
                 query.setParameter("teacherName", "%" + teacher + "%");
                 queryResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
@@ -110,7 +111,7 @@ public class LessonDaoHibernateImpl
                 query.setParameter("date", date);
                 query.setParameter("groupName", group);
                 queryResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
@@ -126,14 +127,22 @@ public class LessonDaoHibernateImpl
                 query.setParameter("date", date);
                 query.setParameter("teacherName", "%" + teacher + "%");
                 queryResult.onNext(query.list());
-            }
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
 
     @Override
     public Observable<List<String>> getSubjectsForGroup(String group) {
-        return null;
+        String hql = "select distinct subjectName from Lesson where groupName = :group";
+        db.runQuery(() -> {
+            try(Session session = db.getSessionFactory().openSession()){
+                Query<String> query = session.createQuery(hql, String.class);
+                query.setParameter("group", group);
+                getGroupsResult.onNext(query.list());
+            } catch (Exception ignored){/*Not required*/}
+        });
+        return getGroupsResult;
     }
 
     @Override

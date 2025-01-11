@@ -20,7 +20,7 @@ import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.views.EditNoteForm;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import java.util.Calendar;
 import java.util.List;
@@ -46,7 +46,7 @@ public class EditNoteModel {
     private boolean isEdited = false;
 
     public EditNoteModel(){
-        noteThemesMediator.subscribe((Consumer<String[]>) scheduleRepository.getSubjects(
+        noteThemesMediator.subscribe((Observer<? super String[]>) scheduleRepository.getSubjects(
                 scheduleRepository.getSavedGroup()));
     }
 
@@ -56,7 +56,7 @@ public class EditNoteModel {
      */
     public void setNoteID(Integer id){
         isEdited = true;
-        note.subscribe((Consumer<Note>) notesRepository.getNote(id));
+        note.subscribe((Observer<? super Note>) notesRepository.getNote(id));
         note.subscribe(note1 -> {
             if(note1 != null){
                 group.onNext(note1.group);
@@ -74,7 +74,7 @@ public class EditNoteModel {
     public void setGroup(String group){
         this.group.onNext(group);
         themes = scheduleRepository.getSubjects(group);
-        noteThemesMediator.subscribe((Consumer<String[]>) themes);
+        noteThemesMediator.subscribe((Observer<? super String[]>) themes);
     }
 
     /**

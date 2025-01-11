@@ -26,7 +26,6 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -282,6 +281,15 @@ public class MainForm
     }
 
     @Override
+    public void onDestroy(Bundle outState) {
+        try {
+            String savedGroup = state.getGroup();
+            repository.saveGroup(savedGroup);
+        } catch (Exception ignored) {/*Not required*/}
+        super.onDestroy(outState);
+    }
+
+    @Override
     public void onCreateUIComponents() {
         mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
         state.addObserver(mondayButton);
@@ -433,17 +441,5 @@ public class MainForm
         settingsButton.setIcon(new ImageIcon(getClass()
                 .getResource("/images/baseline_settings_black_36dp.png")));
         toolBar1.add(settingsButton);
-    }
-
-    /**
-     * Этот метод используется для реакции на событие закрытия окна. Сохранаяет текущею выбранную группу.
-     * @param e the event to be processed
-     */
-    @Override
-    public void windowClosing(WindowEvent e) {
-        try {
-            String savedGroup = state.getGroup();
-            repository.saveGroup(savedGroup);
-        } catch (Exception ignored) {/*Not required*/}
     }
 }

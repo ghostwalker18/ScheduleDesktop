@@ -170,9 +170,11 @@ public class WeekdayButton
             SwingUtilities.invokeLater(() -> updateTableGUI(lessons));
             return;
         }
-        table.setModel(makeDataModel(lessons));
-        table.getColumnModel().getColumn(3).setCellRenderer(renderer);
-        table.getColumn(0).setMaxWidth(100);
+        try{
+            table.setModel(makeDataModel(lessons));
+            table.getColumnModel().getColumn(3).setCellRenderer(renderer);
+            table.getColumn(0).setMaxWidth(100);
+        } catch (Exception ignored){/*Not required*/}
     }
 
     /**

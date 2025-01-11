@@ -17,21 +17,23 @@ package com.ghostwalker18.scheduledesktop;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Этот класс представляет собой аналог класса Bundle для Android.
  *
  * @author Ипатов Никита
  */
-public final class Bundle
-        extends HashMap<String, Object> {
+public final class Bundle {
+    private Map<String, Object> map = new HashMap<>();
+
     /**
      * Этот метод позволяет сохранить значение типа String.
      * @param key ключ для сохранения
      * @param string строка для сохранения
      */
     public void putString(@NotNull String key, @Nullable String string){
-        put(key, string);
+        map.put(key, string);
     }
 
     /**
@@ -40,7 +42,7 @@ public final class Bundle
      * @param integer число для сохранения
      */
     public void putInt(@NotNull String key, @Nullable Integer integer){
-        put(key, integer);
+        map.put(key, integer);
     }
 
     /**
@@ -49,7 +51,7 @@ public final class Bundle
      * @param bool число для сохранения
      */
     public void putBoolean(@NotNull String key, @Nullable Boolean bool){
-        put(key, bool);
+        map.put(key, bool);
     }
 
     /**
@@ -59,7 +61,7 @@ public final class Bundle
      */
     @Nullable
     public String getString(@NotNull String key){
-        Object o = get(key);
+        Object o = map.get(key);
         if(o instanceof String)
             return (String)o;
         else
@@ -73,7 +75,7 @@ public final class Bundle
      */
     @Nullable
     public Integer getInt(@NotNull String key){
-        Object o = get(key);
+        Object o = map.get(key);
         if(o instanceof Integer)
             return (Integer) o;
         else
@@ -87,7 +89,7 @@ public final class Bundle
      */
     @Nullable
     public Boolean getBoolean(@NotNull String key){
-        Object o = get(key);
+        Object o = map.get(key);
         if(o instanceof Boolean)
             return (Boolean) o;
         else

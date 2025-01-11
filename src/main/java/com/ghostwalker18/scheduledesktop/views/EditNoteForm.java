@@ -52,7 +52,7 @@ public class EditNoteForm
     private JButton backButton;
 
     @Override
-    public void onCreate(Bundle bundle) {
+    public void onCreate(Bundle savedState, Bundle bundle) {
         if(bundle != null){
             if(bundle.getInt("noteID") != null){
                 model.setNoteID(bundle.getInt("noteID"));

@@ -15,6 +15,8 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.Bundle;
+import com.sun.istack.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -28,6 +30,7 @@ import java.awt.event.WindowListener;
 public abstract class Form
         implements WindowListener {
     protected Dimension preferredSize = new Dimension(800, 500);
+    protected Bundle savedState;
     private JPanel mainPanel = new JPanel();
     private String title = "Form";
 
@@ -74,7 +77,9 @@ public abstract class Form
     /**
      * Этот метод используется для начальной инициализации формы.
      */
-    public void onCreate(Bundle bundle){/*To be overridden*/}
+    public void onCreate(@Nullable Bundle savedState, @Nullable Bundle bundle){
+        this.savedState = savedState;
+    }
 
     /**
      * Этот метод используется для создания кастомных UI компоненетов формы.
@@ -96,6 +101,12 @@ public abstract class Form
      * Этот метод используется для настройки поведения формы после создания UI.
      */
     public void onCreatedUI(){/*To be overridden*/}
+
+    /**
+     * Этот метод используется для настройки поведения формы при ее уничтожении.
+     */
+    public void onDestroy(Bundle outState){}
+
     @Override
     public void windowOpened(WindowEvent e) {/*To be overridden*/}
 
@@ -130,16 +141,17 @@ public abstract class Form
          * @param bundle передаваемые в форму данные
          * @return сконфигурированная форма
          */
-        public Form createForm(Class<? extends Form> formType, Bundle bundle){
+        public Form createForm(Class<? extends Form> formType, Bundle savedState, Bundle bundle){
             try{
                 Form newForm = formType.getConstructor().newInstance();
-                newForm.onCreate(bundle);
+                newForm.onCreate(savedState, bundle);
                 newForm.onCreateUIComponents();
                 newForm.onCreateUI();
                 newForm.onSetupLanguage();
                 newForm.onCreatedUI();
                 return newForm;
             } catch (Exception e){
+                System.out.println(e.getMessage());
                 return null;
             }
         }

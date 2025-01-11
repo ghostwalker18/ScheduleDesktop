@@ -22,14 +22,17 @@ import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.network.NetworkService;
 import com.ghostwalker18.scheduledesktop.views.Form;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
+import io.reactivex.rxjava3.exceptions.UndeliverableException;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.prefs.Preferences;
 
 /**
@@ -47,6 +50,7 @@ public class ScheduleApp {
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;
     private final JFrame frame;
+    private final Map<String, Bundle> formStates = new HashMap<>();
     private Form currentForm;
 
     /**
@@ -113,12 +117,17 @@ public class ScheduleApp {
      * Этот метод используется для отображения новой формы на экране
      */
     public void startActivity(Class<? extends Form> formType, Bundle bundle){
-        Form newForm = new Form.FormFactory().createForm(formType, bundle);
+        Form newForm = new Form.FormFactory().createForm(formType, formStates.get(formType.getCanonicalName()), bundle);
         if(newForm != null){
+            if(currentForm != null){
+                frame.removeWindowListener(currentForm);
+                Bundle outState = new Bundle();
+                currentForm.onDestroy(outState);
+                formStates.put(currentForm.getClass().getCanonicalName(), outState);
+            }
             frame.setTitle(newForm.getTitle());
             frame.setPreferredSize(newForm.getPreferredSize());
             frame.addWindowListener(newForm);
-            frame.removeWindowListener(currentForm);
             frame.setContentPane(newForm.getMainPanel());
             currentForm = newForm;
         }
@@ -133,7 +142,7 @@ public class ScheduleApp {
         ScheduleApp app = ScheduleApp.getInstance();
     }
 
-    private ScheduleApp(){
+    private ScheduleApp() {
         instance = this;
         setupTheme();
         setupLanguage();
@@ -143,17 +152,23 @@ public class ScheduleApp {
         notesRepository = new NotesRepository(db);
         scheduleRepository.update();
         frame = new JFrame();
-        Form initialForm = new Form.FormFactory().createForm(MainForm.class, null);
-        currentForm = initialForm;
         frame.setIconImage(Toolkit.getDefaultToolkit()
                 .createImage(ScheduleApp.class.getResource("/images/favicon.png")));
-        frame.setContentPane(initialForm.getMainPanel());
-        frame.setTitle(initialForm.getTitle());
-        frame.setPreferredSize(initialForm.getPreferredSize());
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.addWindowListener(initialForm);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        startActivity(MainForm.class, null);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosed(e);
+                currentForm.onDestroy(new Bundle());
+                System.exit(0);
+            }
+        });
         frame.pack();
         frame.setVisible(true);
+        RxJavaPlugins.setErrorHandler(e -> {
+                System.err.println(e.getMessage());
+        });
     }
 
     /**

@@ -25,6 +25,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 /**
@@ -52,10 +53,18 @@ public class NotesForm
     private Calendar endDate;
 
     @Override
-    public void onCreate(Bundle bundle) {
-        group = bundle.getString("group");
-        startDate = new DateConverters().convertToEntityAttribute(bundle.getString("date"));
-        endDate = startDate;
+    public void onCreate(Bundle savedState, Bundle bundle) {
+        if(bundle != null){
+            group = bundle.getString("group");
+            startDate = new DateConverters().convertToEntityAttribute(bundle.getString("date"));
+            endDate = startDate;
+
+        }
+        else{
+            group = savedState.getString("group");
+            startDate = new DateConverters().convertToEntityAttribute(savedState.getString("startDate"));
+            endDate = new DateConverters().convertToEntityAttribute(savedState.getString("endDate"));
+        }
         model.setGroup(group);
         model.setStartDate(startDate);
         model.setEndDate(endDate);
@@ -85,6 +94,13 @@ public class NotesForm
         shareButton.setText(strings.getString("share"));
         filterButton.setText(platformStrings.getString("notes_filter"));
         backButton.setText(platformStrings.getString("back_button_text"));
+    }
+
+    @Override
+    public void onDestroy(Bundle outState) {
+        outState.putString("group", group);
+        outState.putString("startDate", new DateConverters().convertToDatabaseColumn(startDate));
+        outState.putString("endDate", new DateConverters().convertToDatabaseColumn(endDate));
     }
 
     @Override

@@ -86,7 +86,7 @@ public class LessonDaoHibernateImpl
     public Observable<List<Lesson>> getLessonsForGroupWithTeacher(Calendar date, String group, String teacher) {
         BehaviorSubject<List<Lesson>>  queryResult = GTCache.cacheQuery(
                 GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs.class, date, group, teacher);
-        String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date" +
+        String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date " +
                 "order by lessonTimes";
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
@@ -139,10 +139,10 @@ public class LessonDaoHibernateImpl
             try(Session session = db.getSessionFactory().openSession()){
                 Query<String> query = session.createQuery(hql, String.class);
                 query.setParameter("group", group);
-                getGroupsResult.onNext(query.list());
+                getSubjectsResult.onNext(query.list());
             } catch (Exception ignored){/*Not required*/}
         });
-        return getGroupsResult;
+        return getSubjectsResult;
     }
 
     @Override

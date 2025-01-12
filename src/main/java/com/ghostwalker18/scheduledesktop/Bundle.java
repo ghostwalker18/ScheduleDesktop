@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop;
 
+import com.ghostwalker18.scheduledesktop.viewmodels.ViewModel;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import java.util.HashMap;

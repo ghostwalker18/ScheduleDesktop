@@ -21,6 +21,7 @@ import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.views.EditNoteForm;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import java.util.Calendar;
 import java.util.List;
@@ -33,12 +34,13 @@ import java.util.List;
  * @see NotesRepository
  * @see ScheduleRepository
  */
-public class EditNoteModel {
+public class EditNoteModel extends ViewModel {
     private final ScheduleRepository scheduleRepository = ScheduleApp.getInstance().getScheduleRepository();
     private final NotesRepository notesRepository = ScheduleApp.getInstance().getNotesRepository();
     private final BehaviorSubject<Note> note = BehaviorSubject.createDefault(new Note());
-    private final BehaviorSubject<String[]> noteThemesMediator = BehaviorSubject.create();
-    private Observable<List<String>> themes = BehaviorSubject.create();
+    private final BehaviorSubject<List<String>> noteThemesMediator = BehaviorSubject.create();
+    private Observable<List<String>> themes;
+    private Disposable themesWatch;
     private final BehaviorSubject<String> theme = BehaviorSubject.createDefault("");
     private final BehaviorSubject<String> text = BehaviorSubject.createDefault("");
     private final BehaviorSubject<Calendar> date = BehaviorSubject.createDefault(Calendar.getInstance());
@@ -46,8 +48,8 @@ public class EditNoteModel {
     private boolean isEdited = false;
 
     public EditNoteModel(){
-        noteThemesMediator.subscribe((Observer<? super String[]>) scheduleRepository.getSubjects(
-                scheduleRepository.getSavedGroup()));
+        themes = scheduleRepository.getSubjects(scheduleRepository.getSavedGroup());
+        themesWatch = themes.subscribe(noteThemesMediator::onNext);
     }
 
     /**
@@ -73,8 +75,9 @@ public class EditNoteModel {
      */
     public void setGroup(String group){
         this.group.onNext(group);
+        themesWatch.dispose();
         themes = scheduleRepository.getSubjects(group);
-        noteThemesMediator.subscribe((Observer<? super String[]>) themes);
+        themesWatch = themes.subscribe(noteThemesMediator::onNext);
     }
 
     /**
@@ -132,7 +135,7 @@ public class EditNoteModel {
      * Этот метод позволяет получить список предметов у данной группы в качестве тем.
      * @return список предлаагаемых тем
      */
-    public Observable<String[]> getThemes(){
+    public Observable<List<String>> getThemes(){
         return noteThemesMediator;
     }
 

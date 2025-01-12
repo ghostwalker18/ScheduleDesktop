@@ -364,7 +364,6 @@ public class MainForm
         groupComboBox = new JComboBox<>();
         groupComboBox.setEditable(false);
         groupComboBox.setPopupVisible(false);
-        groupComboBox.setToolTipText("");
         headerPanel.add(groupComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearGroupButton = new JButton();
         clearGroupButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));

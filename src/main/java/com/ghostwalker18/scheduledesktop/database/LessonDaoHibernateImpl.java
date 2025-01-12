@@ -134,7 +134,7 @@ public class LessonDaoHibernateImpl
 
     @Override
     public Observable<List<String>> getSubjectsForGroup(String group) {
-        String hql = "select distinct subjectName from Lesson where groupName = :group";
+        String hql = "select distinct subject from Lesson where groupName = :group order by subject asc";
         db.runQuery(() -> {
             try(Session session = db.getSessionFactory().openSession()){
                 Query<String> query = session.createQuery(hql, String.class);

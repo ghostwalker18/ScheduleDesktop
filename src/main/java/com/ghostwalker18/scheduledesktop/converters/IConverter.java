@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.converters;
 
 import com.ghostwalker18.scheduledesktop.models.Lesson;
 import org.apache.poi.ss.usermodel.Workbook;

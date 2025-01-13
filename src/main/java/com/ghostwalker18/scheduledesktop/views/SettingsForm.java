@@ -15,7 +15,8 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
-import com.ghostwalker18.scheduledesktop.XMLBundleControl;
+import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
+import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;

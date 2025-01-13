@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.system;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

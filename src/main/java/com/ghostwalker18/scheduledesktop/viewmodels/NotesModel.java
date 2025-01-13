@@ -18,6 +18,7 @@ import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.models.Note;
 import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.views.NotesForm;
+import com.ghostwalker18.scheduledesktop.common.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import java.util.ArrayList;

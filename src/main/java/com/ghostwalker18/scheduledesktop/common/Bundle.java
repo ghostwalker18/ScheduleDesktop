@@ -12,9 +12,8 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.common;
 
-import com.ghostwalker18.scheduledesktop.viewmodels.ViewModel;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import java.util.HashMap;

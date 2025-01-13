@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop.views;
+package com.ghostwalker18.scheduledesktop.system;
 
-import com.ghostwalker18.scheduledesktop.XMLBundleControl;
+import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.util.ResourceBundle;

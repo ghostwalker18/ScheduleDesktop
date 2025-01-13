@@ -14,8 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.models;
 
-import com.ghostwalker18.scheduledesktop.DateConverters;
-
+import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;

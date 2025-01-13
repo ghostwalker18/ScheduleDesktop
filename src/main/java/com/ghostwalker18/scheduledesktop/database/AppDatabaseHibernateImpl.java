@@ -14,7 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.database;
 
-import com.ghostwalker18.scheduledesktop.*;
+import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.models.Lesson;
 import com.ghostwalker18.scheduledesktop.models.Note;
 import org.hibernate.SessionFactory;

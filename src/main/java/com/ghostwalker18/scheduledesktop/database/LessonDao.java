@@ -14,7 +14,6 @@
 
 package com.ghostwalker18.scheduledesktop.database;
 
-import com.ghostwalker18.scheduledesktop.Query;
 import com.ghostwalker18.scheduledesktop.models.Lesson;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Calendar;

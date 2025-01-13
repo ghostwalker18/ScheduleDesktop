@@ -12,11 +12,9 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop.views;
+package com.ghostwalker18.scheduledesktop.common;
 
-import com.ghostwalker18.scheduledesktop.Bundle;
 import com.sun.istack.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;

@@ -1,4 +1,4 @@
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.system;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

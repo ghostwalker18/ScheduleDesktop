@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.utils;
 
 import com.sun.istack.Nullable;
 import java.util.Calendar;

@@ -20,7 +20,11 @@ import com.ghostwalker18.scheduledesktop.database.AppDatabaseHibernateImpl;
 import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.network.NetworkService;
+import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
+import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopDarkTheme;
+import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopLightTheme;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
+import com.ghostwalker18.scheduledesktop.common.Application;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -36,7 +40,7 @@ import java.util.prefs.Preferences;
  * @version  1.0
  */
 public class ScheduleApp
-        extends Application{
+        extends Application {
 
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ScheduleRepository scheduleRepository;

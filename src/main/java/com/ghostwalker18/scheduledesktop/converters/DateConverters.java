@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.converters;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

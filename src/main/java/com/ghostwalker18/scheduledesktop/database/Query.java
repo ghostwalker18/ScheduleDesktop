@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.database;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -12,29 +12,12 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
-
-import com.formdev.flatlaf.FlatLightLaf;
+package com.ghostwalker18.scheduledesktop.common;
 
 /**
- * Этот класс используется для задания темной темы приложения
+ * Этот класс является базовым для всех моделей представления.
  *
  * @author Ипатов Никита
  */
-public class ScheduleDesktopLightTheme
-	extends FlatLightLaf {
-	public static final String NAME = "ScheduleDesktopLightTheme";
-
-	public static boolean setup() {
-		return setup( new ScheduleDesktopLightTheme() );
-	}
-
-	public static void installLafInfo() {
-		installLafInfo( NAME, ScheduleDesktopLightTheme.class );
-	}
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
+public abstract class ViewModel {
 }

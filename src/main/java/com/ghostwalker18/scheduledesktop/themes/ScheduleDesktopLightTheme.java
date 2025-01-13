@@ -12,29 +12,29 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.themes;
 
-import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 /**
  * Этот класс используется для задания темной темы приложения
  *
  * @author Ипатов Никита
  */
-public class ScheduleDesktopDarkTheme
-        extends FlatDarkLaf {
-    public static final String NAME = "ScheduleDesktopDarkTheme";
+public class ScheduleDesktopLightTheme
+	extends FlatLightLaf {
+	public static final String NAME = "ScheduleDesktopLightTheme";
 
-    public static boolean setup() {
-        return setup( new ScheduleDesktopDarkTheme() );
-    }
+	public static boolean setup() {
+		return setup( new ScheduleDesktopLightTheme() );
+	}
 
-    public static void installLafInfo() {
-        installLafInfo( NAME, ScheduleDesktopDarkTheme.class );
-    }
+	public static void installLafInfo() {
+		installLafInfo( NAME, ScheduleDesktopLightTheme.class );
+	}
 
-    @Override
-    public String getName() {
-        return NAME;
-    }
+	@Override
+	public String getName() {
+		return NAME;
+	}
 }

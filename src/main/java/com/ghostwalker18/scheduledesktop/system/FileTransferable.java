@@ -12,14 +12,13 @@
  * limitations under the License.
  */
 
-package com.ghostwalker18.scheduledesktop;
+package com.ghostwalker18.scheduledesktop.system;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-
 
 /**
  * Этот класс используется для передачи файлов в системный буфер обмена.
@@ -28,11 +27,7 @@ import java.util.List;
  */
 public class FileTransferable
         implements Transferable {
-    private List<File> listOfFiles = new LinkedList<>();
-
-    public FileTransferable(List<File> listOfFiles) {
-        this.listOfFiles = listOfFiles;
-    }
+    private final List<File> listOfFiles = new LinkedList<>();
 
     public FileTransferable(){}
 

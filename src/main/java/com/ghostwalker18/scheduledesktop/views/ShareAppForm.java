@@ -15,8 +15,11 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.*;
+import com.ghostwalker18.scheduledesktop.system.Toast;
+import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;

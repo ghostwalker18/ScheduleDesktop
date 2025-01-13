@@ -15,14 +15,12 @@
 package com.ghostwalker18.scheduledesktop.common;
 
 /**
- * Этот класс является базовым для всех моделей представления.
+ * Этот интерфейс обозначает владельца моделей представления.
+ * Является аналогом класса из androidx.lifecycle.
  *
  * @author Ипатов Никита
+ * @since 3.0
  */
-public abstract class ViewModel {
-
-    /**
-     * Этот метод используется для очищения используемых моделью представления ресурсов, когда она уничтожается.
-     */
-    protected void onCleared(){/*To be overridden*/};
+public interface ViewModelOwner {
+    ViewModelStore store = new ViewModelStore();
 }

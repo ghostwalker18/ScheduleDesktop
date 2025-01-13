@@ -26,7 +26,7 @@ import java.awt.event.WindowListener;
  * @author  Ипатов Никита
  */
 public abstract class Form
-        implements WindowListener {
+        implements ViewModelOwner, WindowListener {
     protected Dimension preferredSize = new Dimension(800, 500);
     protected Bundle savedState;
     private JPanel mainPanel = new JPanel();

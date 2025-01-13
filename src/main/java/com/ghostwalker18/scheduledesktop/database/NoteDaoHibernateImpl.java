@@ -42,16 +42,16 @@ public class NoteDaoHibernateImpl
         this.db = db;
         this.db.getInvalidationTracker().subscribe(changed -> {
             if(changed){
-                for(GetNoteQuery.GetNoteArgs args : getNoteCache.getCache().keySet()){
+                for(GetNoteQuery.Args args : getNoteCache.getCache().keySet()){
                     getNote(args.id);
                 }
-                for(GetNotesQuery.GetNotesArgs args : getNotesCache.getCache().keySet()){
+                for(GetNotesQuery.Args args : getNotesCache.getCache().keySet()){
                     getNotes(args.date, args.group);
                 }
-                for(GetNotesForDatesQuery.GetNotesForDatesArgs args : getNotesForDatesCache.getCache().keySet()){
+                for(GetNotesForDatesQuery.Args args : getNotesForDatesCache.getCache().keySet()){
                     getNotesForDays(args.dates, args.group);
                 }
-                for(GetNotesByKeywordQuery.GetNotesByKeywordArgs args : getNotesByKeywordCache.getCache().keySet()){
+                for(GetNotesByKeywordQuery.Args args : getNotesByKeywordCache.getCache().keySet()){
                     getNotesByKeyword(args.keyword, args.group);
                 }
             }
@@ -60,7 +60,7 @@ public class NoteDaoHibernateImpl
 
     @Override
     public Observable<Note> getNote(Integer id) {
-        BehaviorSubject<Note> queryResult = getNoteCache.cacheQuery(GetNoteQuery.GetNoteArgs.class, id);
+        BehaviorSubject<Note> queryResult = getNoteCache.cacheQuery(GetNoteQuery.Args.class, id);
         String hql = "from Note where id = :id";
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
@@ -75,7 +75,7 @@ public class NoteDaoHibernateImpl
     @Override
     public Observable<List<Note>> getNotes(Calendar date, String group) {
         BehaviorSubject<List<Note>> queryResult = getNotesCache.cacheQuery(
-                GetNotesQuery.GetNotesArgs.class, date, group
+                GetNotesQuery.Args.class, date, group
         );
         String hql = "from Note where date = :date and group = :group";
         db.runQuery(()->{
@@ -92,7 +92,7 @@ public class NoteDaoHibernateImpl
     @Override
     public Observable<List<Note>> getNotesForDays(Calendar[] dates, String group) {
         BehaviorSubject<List<Note>> queryResult = getNotesForDatesCache.cacheQuery(
-                GetNotesForDatesQuery.GetNotesForDatesArgs.class, dates, group
+                GetNotesForDatesQuery.Args.class, dates, group
         );
         String hql = "from Note where date in (:dates) order by noteDate";
         db.runQuery(()->{
@@ -109,7 +109,7 @@ public class NoteDaoHibernateImpl
     @Override
     public Observable<List<Note>> getNotesByKeyword(String keyword, String group) {
         BehaviorSubject<List<Note>> queryResult = getNotesByKeywordCache.cacheQuery(
-                GetNotesByKeywordQuery.GetNotesByKeywordArgs.class, keyword, group
+                GetNotesByKeywordQuery.Args.class, keyword, group
         );
         String hql = "from Note where (text like :keyword or theme like :keyword) and group = :group" +
                 "order by noteDate desc";
@@ -166,17 +166,17 @@ public class NoteDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetNote
      */
     private static class GetNoteQuery
-            extends QueryCache<GetNoteQuery.GetNoteArgs, Note>{
-        public static class GetNoteArgs extends QueryCache.QueryArgs{
+            extends QueryCache<GetNoteQuery.Args, Note>{
+        public static class Args extends QueryCache.QueryArgs{
             public final Integer id;
 
-            public GetNoteArgs(Integer id){
+            public Args(Integer id){
                 this.id = id;
             }
 
             @Override
             public boolean equals(Object o){
-                return super.<GetNoteArgs>t_equals(o);
+                return super.<Args>t_equals(o);
             }
         }
     }
@@ -185,19 +185,19 @@ public class NoteDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetNotes
      */
     private static class GetNotesQuery
-            extends QueryCache<GetNotesQuery.GetNotesArgs, List<Note>>{
-        public static class GetNotesArgs extends QueryCache.QueryArgs{
+            extends QueryCache<GetNotesQuery.Args, List<Note>>{
+        public static class Args extends QueryCache.QueryArgs{
             public final Calendar date;
             public final String group;
 
-            public GetNotesArgs(GregorianCalendar date, String group){
+            public Args(GregorianCalendar date, String group){
                 this.date = date;
                 this.group = group;
             }
 
             @Override
             public boolean equals(Object o){
-                return super.<GetNotesArgs>t_equals(o);
+                return super.<Args>t_equals(o);
             }
         }
     }
@@ -206,19 +206,19 @@ public class NoteDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetNotesForDates
      */
     private static class GetNotesForDatesQuery
-            extends QueryCache<GetNotesForDatesQuery.GetNotesForDatesArgs, List<Note>>{
-        public static class GetNotesForDatesArgs extends QueryCache.QueryArgs{
+            extends QueryCache<GetNotesForDatesQuery.Args, List<Note>>{
+        public static class Args extends QueryCache.QueryArgs{
             public final Calendar[] dates;
             public final String group;
 
-            public GetNotesForDatesArgs(Calendar[] dates, String group){
+            public Args(Calendar[] dates, String group){
                 this.dates = dates;
                 this.group = group;
             }
 
             @Override
             public boolean equals(Object o){
-                return super.<GetNotesForDatesArgs>t_equals(o);
+                return super.<Args>t_equals(o);
             }
         }
     }
@@ -227,19 +227,19 @@ public class NoteDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetNotesByKeyword
      */
     private static class GetNotesByKeywordQuery
-            extends QueryCache<GetNotesByKeywordQuery.GetNotesByKeywordArgs, List<Note>>{
-        public static class GetNotesByKeywordArgs extends QueryCache.QueryArgs{
+            extends QueryCache<GetNotesByKeywordQuery.Args, List<Note>>{
+        public static class Args extends QueryCache.QueryArgs{
             public final String keyword;
             public final String group;
 
-            public GetNotesByKeywordArgs(String keyword, String group){
+            public Args(String keyword, String group){
                 this.keyword = keyword;
                 this.group = group;
             }
 
             @Override
             public boolean equals(Object o){
-                return super.<GetNotesByKeywordArgs>t_equals(o);
+                return super.<Args>t_equals(o);
             }
         }
     }

@@ -27,7 +27,16 @@ import java.util.concurrent.Future;
  */
 public abstract class AppDatabase {
 
+    /**
+     * Этот метод возвращает DAO для доступа к занятиям.
+     * @return LessonDAO
+     */
     public abstract LessonDao lessonDao();
+
+    /**
+     * Этот метод возвращает DAO для доступа к заметкам.
+     * @return NoteDAO
+     */
     public abstract NoteDao noteDao();
     private static AppDatabase instance = null;
     private static final  String DATABASE_NAME = "database";

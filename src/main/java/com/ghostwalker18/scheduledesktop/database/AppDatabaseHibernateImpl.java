@@ -38,12 +38,30 @@ public class AppDatabaseHibernateImpl
 
     @Override
     public LessonDao lessonDao() {
-        return lessonDao;
+        if (lessonDao != null) {
+            return lessonDao;
+        } else {
+            synchronized(this) {
+                if(lessonDao == null) {
+                    lessonDao = new LessonDaoHibernateImpl(this);
+                }
+                return lessonDao;
+            }
+        }
     }
 
     @Override
     public NoteDao noteDao() {
-        return noteDao;
+        if (noteDao != null) {
+            return noteDao;
+        } else {
+            synchronized(this) {
+                if(noteDao == null) {
+                    noteDao = new NoteDaoHibernateImpl(this);
+                }
+                return noteDao;
+            }
+        }
     }
 
     public AppDatabaseHibernateImpl(){
@@ -63,8 +81,6 @@ public class AppDatabaseHibernateImpl
 
         sessionFactory = metadata.getSessionFactoryBuilder()
                 .build();
-        lessonDao = new LessonDaoHibernateImpl(this);
-        noteDao = new NoteDaoHibernateImpl(this);
     }
 
     public SessionFactory getSessionFactory(){

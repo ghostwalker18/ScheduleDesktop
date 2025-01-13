@@ -46,13 +46,13 @@ public class LessonDaoHibernateImpl
             if(changed){
                 getTeachers();
                 getGroups();
-                for(GetLessonsForGroupQuery.GetLessonsForGroupArgs args : GCache.getCache().keySet()){
+                for(GetLessonsForGroupQuery.Args args : GCache.getCache().keySet()){
                     getLessonsForGroup(args.date, args.group);
                 }
-                for(GetLessonsForTeacherQuery.GetLessonsForTeacherArgs args : TCache.getCache().keySet()){
+                for(GetLessonsForTeacherQuery.Args args : TCache.getCache().keySet()){
                     getLessonsForTeacher(args.date, args.teacher);
                 }
-                for(GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs args : GTCache.getCache().keySet()){
+                for(GetLessonsForGroupWithTeacherQuery.Args args : GTCache.getCache().keySet()){
                     getLessonsForGroupWithTeacher(args.date, args.group, args.teacher);
                 }
             }
@@ -85,7 +85,7 @@ public class LessonDaoHibernateImpl
     @Override
     public Observable<List<Lesson>> getLessonsForGroupWithTeacher(Calendar date, String group, String teacher) {
         BehaviorSubject<List<Lesson>>  queryResult = GTCache.cacheQuery(
-                GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs.class, date, group, teacher);
+                GetLessonsForGroupWithTeacherQuery.Args.class, date, group, teacher);
         String hql = "from Lesson where groupName = :groupName and teacher like :teacherName and date = :date " +
                 "order by lessonTimes";
         db.runQuery(()->{
@@ -103,7 +103,7 @@ public class LessonDaoHibernateImpl
     @Override
     public Observable<List<Lesson>> getLessonsForGroup(Calendar date, String group) {
         BehaviorSubject<List<Lesson>>  queryResult = GCache.cacheQuery(
-                GetLessonsForGroupQuery.GetLessonsForGroupArgs.class, date, group);
+                GetLessonsForGroupQuery.Args.class, date, group);
         String hql = "from Lesson where groupName = :groupName and date = :date order by lessonTimes";
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
@@ -119,7 +119,7 @@ public class LessonDaoHibernateImpl
     @Override
     public Observable<List<Lesson>> getLessonsForTeacher(Calendar date, String teacher) {
         BehaviorSubject<List<Lesson>> queryResult = TCache.cacheQuery(
-                GetLessonsForTeacherQuery.GetLessonsForTeacherArgs.class, date, teacher);
+                GetLessonsForTeacherQuery.Args.class, date, teacher);
         String hql = "from Lesson where teacher like :teacherName and date = :date order by lessonTimes";
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
@@ -184,20 +184,20 @@ public class LessonDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetLessonsForGroup
      */
     private static class GetLessonsForGroupQuery
-            extends QueryCache<GetLessonsForGroupQuery.GetLessonsForGroupArgs, List<Lesson>>{
+            extends QueryCache<GetLessonsForGroupQuery.Args, List<Lesson>>{
 
-        public static class GetLessonsForGroupArgs extends QueryCache.QueryArgs{
+        public static class Args extends QueryCache.QueryArgs{
             public final Calendar date;
             public final String group;
 
-            public GetLessonsForGroupArgs(GregorianCalendar date, String group){
+            public Args(GregorianCalendar date, String group){
                 this.date = date;
                 this.group = group;
             }
 
             @Override
             public boolean equals(Object o){
-                return super.<GetLessonsForGroupArgs>t_equals(o);
+                return super.<Args>t_equals(o);
             }
         }
     }
@@ -206,20 +206,20 @@ public class LessonDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetLessonsForTeacher
      */
     private static class GetLessonsForTeacherQuery
-            extends QueryCache<GetLessonsForTeacherQuery.GetLessonsForTeacherArgs, List<Lesson>> {
+            extends QueryCache<GetLessonsForTeacherQuery.Args, List<Lesson>> {
 
-         public static class GetLessonsForTeacherArgs extends QueryCache.QueryArgs{
+         public static class Args extends QueryCache.QueryArgs{
             public final Calendar date;
             public final String teacher;
 
-            public GetLessonsForTeacherArgs(GregorianCalendar date, String teacher){
+            public Args(GregorianCalendar date, String teacher){
                 this.date = date;
                 this.teacher = teacher;
             }
 
             @Override
             public boolean equals(Object o){
-                return super.<GetLessonsForTeacherArgs>t_equals(o);
+                return super.<Args>t_equals(o);
             }
         }
     }
@@ -228,14 +228,14 @@ public class LessonDaoHibernateImpl
      * Этот класс используется для кэширования запросов GetLessonsForGroupWithTeacher
      */
     private static class GetLessonsForGroupWithTeacherQuery
-            extends QueryCache<GetLessonsForGroupWithTeacherQuery.GetLessonsForGroupWithTeacherArgs, List<Lesson>>{
+            extends QueryCache<GetLessonsForGroupWithTeacherQuery.Args, List<Lesson>>{
 
-        public  static class GetLessonsForGroupWithTeacherArgs extends QueryCache.QueryArgs{
+        public  static class Args extends QueryCache.QueryArgs{
             public final Calendar date;
             public final String group;
             public final String teacher;
 
-            public GetLessonsForGroupWithTeacherArgs(GregorianCalendar date, String group, String teacher){
+            public Args(GregorianCalendar date, String group, String teacher){
                 this.date = date;
                 this.group = group;
                 this.teacher = teacher;
@@ -243,7 +243,7 @@ public class LessonDaoHibernateImpl
 
             @Override
             public boolean equals(Object o){
-                return super.<GetLessonsForGroupWithTeacherArgs>t_equals(o);
+                return super.<Args>t_equals(o);
             }
         }
     }

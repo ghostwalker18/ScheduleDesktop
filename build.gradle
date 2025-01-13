@@ -55,12 +55,12 @@ version = '2.3'
 sourceCompatibility = '1.8'
 
 application {
-    mainClass = 'com.ghostwalker18.scheduledesktop.Application'
+    mainClass = 'com.ghostwalker18.scheduledesktop.Main'
 }
 
 jar {
     manifest {
-        attributes("Main-Class" : "com.ghostwalker18.scheduledesktop.Application",
+        attributes("Main-Class" : "com.ghostwalker18.scheduledesktop.Main",
                 'Created-By' : 'Ipatov Nikita')
     }
 

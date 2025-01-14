@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Ипатов Никита
  */
 public final class Bundle {
-    private Map<String, Object> map = new HashMap<>();
+    private final Map<String, Object> map = new HashMap<>();
 
     /**
      * Этот метод позволяет сохранить значение типа String.

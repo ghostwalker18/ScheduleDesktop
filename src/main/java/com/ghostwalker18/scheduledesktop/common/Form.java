@@ -27,6 +27,7 @@ import java.awt.event.WindowListener;
  */
 public abstract class Form
         implements ViewModelOwner, WindowListener {
+    private final ViewModelStore store = new ViewModelStore();
     protected Dimension preferredSize = new Dimension(800, 500);
     protected Bundle savedState;
     private JPanel mainPanel = new JPanel();
@@ -70,6 +71,11 @@ public abstract class Form
      */
     public Dimension getPreferredSize(){
         return preferredSize;
+    }
+
+    @Override
+    public ViewModelStore getViewModelStore(){
+        return store;
     }
 
     /**

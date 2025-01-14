@@ -68,7 +68,6 @@ public interface NoteDao {
     /**
      * Этот метод позволяет внести заметку в БД.
      * @param note заметка
-     * @return количество внесенных изменений
      */
     void insert(Note note);
 

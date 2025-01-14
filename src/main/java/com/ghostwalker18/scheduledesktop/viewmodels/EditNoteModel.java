@@ -35,13 +35,14 @@ import java.util.List;
  * @see NotesRepository
  * @see ScheduleRepository
  */
-public class EditNoteModel extends ViewModel {
+public class EditNoteModel
+        extends ViewModel {
     private final ScheduleRepository scheduleRepository = ScheduleApp.getInstance().getScheduleRepository();
     private final NotesRepository notesRepository = ScheduleApp.getInstance().getNotesRepository();
     private final BehaviorSubject<Note> note = BehaviorSubject.createDefault(new Note());
     private final BehaviorSubject<List<String>> noteThemesMediator = BehaviorSubject.create();
     private Observable<List<String>> themes;
-    private Disposable themesWatch;
+    private Disposable themesWatchdog;
     private final BehaviorSubject<String> theme = BehaviorSubject.createDefault("");
     private final BehaviorSubject<String> text = BehaviorSubject.createDefault("");
     private final BehaviorSubject<Calendar> date = BehaviorSubject.createDefault(Calendar.getInstance());
@@ -50,7 +51,7 @@ public class EditNoteModel extends ViewModel {
 
     public EditNoteModel(){
         themes = scheduleRepository.getSubjects(scheduleRepository.getSavedGroup());
-        themesWatch = themes.subscribe(noteThemesMediator::onNext);
+        themesWatchdog = themes.subscribe(noteThemesMediator::onNext);
     }
 
     /**
@@ -76,9 +77,9 @@ public class EditNoteModel extends ViewModel {
      */
     public void setGroup(String group){
         this.group.onNext(group);
-        themesWatch.dispose();
+        themesWatchdog.dispose();
         themes = scheduleRepository.getSubjects(group);
-        themesWatch = themes.subscribe(noteThemesMediator::onNext);
+        themesWatchdog = themes.subscribe(noteThemesMediator::onNext);
     }
 
     /**

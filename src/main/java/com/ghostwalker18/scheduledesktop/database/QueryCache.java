@@ -73,6 +73,7 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
          * @param <T> тип класса наследника
          * @return равны ли объекты
          */
+        @SuppressWarnings("UNCHECKED_CAST")
         protected  <T extends QueryCache.QueryArgs> boolean t_equals(Object o){
             if (this == o)
                 return true;

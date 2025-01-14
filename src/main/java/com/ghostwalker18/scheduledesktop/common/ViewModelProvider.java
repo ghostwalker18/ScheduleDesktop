@@ -25,7 +25,7 @@ public class ViewModelProvider {
     private final ViewModelStore store;
 
     public ViewModelProvider(ViewModelOwner owner){
-        this.store = owner.store;
+        this.store = owner.getViewModelStore();
     }
 
     /**

@@ -25,7 +25,7 @@ import java.util.Map;
  * @since 3.0
  */
 public class ViewModelStore {
-    private Map<String, ViewModel> map = new HashMap<>();
+    private final Map<String, ViewModel> map = new HashMap<>();
 
     /**
      * Этот метод помещает модель представления в хранилище.

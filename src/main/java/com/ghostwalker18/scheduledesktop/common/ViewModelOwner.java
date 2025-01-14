@@ -22,5 +22,5 @@ package com.ghostwalker18.scheduledesktop.common;
  * @since 3.0
  */
 public interface ViewModelOwner {
-    ViewModelStore store = new ViewModelStore();
+    ViewModelStore getViewModelStore();
 }

@@ -1,5 +1,8 @@
 package com.ghostwalker18.scheduledesktop.system;
 
+import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,11 +70,12 @@ public class XMLBundleControl
             props.loadFromXML(stream);
         }
 
-        protected Object handleGetObject(String key) {
+        protected Object handleGetObject(@NotNull String key) {
             return props.getProperty(key);
         }
 
         @Override
+        @Nullable
         public Enumeration<String> getKeys() {
             return null;
         }

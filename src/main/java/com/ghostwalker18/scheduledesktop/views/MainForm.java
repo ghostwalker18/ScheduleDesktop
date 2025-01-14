@@ -15,12 +15,14 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.*;
+import com.ghostwalker18.scheduledesktop.common.Fragment;
+import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.system.FileTransferable;
 import com.ghostwalker18.scheduledesktop.system.ImageView;
 import com.ghostwalker18.scheduledesktop.system.Toast;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
-import com.ghostwalker18.scheduledesktop.viewmodels.ScheduleState;
+import com.ghostwalker18.scheduledesktop.viewmodels.ScheduleModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -36,7 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -48,11 +49,13 @@ import java.util.Vector;
 public class MainForm
         extends Form {
     private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
-    private final ScheduleState state = new ScheduleState(new Date());
+    private ScheduleModel state;
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
+
+    private String savedGroup;
     private JComboBox<String> groupComboBox;
     private JButton clearGroupButton;
     private JComboBox<String> teacherComboBox;
@@ -201,6 +204,12 @@ public class MainForm
     }
 
     @Override
+    public void onCreate(Bundle savedState, Bundle bundle) {
+        super.onCreate(savedState, bundle);
+        state = new ViewModelProvider(this).get(ScheduleModel.class);
+    }
+
+    @Override
     public void onCreatedUI() {
         setupGroupSearch();
         setupTeacherSearch();
@@ -288,25 +297,30 @@ public class MainForm
 
     @Override
     public void onDestroy(Bundle outState) {
-        try {
+        /*try {
             String savedGroup = state.getGroup();
             repository.saveGroup(savedGroup);
-        } catch (Exception ignored) {/*Not required*/}
+        } catch (Exception ignored) {}*/
         super.onDestroy(outState);
     }
 
     @Override
     public void onCreateUIComponents() {
-        mondayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("monday"));
-        state.addObserver(mondayButton);
-        tuesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("tuesday"));
-        state.addObserver(tuesdayButton);
-        wednesdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("wednesday"));
-        state.addObserver(wednesdayButton);
-        thursdayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("thursday"));
-        state.addObserver(thursdayButton);
-        fridayButton = new WeekdayButton(state.getYear(), state.getWeek(), strings.getString("friday"));
-        state.addObserver(fridayButton);
+        Bundle bundle = new Bundle();
+        bundle.putString("dayOfWeek", strings.getString("monday"));
+        mondayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        bundle = new Bundle();
+        bundle.putString("dayOfWeek", strings.getString("tuesday"));
+        tuesdayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        bundle = new Bundle();
+        bundle.putString("dayOfWeek", strings.getString("wednesday"));
+        wednesdayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        bundle = new Bundle();
+        bundle.putString("dayOfWeek", strings.getString("thursday"));
+        thursdayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        bundle = new Bundle();
+        bundle.putString("dayOfWeek", strings.getString("friday"));
+        fridayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
         mondayTimes = new ImageView();
         otherTimes = new ImageView();
     }

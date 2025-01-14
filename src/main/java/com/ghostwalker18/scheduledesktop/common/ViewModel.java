@@ -24,5 +24,5 @@ public abstract class ViewModel {
     /**
      * Этот метод используется для очищения используемых моделью представления ресурсов, когда она уничтожается.
      */
-    protected void onCleared(){/*To be overridden*/};
+    protected void onCleared(){/*To be overridden*/}
 }

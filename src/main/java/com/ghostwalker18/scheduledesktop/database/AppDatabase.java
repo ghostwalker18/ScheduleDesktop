@@ -54,7 +54,6 @@ public abstract class AppDatabase {
     /**
      * Этот метод позволяет выполнить запрос к БД в отдельном пуле потоков.
      * @param job запрос для асинхронного выполнения.
-     * @return
      */
     public Future runQuery(Runnable job){
         return queryExecutorService.submit(job);

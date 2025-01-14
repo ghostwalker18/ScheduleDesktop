@@ -12,21 +12,22 @@
  * limitations under the License.
  */
 
-/**
- * Этот класс представляет репозиторий данных приложения о заметках.
- *
- * @author Ипатов Никита
- * @see NoteDao
- */
 package com.ghostwalker18.scheduledesktop.models;
 
 import com.ghostwalker18.scheduledesktop.database.AppDatabase;
+import com.ghostwalker18.scheduledesktop.database.NoteDao;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Этот класс представляет репозиторий данных приложения о заметках.
+ *
+ * @author Ипатов Никита
+ * @see NoteDao
+ */
 public class NotesRepository {
     private final AppDatabase db;
 

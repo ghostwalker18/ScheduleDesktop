@@ -31,7 +31,8 @@ import java.util.List;
  * @author Ипатов Никита
  * @see NotesForm
  */
-public class NotesModel extends ViewModel {
+public class NotesModel
+        extends ViewModel {
     private final NotesRepository repository = ScheduleApp.getInstance().getNotesRepository();
     private final BehaviorSubject<List<Note>> notes = BehaviorSubject.create();
     private final BehaviorSubject<Calendar> startDate = BehaviorSubject.createDefault(Calendar.getInstance());

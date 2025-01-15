@@ -130,6 +130,7 @@ public class NoteDaoHibernateImpl
             try (Session session = db.getSessionFactory().openSession()) {
                 Transaction transaction = session.getTransaction();
                 transaction.begin();
+                session.merge(note);
                 transaction.commit();
                 db.getInvalidationTracker().onNext(true);
             } catch (Exception ignored){/*Not required*/}

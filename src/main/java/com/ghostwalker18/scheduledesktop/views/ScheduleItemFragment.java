@@ -40,7 +40,7 @@ import java.util.List;
  *
  * @author Ипатов Никита
  */
-public class WeekdayButton
+public class ScheduleItemFragment
         extends Fragment {
 
     private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
@@ -74,7 +74,7 @@ public class WeekdayButton
     private ScheduleModel scheduleModel;
     private DayModel dayModel;
 
-    public WeekdayButton(Form form) {
+    public ScheduleItemFragment(Form form) {
         super(form);
     }
 

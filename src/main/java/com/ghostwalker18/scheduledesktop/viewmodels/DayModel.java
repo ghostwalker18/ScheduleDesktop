@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Этот класс представляет собой модель представления фрагмента распиисания для определенного дня недели.
+ * Этот класс представляет собой модель представления фрагмента расписания для определенного дня недели.
  *
  * @author Ипатов Никита
  * @since 3.0
@@ -33,44 +33,40 @@ import java.util.List;
 public class DayModel
         extends ViewModel {
     private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
-    private final BehaviorSubject<Calendar> dateFlow = BehaviorSubject.create();
+    private final BehaviorSubject<Calendar> date = BehaviorSubject.create();
     private final BehaviorSubject<List<Lesson>> lessons = BehaviorSubject.create();
     private Observable<List<Lesson>> lessonsMediator;
     private Disposable lessonsWatchdog;
-    private Calendar date;
     private String group;
     private String teacher;
 
-    public Observable<Calendar> getDate(){
-        return dateFlow;
+    public void setDate(Calendar date){
+        this.date.onNext(date);
+        revalidateLessons();
     }
 
-    public void setDate(Calendar date){
-        dateFlow.onNext(date);
-        this.date = date;
-        if(lessonsWatchdog != null)
-            lessonsWatchdog.dispose();
-        lessonsMediator = repository.getSchedule(date, teacher, group);
-        lessonsWatchdog = lessonsMediator.subscribe(lessons::onNext);
+    public Observable<Calendar> getDate(){
+        return date;
     }
 
     public void setGroup(String group){
         this.group = group;
-        if(lessonsWatchdog != null)
-            lessonsWatchdog.dispose();
-        lessonsMediator = repository.getSchedule(date, teacher, group);
-        lessonsWatchdog = lessonsMediator.subscribe(lessons::onNext);
+        revalidateLessons();
     }
 
     public void setTeacher(String teacher){
         this.teacher = teacher;
-        if(lessonsWatchdog != null)
-            lessonsWatchdog.dispose();
-        lessonsMediator = repository.getSchedule(date, teacher, group);
-        lessonsWatchdog = lessonsMediator.subscribe(lessons::onNext);
+        revalidateLessons();
     }
 
     public Observable<List<Lesson>> getLessons(){
         return lessons;
+    }
+
+    private void revalidateLessons(){
+        if(lessonsWatchdog != null)
+            lessonsWatchdog.dispose();
+        lessonsMediator = repository.getSchedule(date.getValue(), teacher, group);
+        lessonsWatchdog = lessonsMediator.subscribe(lessons::onNext);
     }
 }

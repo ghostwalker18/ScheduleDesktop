@@ -15,6 +15,7 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.common.Bundle;
+import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
@@ -35,11 +36,11 @@ import java.util.Vector;
  */
 public class EditNoteForm
         extends Form {
-    private final EditNoteModel model = new EditNoteModel();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
+    private EditNoteModel model;
     private JButton saveButton;
     private JButton discardButton;
     private JComboBox<String> groupBox;
@@ -55,6 +56,7 @@ public class EditNoteForm
 
     @Override
     public void onCreate(Bundle savedState, Bundle bundle) {
+        model = new ViewModelProvider(this).get(EditNoteModel.class);
         if(bundle != null){
             if(bundle.getInt("noteID") != null){
                 model.setNoteID(bundle.getInt("noteID"));

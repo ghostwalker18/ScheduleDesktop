@@ -64,11 +64,11 @@ public class MainForm
     private JLabel chooseTeacherLabel;
     private JButton backwardButton;
     private JButton forwardButton;
-    private WeekdayButton mondayButton;
-    private WeekdayButton tuesdayButton;
-    private WeekdayButton wednesdayButton;
-    private WeekdayButton thursdayButton;
-    private WeekdayButton fridayButton;
+    private ScheduleItemFragment mondayButton;
+    private ScheduleItemFragment tuesdayButton;
+    private ScheduleItemFragment wednesdayButton;
+    private ScheduleItemFragment thursdayButton;
+    private ScheduleItemFragment fridayButton;
     private JTabbedPane tabs;
     private JButton shareButton;
     private JButton settingsButton;
@@ -308,19 +308,19 @@ public class MainForm
     public void onCreateUIComponents() {
         Bundle bundle = new Bundle();
         bundle.putString("dayOfWeek", strings.getString("monday"));
-        mondayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        mondayButton = new Fragment.FragmentFactory().create(this, ScheduleItemFragment.class, bundle);
         bundle = new Bundle();
         bundle.putString("dayOfWeek", strings.getString("tuesday"));
-        tuesdayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        tuesdayButton = new Fragment.FragmentFactory().create(this, ScheduleItemFragment.class, bundle);
         bundle = new Bundle();
         bundle.putString("dayOfWeek", strings.getString("wednesday"));
-        wednesdayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        wednesdayButton = new Fragment.FragmentFactory().create(this, ScheduleItemFragment.class, bundle);
         bundle = new Bundle();
         bundle.putString("dayOfWeek", strings.getString("thursday"));
-        thursdayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        thursdayButton = new Fragment.FragmentFactory().create(this, ScheduleItemFragment.class, bundle);
         bundle = new Bundle();
         bundle.putString("dayOfWeek", strings.getString("friday"));
-        fridayButton = new Fragment.FragmentFactory().create(this, WeekdayButton.class, bundle);
+        fridayButton = new Fragment.FragmentFactory().create(this, ScheduleItemFragment.class, bundle);
         mondayTimes = new ImageView();
         otherTimes = new ImageView();
     }

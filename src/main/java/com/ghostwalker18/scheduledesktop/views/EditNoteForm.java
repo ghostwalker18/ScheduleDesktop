@@ -15,6 +15,7 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.common.Bundle;
+import com.ghostwalker18.scheduledesktop.common.DatePickerDialog;
 import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
@@ -26,6 +27,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -33,6 +35,8 @@ import java.util.Vector;
  * Этот класс представляет собой экран редактирования или добавления новой заметки
  *
  * @author Ипатов Никита
+ * @see EditNoteModel
+ * @since 3.0
  */
 public class EditNoteForm
         extends Form {
@@ -85,14 +89,12 @@ public class EditNoteForm
         model.getGroup().subscribe(group -> {
             groupBox.setSelectedItem(group);
         });
-        model.getThemes().subscribe(themes ->{
+        model.getThemes().subscribe(themes -> {
             if (themes != null) {
                 themeBox.setModel(new DefaultComboBoxModel<>(new Vector<>(themes)));
             }
         });
-        model.getTheme().subscribe(theme -> {
-            themeBox.setSelectedItem(theme);
-        });
+        model.getTheme().subscribe(theme -> themeBox.setSelectedItem(theme));
         model.getText().subscribe(text -> textField.setText(text));
         groupBox.addActionListener(e -> model.setGroup(groupBox.getSelectedItem().toString()));
         groupClear.addActionListener(e -> model.setGroup(""));
@@ -101,6 +103,7 @@ public class EditNoteForm
         saveButton.addActionListener(e -> saveNote());
         discardButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(NotesForm.class, null));
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(NotesForm.class, null));
+        chooseDate.addActionListener(e -> showDateDialog());
     }
 
     @Override
@@ -144,7 +147,7 @@ public class EditNoteForm
         groupClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
         groupClear.setText("Очистить");
         panel3.add(groupClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
-        groupBox = new JComboBox();
+        groupBox = new JComboBox<>();
         groupBox.setEditable(true);
         panel3.add(groupBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
@@ -154,7 +157,7 @@ public class EditNoteForm
         themeClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
         themeClear.setText("Очистить");
         panel4.add(themeClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        themeBox = new JComboBox();
+        themeBox = new JComboBox<>();
         themeBox.setEditable(true);
         panel4.add(themeBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();
@@ -192,7 +195,7 @@ public class EditNoteForm
      */
     private void saveNote(){
         model.setTheme(themeBox.getSelectedItem().toString());
-        model.setText(textField.getText().toString());
+        model.setText(textField.getText());
         model.saveNote();
         ScheduleApp.getInstance().startActivity(NotesForm.class, null);
     }
@@ -201,6 +204,38 @@ public class EditNoteForm
      * Этот метод открывает окно для выбора и установки даты.
      */
     private void showDateDialog(){
+        JDialog dialog = new DatePicker(this);
+        dialog.setSize(new Dimension(400, 500));
+        dialog.pack();
+        dialog.setVisible(true);
+    }
 
+    /**
+     * Этот класс отвечает за окно выбора и установки даты.
+     *
+     * @author Ипатов Никита
+     * @since 3.0
+     */
+    public static class DatePicker
+            extends DatePickerDialog {
+        private final EditNoteModel model;
+        private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+                new XMLBundleControl());
+
+        DatePicker(Form form){
+            model = new ViewModelProvider(form).get(EditNoteModel.class);
+            setupLanguage();
+        }
+
+        @Override
+        public void setupLanguage() {
+            setOKText(platformStrings.getString("saveButtonText"));
+            setCancelText(platformStrings.getString("cancelButtonText"));
+        }
+
+        @Override
+        public void onDateSet(Calendar date){
+            model.setDate(date);
+        }
     }
 }

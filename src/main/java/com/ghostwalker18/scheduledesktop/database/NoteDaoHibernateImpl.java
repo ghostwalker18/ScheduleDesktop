@@ -94,7 +94,7 @@ public class NoteDaoHibernateImpl
         BehaviorSubject<List<Note>> queryResult = getNotesForDatesCache.cacheQuery(
                 GetNotesForDatesQuery.Args.class, dates, group
         );
-        String hql = "from Note where date in (:dates) order by noteDate";
+        String hql = "from Note where date in (:dates) order by date";
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
                 Query<Note> query = session.createQuery(hql, Note.class);
@@ -111,8 +111,8 @@ public class NoteDaoHibernateImpl
         BehaviorSubject<List<Note>> queryResult = getNotesByKeywordCache.cacheQuery(
                 GetNotesByKeywordQuery.Args.class, keyword, group
         );
-        String hql = "from Note where (text like :keyword or theme like :keyword) and group = :group" +
-                "order by noteDate desc";
+        String hql = "from Note where (text like :keyword or theme like :keyword) and group = :group " +
+                "order by date desc";
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
                 Query<Note> query = session.createQuery(hql, Note.class);

@@ -17,6 +17,8 @@ package com.ghostwalker18.scheduledesktop.views;
 import com.ghostwalker18.scheduledesktop.common.Bundle;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
+import com.ghostwalker18.scheduledesktop.models.Note;
+import com.ghostwalker18.scheduledesktop.system.TextWatcher;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.NotesModel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -24,9 +26,13 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Этот класс представляет собой экран приложения, на котором отображаются заметки к занятиям.
@@ -41,7 +47,7 @@ public class NotesForm
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private JButton addNoteButton;
-    private JList notesList;
+    private JList<Note> notesList;
     private JTextField searchField;
     private JButton filterButton;
     private JButton backButton;
@@ -51,6 +57,12 @@ public class NotesForm
     private String group;
     private Calendar startDate;
     private Calendar endDate;
+    private final Map<Integer, Note> selectedNotes = new ConcurrentHashMap<>();
+    private final ListSelectionListener listener = e -> {
+        for(int i: notesList.getSelectedIndices()){
+            selectedNotes.put(i, notesList.getModel().getElementAt(i));
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedState, Bundle bundle) {
@@ -81,7 +93,12 @@ public class NotesForm
             ScheduleApp.getInstance().startActivity(EditNoteForm.class, bundle);
         });
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
-        model.getNotes().subscribe(notes -> {
+        model.getNotes().subscribe(notes -> notesList.setListData(new Vector<>(notes)));
+        searchField.getDocument().addDocumentListener(new TextWatcher() {
+            @Override
+            public void onTextChanged() {
+                model.setKeyword(searchField.getText());
+            }
         });
     }
 
@@ -124,7 +141,10 @@ public class NotesForm
         mainPanel.add(panel2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        notesList = new JList();
+        notesList = new JList<>();
+        notesList.setCellRenderer(new NoteViewHolder());
+        notesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        notesList.addListSelectionListener(listener);
         scrollPane1.setViewportView(notesList);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 2, new Insets(10, 10, 10, 10), -1, -1));

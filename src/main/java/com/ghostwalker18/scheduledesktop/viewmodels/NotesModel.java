@@ -20,9 +20,11 @@ import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.views.NotesForm;
 import com.ghostwalker18.scheduledesktop.common.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,9 +39,10 @@ public class NotesModel
     private final BehaviorSubject<List<Note>> notes = BehaviorSubject.create();
     private final BehaviorSubject<Calendar> startDate = BehaviorSubject.createDefault(Calendar.getInstance());
     private final BehaviorSubject<Calendar> endDate = BehaviorSubject.createDefault(Calendar.getInstance());
+    private Observable<List<Note>> notesMediator = BehaviorSubject.create();
+    private Disposable notesWatchdog;
     private String group;
     private String keyword;
-    private Observable<List<Note>> notesMediator = BehaviorSubject.create();
 
     public NotesModel(){
         setGroup(ScheduleApp.getInstance().getScheduleRepository().getSavedGroup());
@@ -51,6 +54,14 @@ public class NotesModel
      */
     public Observable<List<Note>> getNotes(){
         return notes;
+    }
+
+    /**
+     * Этот метод удаляет выбранные заметки из репозитория.
+     * @param notes заметки для удаления
+     */
+    public void deleteNotes(Collection<Note> notes) {
+        repository.deleteNotes(notes);
     }
 
     /**
@@ -76,13 +87,15 @@ public class NotesModel
     public void setGroup(String group){
         this.group = group;
         if(group != null){
+            if(notesWatchdog != null)
+                notesWatchdog.dispose();
             if(keyword != null)
                 notesMediator = repository.getNotes(group, keyword);
             if(startDate.getValue() != null && endDate.getValue() != null)
                 notesMediator = repository.getNotes(group,
                         generateDateSequence(startDate.getValue(), endDate.getValue()));
+            notesWatchdog = notesMediator.subscribe(notes::onNext);
         }
-        notes.mergeWith(notesMediator);
     }
 
     /**
@@ -99,6 +112,8 @@ public class NotesModel
      */
     public void setKeyword(String keyword){
         this.keyword = keyword;
+        if(notesWatchdog != null)
+            notesWatchdog.dispose();
         if(keyword != null)
             notesMediator = repository.getNotes(group, keyword);
         else {
@@ -106,7 +121,7 @@ public class NotesModel
                 notesMediator = repository.getNotes(group,
                         generateDateSequence(startDate.getValue(), endDate.getValue()));
         }
-        notes.mergeWith(notesMediator);
+        notesWatchdog = notesMediator.subscribe(notes::onNext);
     }
 
     /**
@@ -115,10 +130,12 @@ public class NotesModel
      */
     public void setStartDate(Calendar date){
         this.startDate.onNext(date);
+        if(notesWatchdog != null)
+            notesWatchdog.dispose();
         if(startDate.getValue() != null && endDate.getValue() != null && group != null)
             notesMediator = repository.getNotes(group,
                     generateDateSequence(startDate.getValue(), endDate.getValue()));
-        notes.mergeWith(notesMediator);
+        notesWatchdog = notesMediator.subscribe(notes::onNext);
     }
 
     /**
@@ -127,10 +144,12 @@ public class NotesModel
      */
     public void setEndDate(Calendar date){
         this.endDate.onNext(date);
+        if(notesWatchdog != null)
+            notesWatchdog.dispose();
         if(startDate.getValue() != null && endDate.getValue() != null && group != null)
             notesMediator = repository.getNotes(group,
                     generateDateSequence(startDate.getValue(), endDate.getValue()));
-        notes.mergeWith(notesMediator);
+        notesWatchdog = notesMediator.subscribe(notes::onNext);
     }
 
     /**

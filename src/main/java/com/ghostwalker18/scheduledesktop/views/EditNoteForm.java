@@ -229,7 +229,7 @@ public class EditNoteForm
 
         @Override
         public void setupLanguage() {
-            setOKText(platformStrings.getString("saveButtonText"));
+            setOKText(platformStrings.getString("date_choice"));
             setCancelText(platformStrings.getString("cancelButtonText"));
         }
 

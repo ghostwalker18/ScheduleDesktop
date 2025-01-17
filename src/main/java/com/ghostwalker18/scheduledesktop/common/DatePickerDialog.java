@@ -22,6 +22,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Этот класс является прототипом для диалогов выбора даты.
@@ -51,6 +52,7 @@ public abstract class DatePickerDialog
         setupUI();
         setContentPane(contentPane);
         setModal(true);
+        setPreferredSize(new Dimension(400, 500));
         getRootPane().setDefaultButton(buttonOK);
         buttonOK.addActionListener(e -> {
             onDateSet(datePicker.getCalendar());
@@ -107,6 +109,7 @@ public abstract class DatePickerDialog
         calendarPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(calendarPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         datePicker = new JCalendar();
+        datePicker.setLocale(Locale.getDefault());
         calendarPanel.add(datePicker, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 }

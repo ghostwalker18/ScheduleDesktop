@@ -9,6 +9,7 @@
         ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.*/
+
 buildscript {
     repositories {
         mavenCentral()
@@ -52,7 +53,7 @@ tasks.withType(AbstractCopyTask).all {
 }
 
 group = 'com.ghostwalker18.scheduledesktop'
-version = '2.3'
+version = '3.0'
 sourceCompatibility = '1.8'
 
 application {

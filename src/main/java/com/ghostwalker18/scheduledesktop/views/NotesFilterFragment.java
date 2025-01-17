@@ -173,11 +173,14 @@ public class NotesFilterFragment
 
     /**
      * Этот класс служит для задания начальной/конечной даты выдачи заметок.
+     *
+     * @author Ипатов Никита
+     * @since 3.0
      */
     public static class DatePicker
             extends DatePickerDialog {
         private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
-                new XMLBundleControl());
+                new XMLBundleControl());;
         private final NotesModel model;
         private final String dateType;
 

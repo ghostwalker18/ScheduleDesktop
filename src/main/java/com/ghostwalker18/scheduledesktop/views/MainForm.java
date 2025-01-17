@@ -15,19 +15,13 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.*;
-import com.ghostwalker18.scheduledesktop.common.Fragment;
-import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
+import com.ghostwalker18.scheduledesktop.common.*;
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
-import com.ghostwalker18.scheduledesktop.system.FileTransferable;
-import com.ghostwalker18.scheduledesktop.system.ImageView;
-import com.ghostwalker18.scheduledesktop.system.Toast;
-import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
+import com.ghostwalker18.scheduledesktop.system.*;
 import com.ghostwalker18.scheduledesktop.viewmodels.ScheduleModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.ghostwalker18.scheduledesktop.common.Bundle;
-import com.ghostwalker18.scheduledesktop.common.Form;
 import org.javatuples.Pair;
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -207,6 +202,7 @@ public class MainForm
     public void onCreate(Bundle savedState, Bundle bundle) {
         super.onCreate(savedState, bundle);
         state = new ViewModelProvider(this).get(ScheduleModel.class);
+        state.getGroup().subscribe(group -> savedGroup = group);
     }
 
     @Override
@@ -224,8 +220,19 @@ public class MainForm
             state.setTeacher(null);
         });
 
-        backwardButton.addActionListener(e ->
-                state.goPreviousWeek());
+        backwardButton.addMouseListener(new MouseClickAdapter(){
+            @Override
+            public void onClick() {
+                state.goPreviousWeek();
+            }
+
+            @Override
+            public void onLongClick() {
+                JDialog datePicker = new DatePicker(MainForm.this);
+                datePicker.pack();
+                datePicker.setVisible(true);
+            }
+        });
         backwardButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -236,8 +243,19 @@ public class MainForm
             }
         });
 
-        forwardButton.addActionListener(e ->
-                state.goNextWeek());
+        forwardButton.addMouseListener(new MouseClickAdapter(){
+            @Override
+            public void onClick() {
+                state.goNextWeek();
+            }
+
+            @Override
+            public void onLongClick() {
+                JDialog datePicker = new DatePicker(MainForm.this);
+                datePicker.pack();
+                datePicker.setVisible(true);
+            }
+        });
         forwardButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -297,10 +315,7 @@ public class MainForm
 
     @Override
     public void onDestroy(Bundle outState) {
-        /*try {
-            String savedGroup = state.getGroup();
-            repository.saveGroup(savedGroup);
-        } catch (Exception ignored) {}*/
+        repository.saveGroup(savedGroup);
         super.onDestroy(outState);
     }
 
@@ -460,5 +475,34 @@ public class MainForm
         settingsButton.setIcon(new ImageIcon(getClass()
                 .getResource("/images/baseline_settings_black_36dp.png")));
         toolBar1.add(settingsButton);
+    }
+
+    /**
+     * Этот класс используется для выбора даты (недели) для отображения расписания.
+     *
+     * @author Ипатов Никита
+     * @since 3.0
+     */
+    public static class DatePicker
+            extends DatePickerDialog {
+        private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+                new XMLBundleControl());
+        private final ScheduleModel model;
+
+        public DatePicker(Form owner) {
+            model = new ViewModelProvider(owner).get(ScheduleModel.class);
+            setupLanguage();
+        }
+
+        @Override
+        public void setupLanguage() {
+            setOKText(platformStrings.getString("go_to_date"));
+            setCancelText(platformStrings.getString("cancelButtonText"));
+        }
+
+        @Override
+        public void onDateSet(Calendar date) {
+            model.goToDate(date);
+        }
     }
 }

@@ -15,9 +15,11 @@
 package com.ghostwalker18.scheduledesktop.models;
 
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
+import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import io.reactivex.rxjava3.annotations.NonNull;
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.ResourceBundle;
 
 /**
  * Этот класс используется для описания единичной сущности заметок.
@@ -29,6 +31,8 @@ import java.util.Calendar;
 @Entity
 @Table(name="tblNote")
 public class Note {
+    private static final ResourceBundle strings = ResourceBundle.getBundle("strings",
+            new XMLBundleControl());
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Integer id;
@@ -46,4 +50,14 @@ public class Note {
     public String text;
     @Column(name="notePhotoIDs")
     public String photoIDs;
+
+    @Override
+    public String toString(){
+        String res = "";
+        res = res + strings.getString("date") + ": " + new DateConverters().convertToDatabaseColumn(date) + "\n";
+        res = res + strings.getString("group") + ": " + group + "\n";
+        res = res + strings.getString("theme") + ": " + theme + "\n";
+        res = res + strings.getString("text") + ": " + text + "\n";
+        return res;
+    }
 }

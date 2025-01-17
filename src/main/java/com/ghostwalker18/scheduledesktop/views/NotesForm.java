@@ -22,6 +22,7 @@ import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.models.Note;
 import com.ghostwalker18.scheduledesktop.system.CustomListSelectionModel;
 import com.ghostwalker18.scheduledesktop.system.TextWatcher;
+import com.ghostwalker18.scheduledesktop.system.Toast;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.NotesModel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -31,6 +32,7 @@ import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -64,6 +66,9 @@ public class NotesForm
     private Calendar endDate;
     private final Map<Integer, Note> selectedNotes = new ConcurrentHashMap<>();
     private final ListSelectionListener listener = e -> {
+        editButton.setVisible(notesList.getSelectedIndices().length == 1);
+        deleteButton.setVisible(notesList.getSelectedIndices().length >= 1);
+        shareButton.setVisible(notesList.getSelectedIndices().length >= 1);
         for(int i: notesList.getSelectedIndices()){
             selectedNotes.put(i, notesList.getModel().getElementAt(i));
         }
@@ -126,6 +131,45 @@ public class NotesForm
                 filterPanel.add(filter);
             }
         });
+        editButton.addActionListener(e -> openEditNote());
+        deleteButton.addActionListener(e -> deleteNotes());
+        shareButton.addActionListener(e -> shareNotes());
+    }
+
+    /**
+     * Этот метод позволяет, если выбранна одна заметка,
+     * открыть экран приложения для ее редактирования.
+     */
+    private void openEditNote(){
+        Note noteToEdit = notesList.getSelectedValue();
+        Bundle bundle = new Bundle();
+        bundle.putInt("noteID", noteToEdit.id);
+        ScheduleApp.getInstance().startActivity(EditNoteForm.class, bundle);
+    }
+
+    /**
+     * Этот метод позволяет удалить выбранные заметки.
+     */
+    private void deleteNotes(){
+        model.deleteNotes(notesList.getSelectedValuesList());
+    }
+
+
+    /**
+     * Этот метод позволяет поделиться выбранными заметками.
+     */
+    private void shareNotes(){
+        StringBuilder notes = new StringBuilder();
+        for(Note note : notesList.getSelectedValuesList()){
+            notes.append(note.toString()).append("\n");
+        }
+
+        Toolkit.getDefaultToolkit()
+                .getSystemClipboard()
+                .setContents(new StringSelection(notes.toString()), null);
+
+        Toast message = new Toast(shareButton, platformStrings.getString("notes_share_completed"));
+        message.display();
     }
 
     @Override
@@ -192,12 +236,15 @@ public class NotesForm
         toolBar1.add(spacer2);
         editButton = new JButton();
         editButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_edit_document_36.png")));
+        editButton.setVisible(false);
         toolBar1.add(editButton);
         deleteButton = new JButton();
         deleteButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_delete_36.png")));
+        deleteButton.setVisible(false);
         toolBar1.add(deleteButton);
         shareButton = new JButton();
         shareButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_share_black_36dp.png")));
+        shareButton.setVisible(false);
         toolBar1.add(shareButton);
         setMainPanel(mainPanel);
     }

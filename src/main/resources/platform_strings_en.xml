@@ -20,6 +20,7 @@
     <entry key="share_tooltip">Copy schedule in buffer</entry>
     <entry key="share_completed">The schedule has been copied to the clipboard</entry>
     <entry key="share_times_completed">The times schedule files have been copied to the clipboard</entry>
+    <entry key="notes_share_completed">The selected notes have been copied to the clipboard</entry>
     <entry key="settings_tooltip">App settings</entry>
     <entry key="download_tooltip">Download the Excel schedule file to the selected location</entry>
     <entry key="download_completed">The schedule files were saved at:</entry>

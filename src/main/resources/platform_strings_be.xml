@@ -19,6 +19,7 @@
     <entry key="combox_placeholder">Не выбрана</entry>
     <entry key="share_tooltip">Скапіяваць расклад ў буфер абмену</entry>
     <entry key="share_completed">Расклад быў скапіяваны ў буфер абмену</entry>
+    <entry key="notes_share_completed">Выбраныя нататкі былі скапіяваныя ў буфер абмену</entry>
     <entry key="share_times_completed">Файлы раскладу званкоў былі скапіяваныя ў буфер абмену</entry>
     <entry key="settings_tooltip">Налады прыкладання</entry>
     <entry key="download_tooltip">Спампаваць Excel - файл раскладу ў абранае месца</entry>

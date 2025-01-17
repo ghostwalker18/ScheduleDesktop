@@ -36,8 +36,15 @@ public abstract class DatePickerDialog
     private JButton buttonCancel;
     private JCalendar datePicker;
 
+    /**
+     * Этот метод должен настраивать локализацию интерфейса диалогового окна.
+     */
     public abstract void setupLanguage();
 
+    /**
+     * Этот метод должен определять реаакцию на выбор даты пользователем.
+     * @param date выбранная дата
+     */
     public abstract void onDateSet(Calendar date);
 
     public DatePickerDialog() {
@@ -45,7 +52,10 @@ public abstract class DatePickerDialog
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        buttonOK.addActionListener(e -> onOK());
+        buttonOK.addActionListener(e -> {
+            onDateSet(datePicker.getCalendar());
+            dispose();
+        });
         buttonCancel.addActionListener(e -> dispose());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -57,19 +67,25 @@ public abstract class DatePickerDialog
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    /**
+     * Этот метод задает надпись на кнопке подтверждения.
+     * @param text текст надписи
+     */
     protected void setOKText(String text){
         buttonOK.setText(text);
     }
 
+    /**
+     * Этот метод задает надпись на кнопке отмены.
+     * @param text текст надписи
+     */
     protected void setCancelText(String text){
         buttonCancel.setText(text);
     }
 
-    private void onOK() {
-        onDateSet(datePicker.getCalendar());
-        dispose();
-    }
-
+    /**
+     * Этот метод задает UI диалогового окна.
+     */
     private void setupUI() {
         contentPane = new JPanel();
         contentPane.setLayout(new GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));

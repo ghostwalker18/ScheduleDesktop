@@ -62,7 +62,7 @@ public class NoteDaoHibernateImpl
     public Observable<Note> getNote(Integer id) {
         BehaviorSubject<Note> queryResult = getNoteCache.cacheQuery(GetNoteQuery.Args.class, id);
         String hql = "from Note where id = :id";
-        db.runQuery(()->{
+        db.runQuery(() -> {
             try(Session session = db.getSessionFactory().openSession()){
                 Query<Note> query = session.createQuery(hql, Note.class);
                 query.setParameter("id", id);
@@ -78,7 +78,7 @@ public class NoteDaoHibernateImpl
                 GetNotesQuery.Args.class, date, group
         );
         String hql = "from Note where date = :date and group = :group";
-        db.runQuery(()->{
+        db.runQuery(() -> {
             try(Session session = db.getSessionFactory().openSession()){
                 Query<Note> query = session.createQuery(hql, Note.class);
                 query.setParameter("date", date);
@@ -94,14 +94,16 @@ public class NoteDaoHibernateImpl
         BehaviorSubject<List<Note>> queryResult = getNotesForDatesCache.cacheQuery(
                 GetNotesForDatesQuery.Args.class, dates, group
         );
-        String hql = "from Note where date in (:dates) order by date";
-        db.runQuery(()->{
+        String hql = "from Note where date in (:dates) and group = :group order by date";
+        db.runQuery(() -> {
             try(Session session = db.getSessionFactory().openSession()){
                 Query<Note> query = session.createQuery(hql, Note.class);
                 query.setParameterList("dates", Arrays.asList(dates));
                 query.setParameter("group", group);
                 queryResult.onNext(query.list());
-            } catch (Exception ignored){/*Not required*/}
+            } catch (Exception ignored){
+                int i = 0;
+                /*Not required*/}
         });
         return queryResult;
     }
@@ -113,7 +115,7 @@ public class NoteDaoHibernateImpl
         );
         String hql = "from Note where (text like :keyword or theme like :keyword) and group = :group " +
                 "order by date desc";
-        db.runQuery(()->{
+        db.runQuery(() -> {
             try(Session session = db.getSessionFactory().openSession()){
                 Query<Note> query = session.createQuery(hql, Note.class);
                 query.setParameter("keyword", "%" + keyword + "%");
@@ -139,7 +141,7 @@ public class NoteDaoHibernateImpl
 
     @Override
     public void update(Note note) {
-        db.runQuery(()->{
+        db.runQuery(() -> {
             try(Session session = db.getSessionFactory().openSession()){
                 Transaction transaction = session.getTransaction();
                 transaction.begin();
@@ -152,7 +154,7 @@ public class NoteDaoHibernateImpl
 
     @Override
     public void delete(Note note) {
-        db.runQuery(()->{
+        db.runQuery(() -> {
             try(Session session = db.getSessionFactory().openSession()){
                 Transaction transaction = session.getTransaction();
                 transaction.begin();

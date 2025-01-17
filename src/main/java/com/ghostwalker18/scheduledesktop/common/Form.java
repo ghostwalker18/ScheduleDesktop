@@ -80,6 +80,9 @@ public abstract class Form
 
     /**
      * Этот метод используется для начальной инициализации формы.
+     *
+     * @param savedState сохраненное состояние формы
+     * @param bundle передаваемые данные
      */
     public void onCreate(@Nullable Bundle savedState, @Nullable Bundle bundle){
         this.savedState = savedState;

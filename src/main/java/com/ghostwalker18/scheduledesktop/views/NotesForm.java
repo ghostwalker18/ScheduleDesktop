@@ -15,6 +15,8 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.common.Bundle;
+import com.ghostwalker18.scheduledesktop.common.Fragment;
+import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.models.Note;
@@ -41,15 +43,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NotesForm
         extends Form {
-    private final NotesModel model = new NotesModel();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
+    private NotesModel model;
+    private NotesFilterFragment filter;
     private JButton addNoteButton;
     private JList<Note> notesList;
     private JTextField searchField;
     private JButton filterButton;
+    private JPanel filterPanel;
     private JButton backButton;
     private JButton editButton;
     private JButton deleteButton;
@@ -77,6 +81,7 @@ public class NotesForm
             startDate = new DateConverters().convertToEntityAttribute(savedState.getString("startDate"));
             endDate = new DateConverters().convertToEntityAttribute(savedState.getString("endDate"));
         }
+        model = new ViewModelProvider(this).get(NotesModel.class);
         model.setGroup(group);
         model.setStartDate(startDate);
         model.setEndDate(endDate);
@@ -98,6 +103,26 @@ public class NotesForm
             @Override
             public void onTextChanged() {
                 model.setKeyword(searchField.getText());
+            }
+        });
+        filterButton.addActionListener(e -> {
+            if (filter == null) {
+                filter = new Fragment.FragmentFactory().create(this, NotesFilterFragment.class, null);
+                filter.setListener(new NotesFilterFragment.VisibilityListener(){
+                    @Override
+                    public void onFragmentShow() {
+
+                    }
+
+                    @Override
+                    public void onFragmentHide() {
+                        filterPanel.remove(filter);
+                        filterPanel.revalidate();
+                        filterPanel.repaint();
+                        filter = null;
+                    }
+                });
+                filterPanel.add(filter);
             }
         });
     }
@@ -125,7 +150,7 @@ public class NotesForm
         final JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 0, 10), -1, -1));
+        panel1.setLayout(new GridLayoutManager(2, 3, new Insets(0, 10, 0, 10), -1, -1));
         mainPanel.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         searchField = new JTextField();
         panel1.add(searchField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
@@ -134,17 +159,19 @@ public class NotesForm
         panel1.add(filterButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setIcon(new ImageIcon(getClass().getResource("/images/baseline_search_36.png")));
-        label1.setText("");
         panel1.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        filterPanel = new JPanel();
+        filterPanel.setLayout(new GridBagLayout());
+        panel1.add(filterPanel, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 10), -1, -1));
         mainPanel.add(panel2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         notesList = new JList<>();
-        notesList.setCellRenderer(new NoteViewHolder());
         notesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         notesList.addListSelectionListener(listener);
+        notesList.setCellRenderer(new NoteViewHolder());
         scrollPane1.setViewportView(notesList);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 2, new Insets(10, 10, 10, 10), -1, -1));

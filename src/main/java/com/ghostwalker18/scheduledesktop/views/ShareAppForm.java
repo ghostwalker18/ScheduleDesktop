@@ -35,7 +35,6 @@ public class ShareAppForm
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private JLabel QRLabel;
-    private JLabel QR;
     private JLabel OrLabel;
     private JButton shareButton;
     private JButton backButton;
@@ -54,7 +53,7 @@ public class ShareAppForm
         mainPanel.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         QRLabel = new JLabel();
         panel1.add(QRLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        QR = new JLabel();
+        final JLabel QR = new JLabel();
         QR.setIcon(new ImageIcon(getClass().getResource("/images/github_qr.png")));
         panel1.add(QR, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         OrLabel = new JLabel();

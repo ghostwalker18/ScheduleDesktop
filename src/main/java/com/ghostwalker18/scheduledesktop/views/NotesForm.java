@@ -20,6 +20,7 @@ import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.models.Note;
+import com.ghostwalker18.scheduledesktop.system.CustomListSelectionModel;
 import com.ghostwalker18.scheduledesktop.system.TextWatcher;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.NotesModel;
@@ -169,7 +170,7 @@ public class NotesForm
         final JScrollPane scrollPane1 = new JScrollPane();
         panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         notesList = new JList<>();
-        notesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        notesList.setSelectionModel(new CustomListSelectionModel());
         notesList.addListSelectionListener(listener);
         notesList.setCellRenderer(new NoteViewHolder());
         scrollPane1.setViewportView(notesList);

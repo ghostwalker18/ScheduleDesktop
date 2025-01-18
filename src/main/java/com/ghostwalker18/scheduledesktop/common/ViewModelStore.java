@@ -47,4 +47,12 @@ public class ViewModelStore {
     public ViewModel get(String key){
         return map.get(key);
     }
+
+    /**
+     * Этот метод очищает хранилище.
+     */
+    public void clear(){
+        for(ViewModel model : map.values())
+            model.onCleared();
+    }
 }

@@ -42,7 +42,7 @@ import java.util.Vector;
  * @author Ипатов Никита
  */
 public class MainForm
-        extends Form {
+        extends RxForm {
     private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
     private ScheduleModel state;
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
@@ -78,7 +78,7 @@ public class MainForm
      * Этот метод используется для настройки поля выбора группы.
      */
     private void setupGroupSearch() {
-        repository.getGroups().subscribe(groups -> {
+        addSubscription(repository.getGroups().subscribe(groups -> {
             if (groups != null) {
                 groupComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(groups)));
             }
@@ -92,7 +92,7 @@ public class MainForm
                     break;
                 }
             }
-        });
+        }));
         groupComboBox.addActionListener(e -> {
             if (groupComboBox.getSelectedIndex() != 0) {
                 state.setGroup(groupComboBox.getSelectedItem().toString());
@@ -106,13 +106,13 @@ public class MainForm
      * Этот метод используется для настройки поля выбора преподавателя.
      */
     private void setupTeacherSearch() {
-        repository.getTeachers().subscribe(teachers -> {
+        addSubscription(repository.getTeachers().subscribe(teachers -> {
             if (teachers != null) {
                 teacherComboBox.setModel(new DefaultComboBoxModel<>(new Vector<>(teachers)));
             }
             teacherComboBox.insertItemAt(platformStrings.getString("combox_placeholder"), 0);
             teacherComboBox.setSelectedIndex(0);
-        });
+        }));
         teacherComboBox.addActionListener(e -> {
             if (teacherComboBox.getSelectedIndex() != 0) {
                 state.setTeacher(teacherComboBox.getSelectedItem().toString());
@@ -202,7 +202,7 @@ public class MainForm
     public void onCreate(Bundle savedState, Bundle bundle) {
         super.onCreate(savedState, bundle);
         state = new ViewModelProvider(this).get(ScheduleModel.class);
-        state.getGroup().subscribe(group -> savedGroup = group);
+        addSubscription(state.getGroup().subscribe(group -> savedGroup = group));
     }
 
     @Override
@@ -301,14 +301,14 @@ public class MainForm
 
         refreshButton.addActionListener( e -> repository.update());
 
-        repository.getMondayTimes().subscribe(image -> mondayTimes.setImage(image));
+        addSubscription(repository.getMondayTimes().subscribe(image -> mondayTimes.setImage(image)));
 
-        repository.getOtherTimes().subscribe(image -> otherTimes.setImage(image));
+        addSubscription(repository.getOtherTimes().subscribe(image -> otherTimes.setImage(image)));
 
-        repository.getStatus().subscribe(status -> {
+        addSubscription(repository.getStatus().subscribe(status -> {
             updateStatus.setText(status.text);
             updateProgress.setValue(status.progress);
-        });
+        }));
 
         groupComboBox.requestFocusInWindow();
     }

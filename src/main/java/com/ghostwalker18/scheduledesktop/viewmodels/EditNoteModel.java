@@ -21,7 +21,6 @@ import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.views.EditNoteForm;
 import com.ghostwalker18.scheduledesktop.common.ViewModel;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import java.util.Calendar;
@@ -42,6 +41,7 @@ public class EditNoteModel
     private final BehaviorSubject<Note> note = BehaviorSubject.createDefault(new Note());
     private final BehaviorSubject<List<String>> noteThemesMediator = BehaviorSubject.create();
     private Observable<List<String>> themes;
+    private Disposable notesWatchdog;
     private Disposable themesWatchdog;
     private final BehaviorSubject<String> theme = BehaviorSubject.createDefault("");
     private final BehaviorSubject<String> text = BehaviorSubject.createDefault("");
@@ -60,9 +60,9 @@ public class EditNoteModel
      */
     public void setNoteID(Integer id){
         isEdited = true;
-        note.subscribe((Observer<? super Note>) notesRepository.getNote(id));
-        note.subscribe(note1 -> {
+        notesWatchdog = notesRepository.getNote(id).subscribe(note1 -> {
             if(note1 != null){
+                note.onNext(note1);
                 group.onNext(note1.group);
                 date.onNext(note1.date);
                 text.onNext(note1.text);
@@ -175,5 +175,13 @@ public class EditNoteModel
             else
                 notesRepository.saveNote(noteToSave);
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        if(notesWatchdog != null)
+            notesWatchdog.dispose();
+        if(themesWatchdog != null)
+            themesWatchdog.dispose();
     }
 }

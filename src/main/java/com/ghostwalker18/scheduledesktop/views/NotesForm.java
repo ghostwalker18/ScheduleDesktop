@@ -14,9 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
-import com.ghostwalker18.scheduledesktop.common.Bundle;
-import com.ghostwalker18.scheduledesktop.common.Fragment;
-import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
+import com.ghostwalker18.scheduledesktop.common.*;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.models.Note;
@@ -28,16 +26,11 @@ import com.ghostwalker18.scheduledesktop.viewmodels.NotesModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 /**
  * Этот класс представляет собой экран приложения, на котором отображаются заметки к занятиям.
@@ -45,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Ипатов Никита
  */
 public class NotesForm
-        extends Form {
+        extends RxForm {
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
@@ -64,14 +57,10 @@ public class NotesForm
     private String group;
     private Calendar startDate;
     private Calendar endDate;
-    private final Map<Integer, Note> selectedNotes = new ConcurrentHashMap<>();
     private final ListSelectionListener listener = e -> {
         editButton.setVisible(notesList.getSelectedIndices().length == 1);
         deleteButton.setVisible(notesList.getSelectedIndices().length >= 1);
         shareButton.setVisible(notesList.getSelectedIndices().length >= 1);
-        for(int i: notesList.getSelectedIndices()){
-            selectedNotes.put(i, notesList.getModel().getElementAt(i));
-        }
     };
 
     @Override
@@ -81,8 +70,7 @@ public class NotesForm
             startDate = new DateConverters().convertToEntityAttribute(bundle.getString("date"));
             endDate = startDate;
 
-        }
-        else{
+        } else {
             group = savedState.getString("group");
             startDate = new DateConverters().convertToEntityAttribute(savedState.getString("startDate"));
             endDate = new DateConverters().convertToEntityAttribute(savedState.getString("endDate"));
@@ -104,7 +92,7 @@ public class NotesForm
             ScheduleApp.getInstance().startActivity(EditNoteForm.class, bundle);
         });
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
-        model.getNotes().subscribe(notes -> notesList.setListData(new Vector<>(notes)));
+        addSubscription(model.getNotes().subscribe(notes -> notesList.setListData(new Vector<>(notes))));
         searchField.getDocument().addDocumentListener(new TextWatcher() {
             @Override
             public void onTextChanged() {
@@ -188,6 +176,7 @@ public class NotesForm
         outState.putString("group", group);
         outState.putString("startDate", new DateConverters().convertToDatabaseColumn(startDate));
         outState.putString("endDate", new DateConverters().convertToDatabaseColumn(endDate));
+        super.onDestroy(outState);
     }
 
     @Override

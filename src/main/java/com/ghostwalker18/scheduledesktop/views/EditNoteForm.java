@@ -14,9 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.views;
 
-import com.ghostwalker18.scheduledesktop.common.Bundle;
-import com.ghostwalker18.scheduledesktop.common.DatePickerDialog;
-import com.ghostwalker18.scheduledesktop.common.ViewModelProvider;
+import com.ghostwalker18.scheduledesktop.common.*;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
@@ -24,12 +22,9 @@ import com.ghostwalker18.scheduledesktop.viewmodels.EditNoteModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Calendar;
-import java.util.ResourceBundle;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Этот класс представляет собой экран редактирования или добавления новой заметки
@@ -39,7 +34,7 @@ import java.util.Vector;
  * @since 3.0
  */
 public class EditNoteForm
-        extends Form {
+        extends RxForm {
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
@@ -57,6 +52,8 @@ public class EditNoteForm
     private JLabel dateField;
     private JLabel dateLabel;
     private JButton backButton;
+    private String group;
+    private String theme;
 
     @Override
     public void onCreate(Bundle savedState, Bundle bundle) {
@@ -78,24 +75,32 @@ public class EditNoteForm
 
     @Override
     public void onCreatedUI() {
-        model.getDate().subscribe(
+        addSubscription(model.getDate().subscribe(
                 date -> dateField.setText(new DateConverters().convertToDatabaseColumn(date))
-        );
-        model.getGroups().subscribe(groups -> {
+        ));
+        addSubscription(model.getGroups().subscribe(groups -> {
             if (groups != null) {
                 groupBox.setModel(new DefaultComboBoxModel<>(new Vector<>(groups)));
+                if (group != null)
+                    groupBox.setSelectedItem(group);
             }
-        });
-        model.getGroup().subscribe(group -> {
+        }));
+       addSubscription(model.getGroup().subscribe(group -> {
+            this.group = group;
             groupBox.setSelectedItem(group);
-        });
-        model.getThemes().subscribe(themes -> {
+        }));
+        addSubscription(model.getThemes().subscribe(themes -> {
             if (themes != null) {
                 themeBox.setModel(new DefaultComboBoxModel<>(new Vector<>(themes)));
+                if(theme != null)
+                    themeBox.setSelectedItem(theme);
             }
-        });
-        model.getTheme().subscribe(theme -> themeBox.setSelectedItem(theme));
-        model.getText().subscribe(text -> textField.setText(text));
+        }));
+        addSubscription(model.getTheme().subscribe(theme -> {
+            this.theme = theme;
+            themeBox.setSelectedItem(theme);
+        }));
+        addSubscription(model.getText().subscribe(text -> textField.setText(text)));
         groupBox.addActionListener(e -> model.setGroup(groupBox.getSelectedItem().toString()));
         groupClear.addActionListener(e -> model.setGroup(""));
         themeClear.addActionListener(e -> model.setTheme(""));
@@ -128,13 +133,10 @@ public class EditNoteForm
         panel2.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         dateLabel = new JLabel();
-        dateLabel.setText("Дата");
         panel2.add(dateLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         dateField = new JLabel();
-        dateField.setText("Label");
         panel2.add(dateField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chooseDate = new JButton();
-        chooseDate.setText("Выбрать дату");
         panel2.add(chooseDate, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -145,7 +147,6 @@ public class EditNoteForm
         groupClear.setBorderPainted(true);
         groupClear.setContentAreaFilled(true);
         groupClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
-        groupClear.setText("Очистить");
         panel3.add(groupClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
         groupBox = new JComboBox<>();
         groupBox.setEditable(true);
@@ -155,7 +156,6 @@ public class EditNoteForm
         panel1.add(panel4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         themeClear = new JButton();
         themeClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
-        themeClear.setText("Очистить");
         panel4.add(themeClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         themeBox = new JComboBox<>();
         themeBox.setEditable(true);
@@ -167,16 +167,13 @@ public class EditNoteForm
         panel5.add(textField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         textClear = new JButton();
         textClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
-        textClear.setText("Очистить");
         panel5.add(textClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridLayoutManager(1, 2, new Insets(0, 10, 0, 10), -1, -1));
         mainPanel.add(panel6, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         saveButton = new JButton();
-        saveButton.setText("Сохранить");
         panel6.add(saveButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         discardButton = new JButton();
-        discardButton.setText("Отмена");
         panel6.add(discardButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         mainPanel.add(spacer2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -185,7 +182,6 @@ public class EditNoteForm
         backButton = new JButton();
         backButton.setBorderPainted(false);
         backButton.setIcon(new ImageIcon(getClass().getResource("/images/baseline_arrow_back_36.png")));
-        backButton.setText("Назад");
         toolBar1.add(backButton);
         setMainPanel(mainPanel);
     }

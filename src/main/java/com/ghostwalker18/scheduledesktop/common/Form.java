@@ -112,7 +112,9 @@ public abstract class Form
     /**
      * Этот метод используется для настройки поведения формы при ее уничтожении.
      */
-    public void onDestroy(Bundle outState){}
+    public void onDestroy(Bundle outState){
+        store.clear();
+    }
 
     @Override
     public void windowOpened(WindowEvent e) {/*To be overridden*/}

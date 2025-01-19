@@ -279,6 +279,7 @@ public class ScheduleItemFragment
     @Override
     public void onSetupLanguage(){
         scheduleButton.setToolTipText(platformStrings.getString("weekday_tooltip"));
+        notesButton.setToolTipText(platformStrings.getString("show_notes_tooltip"));
     }
 
     @Override

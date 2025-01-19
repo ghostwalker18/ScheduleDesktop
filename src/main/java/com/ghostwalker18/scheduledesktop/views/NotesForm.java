@@ -92,7 +92,11 @@ public class NotesForm
             ScheduleApp.getInstance().startActivity(EditNoteForm.class, bundle);
         });
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
-        addSubscription(model.getNotes().subscribe(notes -> notesList.setListData(new Vector<>(notes))));
+        addSubscription(model.getNotes().subscribe(notes -> {
+            notesList.setListData(new Vector<>(notes));
+            notesList.revalidate();
+            notesList.repaint();
+        }));
         searchField.getDocument().addDocumentListener(new TextWatcher() {
             @Override
             public void onTextChanged() {
@@ -168,6 +172,7 @@ public class NotesForm
         deleteButton.setText(strings.getString("delete"));
         shareButton.setText(strings.getString("share"));
         filterButton.setText(platformStrings.getString("notes_filter"));
+        searchField.setToolTipText(platformStrings.getString("search_tooltip"));
         backButton.setText(platformStrings.getString("back_button_text"));
     }
 

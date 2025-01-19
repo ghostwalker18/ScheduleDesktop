@@ -53,4 +53,7 @@
     <entry key="github_link">https://github.com/ghostwalker18/ScheduleDesktop/releases/latest</entry>
     <entry key="back_button_text">Артқа</entry>
     <entry key="go_to_date">Күнге өту</entry>
+    <entry key="show_notes_tooltip">Осы күнге арналған жазбаларды көрсету</entry>
+    <entry key="filter_close_tooltip">Қолдану және орау</entry>
+    <entry key="search_tooltip">Кілт сөз бойынша жазбаларды іздеу</entry>
 </properties>

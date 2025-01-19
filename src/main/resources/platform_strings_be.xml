@@ -53,4 +53,7 @@
     <entry key="github_link">https://github.com/ghostwalker18/ScheduleDesktop/releases/latest</entry>
     <entry key="back_button_text">Назад</entry>
     <entry key="go_to_date">Перайсці да даты</entry>
+    <entry key="show_notes_tooltip">Паказаць нататкі на гэты дзень</entry>
+    <entry key="filter_close_tooltip">Прымяніць і згарнуць</entry>
+    <entry key="search_tooltip">Пошук нататак па ключавым слове</entry>
 </properties>

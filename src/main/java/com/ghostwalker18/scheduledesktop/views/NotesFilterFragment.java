@@ -45,6 +45,8 @@ public class NotesFilterFragment
     private final ScheduleRepository repository = ScheduleApp.getInstance().getScheduleRepository();
     private final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
+    private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
     private NotesModel model;
     private VisibilityListener listener;
     private JButton closeButton;
@@ -117,6 +119,9 @@ public class NotesFilterFragment
         forGroupLabel.setText(strings.getString("for_group"));
         startDateLabel.setText(strings.getString("start_date"));
         endDateLabel.setText(strings.getString("end_date"));
+        startDateSet.setToolTipText(platformStrings.getString("date_choice"));
+        endDateSet.setToolTipText(platformStrings.getString("date_choice"));
+        closeButton.setToolTipText(platformStrings.getString("filter_close_tooltip"));
     }
 
     @Override

@@ -26,7 +26,7 @@ import java.util.*;
  * @author Ипатов Никита
  */
 public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
-    private final Map<T, BehaviorSubject<R>> cachedResults = new HashMap<>();
+    private final Map<T, BehaviorSubject<R>> cachedResults = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Этот метод возвращает кэш запросов для данного типа запросов к БД, определяемых классом наследником.
@@ -36,13 +36,15 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
         return cachedResults;
     }
 
-    public BehaviorSubject<R> cacheQuery(Class<T> clazz, Object... args){
+    public synchronized BehaviorSubject<R> cacheQuery(Class<T> clazz, Object... args){
         Class[] argsTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
         try{
-            T key = clazz.getConstructor(argsTypes).newInstance(args);
-            if(!cachedResults.containsKey(key))
-                cachedResults.put(key, BehaviorSubject.create());
-            return cachedResults.get(key);
+            final T key = clazz.getConstructor(argsTypes).newInstance(args);
+            synchronized (key){
+                if(!cachedResults.containsKey(key))
+                    cachedResults.put(key, BehaviorSubject.create());
+                return cachedResults.get(key);
+            }
         } catch (Exception e){
             throw new RuntimeException();
         }
@@ -52,7 +54,7 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
      * Этот класс является прототипом для класса аргументов запроса к БД.
      * При наследовании нужно определить конструктор класса и поля аргументов.
      */
-    protected abstract static class QueryArgs{
+    protected abstract static class QueryArgs {
 
         /**
          * Этот метод позволяет получить значения поля класа наследника.
@@ -61,6 +63,13 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
          */
         private Object getFieldValue(Field field) {
             try {
+                if(field.isAnnotationPresent(Converter.class)){
+                    Converter converterAnnotation = field.getAnnotation(Converter.class);
+                    QueryArgConverter converter = converterAnnotation.converter()
+                            .getConstructor()
+                            .newInstance();
+                    return converter.convertToQueryArg(field.get(this));
+                }
                 return field.get(this);
             } catch (Exception e) {
                 return null;
@@ -74,7 +83,7 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
          * @return равны ли объекты
          */
         @SuppressWarnings("UNCHECKED_CAST")
-        protected  <T extends QueryCache.QueryArgs> boolean t_equals(Object o){
+        protected <T extends QueryCache.QueryArgs> boolean t_equals(Object o){
             if (this == o)
                 return true;
             if (o == null || getClass() != o.getClass())

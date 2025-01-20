@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.database;
 
+import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.models.Lesson;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -187,6 +188,7 @@ public class LessonDaoHibernateImpl
             extends QueryCache<GetLessonsForGroupQuery.Args, List<Lesson>>{
 
         public static class Args extends QueryCache.QueryArgs{
+            @Converter(converter = DateConverters.class)
             public final Calendar date;
             public final String group;
 
@@ -208,19 +210,20 @@ public class LessonDaoHibernateImpl
     private static class GetLessonsForTeacherQuery
             extends QueryCache<GetLessonsForTeacherQuery.Args, List<Lesson>> {
 
-         public static class Args extends QueryCache.QueryArgs{
-            public final Calendar date;
-            public final String teacher;
+         public static class Args extends QueryCache.QueryArgs {
+             @Converter(converter = DateConverters.class)
+             public final Calendar date;
+             public final String teacher;
 
-            public Args(GregorianCalendar date, String teacher){
-                this.date = date;
-                this.teacher = teacher;
-            }
+             public Args(GregorianCalendar date, String teacher){
+                 this.date = date;
+                 this.teacher = teacher;
+             }
 
-            @Override
-            public boolean equals(Object o){
-                return super.<Args>t_equals(o);
-            }
+             @Override
+             public boolean equals(Object o){
+                 return super.<Args>t_equals(o);
+             }
         }
     }
 
@@ -230,7 +233,8 @@ public class LessonDaoHibernateImpl
     private static class GetLessonsForGroupWithTeacherQuery
             extends QueryCache<GetLessonsForGroupWithTeacherQuery.Args, List<Lesson>>{
 
-        public  static class Args extends QueryCache.QueryArgs{
+        public  static class Args extends QueryCache.QueryArgs {
+            @Converter(converter = DateConverters.class)
             public final Calendar date;
             public final String group;
             public final String teacher;

@@ -14,10 +14,13 @@
 
 package com.ghostwalker18.scheduledesktop.converters;
 
+import com.ghostwalker18.scheduledesktop.database.QueryArgConverter;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -29,7 +32,7 @@ import java.util.Locale;
  */
 @Converter
 public class DateConverters
-        implements AttributeConverter<Calendar, String> {
+        implements AttributeConverter<Calendar, String>, QueryArgConverter {
     private static final SimpleDateFormat dateFormatDB = new SimpleDateFormat("dd.MM.yyyy",
             new Locale("ru"));
     private static final SimpleDateFormat dateFormatSecondCorpus = new SimpleDateFormat("dd.MM.yyyy",
@@ -97,6 +100,18 @@ public class DateConverters
             catch (ParseException e){
                 return null;
             }
+        }
+    }
+
+    @Override
+    public Object convertToQueryArg(Object o) {
+        if(o instanceof Calendar)
+            return convertToDatabaseColumn((Calendar) o);
+        if (o instanceof Calendar[]){
+            Calendar[] array = (Calendar[])o;
+            return Arrays.stream(array).map(this::convertToDatabaseColumn).toArray(Object[]::new);
+        } else {
+            throw new UnsupportedOperationException();
         }
     }
 }

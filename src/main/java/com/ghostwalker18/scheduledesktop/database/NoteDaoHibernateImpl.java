@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.scheduledesktop.database;
 
+import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.models.Note;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -101,9 +102,7 @@ public class NoteDaoHibernateImpl
                 query.setParameterList("dates", Arrays.asList(dates));
                 query.setParameter("group", group);
                 queryResult.onNext(query.list());
-            } catch (Exception ignored){
-                int i = 0;
-                /*Not required*/}
+            } catch (Exception ignored){/*Not required*/}
         });
         return queryResult;
     }
@@ -189,7 +188,8 @@ public class NoteDaoHibernateImpl
      */
     private static class GetNotesQuery
             extends QueryCache<GetNotesQuery.Args, List<Note>>{
-        public static class Args extends QueryCache.QueryArgs{
+        public static class Args extends QueryCache.QueryArgs {
+            @Converter(converter = DateConverters.class)
             public final Calendar date;
             public final String group;
 

@@ -56,4 +56,8 @@
     <entry key="show_notes_tooltip">Показати нотатки на цей день</entry>
     <entry key="filter_close_tooltip">Застосувати і згорнути</entry>
     <entry key="search_tooltip">Пошук нотаток за ключовим словом</entry>
+    <entry key="theme_tooltip">Виберіть або введіть. Макс. довжина – 124 символи.</entry>
+    <entry key="text_tooltip">Введіть текст. Макс. довжина - 255 символів.</entry>
+    <entry key="save_note_tooltip">Зберегти і повернутися</entry>
+    <entry key="discard_note_tooltip">Повернутися без збереження</entry>
 </properties>

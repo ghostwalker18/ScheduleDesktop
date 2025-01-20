@@ -25,6 +25,8 @@ import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopDarkTheme;
 import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopLightTheme;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import com.ghostwalker18.scheduledesktop.common.Application;
+import com.sun.istack.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -50,6 +52,7 @@ public class ScheduleApp
      * Этот метод используется для создания экземпляра приложения
      * @return синглтон приложения
      */
+    @NotNull
     public static ScheduleApp getInstance(){
         try{
             if(instance == null)

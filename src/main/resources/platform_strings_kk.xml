@@ -56,4 +56,8 @@
     <entry key="show_notes_tooltip">Осы күнге арналған жазбаларды көрсету</entry>
     <entry key="filter_close_tooltip">Қолдану және орау</entry>
     <entry key="search_tooltip">Кілт сөз бойынша жазбаларды іздеу</entry>
+    <entry key="theme_tooltip">Таңдаңыз немесе теріңіз. Макс.ұзындығы - 124 таңба.</entry>
+    <entry key="text_tooltip">Мәтінді енгізіңіз. Макс.ұзындығы - 255 таңба.</entry>
+    <entry key="save_note_tooltip">Сақтау және оралу</entry>
+    <entry key="discard_note_tooltip">Сақтаусыз оралу</entry>
 </properties>

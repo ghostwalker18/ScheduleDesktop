@@ -17,6 +17,7 @@ package com.ghostwalker18.scheduledesktop.views;
 import com.ghostwalker18.scheduledesktop.common.*;
 import com.ghostwalker18.scheduledesktop.converters.DateConverters;
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
+import com.ghostwalker18.scheduledesktop.system.JTextFieldLimited;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.viewmodels.EditNoteModel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -45,6 +46,9 @@ public class EditNoteForm
     private JComboBox<String> groupBox;
     private JComboBox<String> themeBox;
     private JTextField textField;
+    private JLabel groupLabel;
+    private JLabel themeLabel;
+    private JLabel textLabel;
     private JButton groupClear;
     private JButton themeClear;
     private JButton textClear;
@@ -101,6 +105,7 @@ public class EditNoteForm
             themeBox.setSelectedItem(theme);
         }));
         addSubscription(model.getText().subscribe(text -> textField.setText(text)));
+
         groupBox.addActionListener(e -> model.setGroup(groupBox.getSelectedItem().toString()));
         groupClear.addActionListener(e -> model.setGroup(""));
         themeClear.addActionListener(e -> model.setTheme(""));
@@ -115,11 +120,23 @@ public class EditNoteForm
     public void onSetupLanguage() {
         dateLabel.setText(strings.getString("date"));
         chooseDate.setText(platformStrings.getString("date_choice"));
+
+        groupLabel.setText(strings.getString("group"));
         groupClear.setText(platformStrings.getString("clear"));
+
+        themeLabel.setText(strings.getString("theme"));
+        themeBox.setToolTipText(platformStrings.getString("theme_tooltip"));
         themeClear.setText(platformStrings.getString("clear"));
+
+        textLabel.setText(strings.getString("text"));
+        textField.setToolTipText(platformStrings.getString("text_tooltip"));
         textClear.setText(platformStrings.getString("clear"));
+
         saveButton.setText(platformStrings.getString("saveButtonText"));
+        saveButton.setToolTipText(platformStrings.getString("save_note_tooltip"));
+
         discardButton.setText(platformStrings.getString("cancelButtonText"));
+        discardButton.setToolTipText(platformStrings.getString("discard_note_tooltip"));
     }
 
     @Override
@@ -141,33 +158,41 @@ public class EditNoteForm
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         groupClear = new JButton();
         groupClear.setBorderPainted(true);
         groupClear.setContentAreaFilled(true);
         groupClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
-        panel3.add(groupClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+        panel3.add(groupClear, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
         groupBox = new JComboBox<>();
-        groupBox.setEditable(true);
-        panel3.add(groupBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        groupBox.setEditable(false);
+        panel3.add(groupBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        groupLabel = new JLabel();
+        panel3.add(groupLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(200, -1), null, null, 0, false));
         final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel4.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         themeClear = new JButton();
         themeClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
-        panel4.add(themeClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel4.add(themeClear, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         themeBox = new JComboBox<>();
         themeBox.setEditable(true);
-        panel4.add(themeBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        ((JTextField)themeBox.getEditor().getEditorComponent()).setDocument(new JTextFieldLimited(124));
+        panel4.add(themeBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        themeLabel = new JLabel();
+        panel4.add(themeLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(75, -1), null, null, 0, false));
         final JPanel panel5 = new JPanel();
-        panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel5.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel5, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         textField = new JTextField();
-        panel5.add(textField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        textField.setDocument(new JTextFieldLimited(255));
+        panel5.add(textField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         textClear = new JButton();
         textClear.setIcon(new ImageIcon(getClass().getResource("/images/baseline_clear_24.png")));
-        panel5.add(textClear, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel5.add(textClear, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        textLabel = new JLabel();
+        panel5.add(textLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(75, -1), null, null, 0, false));
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridLayoutManager(1, 2, new Insets(0, 10, 0, 10), -1, -1));
         mainPanel.add(panel6, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

@@ -56,4 +56,8 @@
     <entry key="show_notes_tooltip">Паказаць нататкі на гэты дзень</entry>
     <entry key="filter_close_tooltip">Прымяніць і згарнуць</entry>
     <entry key="search_tooltip">Пошук нататак па ключавым слове</entry>
+    <entry key="theme_tooltip">Выберыце або ўвядзіце. Макс. даўжыня - 124 сімвала.</entry>
+    <entry key="text_tooltip">Увядзіце тэкст. Макс. даўжыня - 255 сімвалаў.</entry>
+    <entry key="save_note_tooltip">Захаваць і вярнуцца</entry>
+    <entry key="discard_note_tooltip">Вярнуцца без захавання</entry>
 </properties>

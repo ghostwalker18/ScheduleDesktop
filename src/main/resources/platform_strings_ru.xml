@@ -56,4 +56,8 @@
     <entry key="show_notes_tooltip">Показать заметки на этот день</entry>
     <entry key="filter_close_tooltip">Применить и свернуть</entry>
     <entry key="search_tooltip">Поиск заметок по ключевому слову</entry>
+    <entry key="theme_tooltip">Выберите или введите. Макс. длина - 124 символа.</entry>
+    <entry key="text_tooltip">Введите текст. Макс. длина - 255 символов.</entry>
+    <entry key="save_note_tooltip">Сохранить и вернуться</entry>
+    <entry key="discard_note_tooltip">Вернуться без сохранения</entry>
 </properties>

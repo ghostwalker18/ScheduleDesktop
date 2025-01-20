@@ -56,4 +56,8 @@
     <entry key="show_notes_tooltip">Show notes for this day</entry>
     <entry key="filter_close_tooltip">Apply and close</entry>
     <entry key="search_tooltip">Search for notes by keyword</entry>
+    <entry key="theme_tooltip">Select or enter. The max. length is 124 characters.</entry>
+    <entry key="text_tooltip">Enter the text. The max. length is 255 characters.</entry>
+    <entry key="save_note_tooltip">Save and go back</entry>
+    <entry key="discard_note_tooltip">Go back without saving</entry>
 </properties>

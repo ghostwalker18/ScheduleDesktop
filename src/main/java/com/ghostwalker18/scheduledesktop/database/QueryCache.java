@@ -58,6 +58,7 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
 
         /**
          * Этот метод позволяет получить значения поля класа наследника.
+         * Возможно задать операцию конверсии для приведения к нужному типу, отметив поле аннотацией Converter.
          * @param field поле класса
          * @return значение поля класса
          */
@@ -77,7 +78,7 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
         }
 
         /**
-         * Этот метод представляет собой дженерефицированную версию метода equals.
+         * Этот метод представляет собой обобщенную версию метода equals.
          * @param o объект сравнения на равенство
          * @param <T> тип класса наследника
          * @return равны ли объекты

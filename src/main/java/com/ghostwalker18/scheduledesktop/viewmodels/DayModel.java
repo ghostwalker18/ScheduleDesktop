@@ -67,6 +67,7 @@ public class DayModel
         if(lessonsWatchdog != null)
             lessonsWatchdog.dispose();
         lessonsMediator = repository.getSchedule(date.getValue(), teacher, group);
-        lessonsWatchdog = lessonsMediator.subscribe(lessons::onNext);
+        if(lessonsMediator != null)
+            lessonsWatchdog = lessonsMediator.subscribe(lessons::onNext);
     }
 }

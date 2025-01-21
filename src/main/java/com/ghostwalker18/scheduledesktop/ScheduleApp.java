@@ -43,7 +43,7 @@ import java.util.prefs.Preferences;
  */
 public class ScheduleApp
         extends Application {
-
+    public static final String DEVELOPER_EMAIL = "@gmail.com";
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;

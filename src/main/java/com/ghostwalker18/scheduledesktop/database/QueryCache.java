@@ -32,19 +32,17 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
      * Этот метод возвращает кэш запросов для данного типа запросов к БД, определяемых классом наследником.
      * @return кэщ запросов к БД
      */
-    public Map<T, BehaviorSubject<R>> getCache(){
+    public final Map<T, BehaviorSubject<R>> getCache(){
         return cachedResults;
     }
 
-    public synchronized BehaviorSubject<R> cacheQuery(Class<T> clazz, Object... args){
+    public final synchronized BehaviorSubject<R> cacheQuery(Class<T> clazz, Object... args){
         Class[] argsTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
         try{
             final T key = clazz.getConstructor(argsTypes).newInstance(args);
-            synchronized (key){
-                if(!cachedResults.containsKey(key))
-                    cachedResults.put(key, BehaviorSubject.create());
-                return cachedResults.get(key);
-            }
+            if(!cachedResults.containsKey(key))
+                cachedResults.put(key, BehaviorSubject.create());
+            return cachedResults.get(key);
         } catch (Exception e){
             throw new RuntimeException();
         }
@@ -84,7 +82,7 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
          * @return равны ли объекты
          */
         @SuppressWarnings("UNCHECKED_CAST")
-        protected <T extends QueryCache.QueryArgs> boolean t_equals(Object o){
+        protected final synchronized <T extends QueryCache.QueryArgs> boolean t_equals(Object o){
             if (this == o)
                 return true;
             if (o == null || getClass() != o.getClass())
@@ -100,9 +98,11 @@ public abstract class QueryCache<T extends QueryCache.QueryArgs, R> {
         }
 
         @Override
-        public int hashCode(){
-            Object[] fieldValues = Arrays.stream(this.getClass().getFields()).map(this::getFieldValue).toArray();
-            return Objects.hash(fieldValues);
+        public final int hashCode(){
+            synchronized (this){
+                Object[] fieldValues = Arrays.stream(this.getClass().getFields()).map(this::getFieldValue).toArray();
+                return Objects.hash(fieldValues);
+            }
         }
     }
 }

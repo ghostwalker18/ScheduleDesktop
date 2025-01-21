@@ -50,7 +50,7 @@ public class NetworkService {
         boolean isCachingEnabled = preferences.getBoolean("isCachingEnabled", true);
         if(isCachingEnabled){
             try{
-                Cache cache = new Cache(new File(getClass().getResource("/cache/http").getPath()), SIZE_OF_CACHE);
+                Cache cache = new Cache(new File(getClass().getResource("/cache").getPath()), SIZE_OF_CACHE);
                 OkHttpClient client = new OkHttpClient().newBuilder()
                         .cache(cache)
                         .addInterceptor(new CacheInterceptor())

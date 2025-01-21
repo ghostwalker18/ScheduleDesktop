@@ -15,16 +15,20 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
+import com.ghostwalker18.scheduledesktop.system.MouseClickAdapter;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import java.awt.*;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
+
+import static java.awt.Desktop.getDesktop;
 
 /**
  * Этот класс представляет собой экран настроек приложения.
@@ -77,6 +81,7 @@ public class SettingsForm
     private JComboBox<String> themeComboBox;
     private JButton saveButton;
     private JButton shareButton;
+    private JLabel copyright;
     private JButton backButton;
 
     /**
@@ -152,6 +157,17 @@ public class SettingsForm
             SwingUtilities.getWindowAncestor(getMainPanel()).dispose();
         });
 
+        copyright.addMouseListener(new MouseClickAdapter() {
+            @Override
+            public void onClick() {
+                try{
+                    getDesktop().mail(new URI("mailto:"+ ScheduleApp.DEVELOPER_EMAIL + "?subject=Расписание%20ПАСТ%20(десктоп)"));
+                } catch (Exception ignored){/*Not required*/}
+            }
+
+            @Override
+            public void onLongClick() {}
+        });
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
     }
 
@@ -336,7 +352,7 @@ public class SettingsForm
         gbc.insets = new Insets(0, 10, 0, 10);
         getMainPanel().add(shareButton, gbc);
 
-        final JLabel copyright = new JLabel();
+        copyright = new JLabel();
         copyright.setHorizontalAlignment(10);
         copyright.setText("2024©");
         gbc = new GridBagConstraints();

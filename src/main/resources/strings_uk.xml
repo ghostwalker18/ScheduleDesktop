@@ -72,4 +72,11 @@
     <entry key="network_settings">Мережа</entry>
     <entry key="option_enable_caching">Увімкнути кешування</entry>
     <entry key="option_download_for">Завантажувати розклад для</entry>
+    <entry key="data_transfer">Перенесення даних</entry>
+    <entry key="import_activity">Імпорт/експорт даних</entry>
+    <entry key="operation_type">Виберіть тип операції</entry>
+    <entry key="data_types">Виберіть дані</entry>
+    <entry key="import_policy_type">Режим імпорту</entry>
+    <entry key="import_data">Імпортувати дані</entry>
+    <entry key="export_data">Експортувати дані</entry>
 </properties>

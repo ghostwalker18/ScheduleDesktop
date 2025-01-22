@@ -71,4 +71,11 @@
     <entry key="network_settings">Сеть</entry>
     <entry key="option_enable_caching">Включить кэширование</entry>
     <entry key="option_download_for">Скачать раcписание для</entry>
+    <entry key="data_transfer">Перенос данных</entry>
+    <entry key="import_activity">Импорт/экспорт данных</entry>
+    <entry key="operation_type">Выберите тип операции</entry>
+    <entry key="data_types">Выберите данные</entry>
+    <entry key="import_policy_type">Режим импорта</entry>
+    <entry key="import_data">Импортировать данные</entry>
+    <entry key="export_data">Экспортировать данные</entry>
 </properties>

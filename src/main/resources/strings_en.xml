@@ -71,4 +71,11 @@
     <entry key="network_settings">Network</entry>
     <entry key="option_enable_caching">Enable caching</entry>
     <entry key="option_download_for">Download schedule for</entry>
+    <entry key="data_transfer">Data transfer</entry>
+    <entry key="import_activity">Import/export data</entry>
+    <entry key="operation_type">Select the type of operation</entry>
+    <entry key="data_types">Select the data</entry>
+    <entry key="import_policy_type">Import mode</entry>
+    <entry key="import_data">Import data</entry>
+    <entry key="export_data">Export data</entry>
 </properties>

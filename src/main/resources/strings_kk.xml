@@ -73,4 +73,11 @@
     <entry key="network_settings">Желі</entry>
     <entry key="option_enable_caching">Кэштеуді қосыңыз</entry>
     <entry key="option_download_for">Кестені жүктеу</entry>
+    <entry key="data_transfer">Деректерді тасымалдау</entry>
+    <entry key="import_activity">Деректерді импорттау/экспорттау</entry>
+    <entry key="operation_type">Операция түрін таңдаңыз</entry>
+    <entry key="data_types">Деректерді таңдаңыз</entry>
+    <entry key="import_policy_type">Импорттау режимі</entry>
+    <entry key="import_data">Деректерді импорттау</entry>
+    <entry key="export_data">Деректерді экспорттау</entry>
 </properties>

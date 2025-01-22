@@ -26,7 +26,6 @@ import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopLightTheme;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import com.ghostwalker18.scheduledesktop.common.Application;
 import com.sun.istack.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -43,7 +42,7 @@ import java.util.prefs.Preferences;
  */
 public class ScheduleApp
         extends Application {
-    public static final String DEVELOPER_EMAIL = "@gmail.com";
+    public static final String DEVELOPER_EMAIL = "ghostwalker18@mail.ru";
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;

@@ -16,10 +16,12 @@ package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.system.MouseClickAdapter;
+import com.ghostwalker18.scheduledesktop.system.Toast;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.common.Form;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,13 +29,13 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
-
 import static java.awt.Desktop.getDesktop;
 
 /**
  * Этот класс представляет собой экран настроек приложения.
  *
  * @author Ипатов Никита
+ * @since 1.0
  */
 public class SettingsForm
         extends Form {
@@ -161,12 +163,30 @@ public class SettingsForm
             @Override
             public void onClick() {
                 try{
-                    getDesktop().mail(new URI("mailto:"+ ScheduleApp.DEVELOPER_EMAIL + "?subject=Расписание%20ПАСТ%20(десктоп)"));
-                } catch (Exception ignored){/*Not required*/}
+                    getDesktop().mail(new URI("mailto:"+ ScheduleApp.DEVELOPER_EMAIL
+                            + "?subject=" + platformStrings.getString("email_subject")));
+                } catch (Exception e) {
+                    Toast toast = new Toast(SettingsForm.this.getMainPanel(),
+                            platformStrings.getString("no_email_client_found"));
+                    toast.display();
+                    Toolkit.getDefaultToolkit()
+                            .getSystemClipboard()
+                            .setContents(new StringSelection(ScheduleApp.DEVELOPER_EMAIL), null);
+                    toast = new Toast(SettingsForm.this.getMainPanel(),
+                            platformStrings.getString("email_share_completed"));
+                    toast.display();
+                }
             }
 
             @Override
-            public void onLongClick() {}
+            public void onLongClick() {
+                Toolkit.getDefaultToolkit()
+                        .getSystemClipboard()
+                        .setContents(new StringSelection(ScheduleApp.DEVELOPER_EMAIL), null);
+                Toast toast = new Toast(SettingsForm.this.getMainPanel(),
+                        platformStrings.getString("email_share_completed"));
+                toast.display();
+            }
         });
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
     }
@@ -185,6 +205,7 @@ public class SettingsForm
         saveButton.setToolTipText(platformStrings.getString("save_button_tooltip"));
         shareButton.setText(platformStrings.getString("share_app"));
         backButton.setText(platformStrings.getString("back_button_text"));
+        copyright.setToolTipText(platformStrings.getString("connect_to_developer_tooltip"));
     }
 
     @Override

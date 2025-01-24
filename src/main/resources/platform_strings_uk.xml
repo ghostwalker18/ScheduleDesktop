@@ -60,4 +60,8 @@
     <entry key="text_tooltip">Введіть текст. Макс. довжина - 255 символів.</entry>
     <entry key="save_note_tooltip">Зберегти і повернутися</entry>
     <entry key="discard_note_tooltip">Повернутися без збереження</entry>
+    <entry key="no_email_client_found">Поштовий додаток не знайдено</entry>
+    <entry key="email_subject">Расписание%20ПАСТ%20(десктоп)</entry>
+    <entry key="connect_to_developer_tooltip">Зв\'язатися з розробником</entry>
+    <entry key="share_email_completed">Email був скопійований в буфер обміну</entry>
 </properties>

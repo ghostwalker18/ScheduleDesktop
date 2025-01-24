@@ -38,7 +38,7 @@ import java.util.prefs.Preferences;
  * </p>
  *
  * @author  Ипатов Никита
- * @version  1.0
+ * @version  3.0
  */
 public class ScheduleApp
         extends Application {

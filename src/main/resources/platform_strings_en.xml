@@ -60,4 +60,8 @@
     <entry key="text_tooltip">Enter the text. The max. length is 255 characters.</entry>
     <entry key="save_note_tooltip">Save and go back</entry>
     <entry key="discard_note_tooltip">Go back without saving</entry>
+    <entry key="no_email_client_found">The mail application was not found</entry>
+    <entry key="email_subject">Расписание%20ПАСТ%20(десктоп)</entry>
+    <entry key="connect_to_developer_tooltip">Contact the developer</entry>
+    <entry key="share_email_completed">The email was copied to the clipboard</entry>
 </properties>

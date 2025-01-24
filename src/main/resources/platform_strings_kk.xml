@@ -60,4 +60,8 @@
     <entry key="text_tooltip">Мәтінді енгізіңіз. Макс.ұзындығы - 255 таңба.</entry>
     <entry key="save_note_tooltip">Сақтау және оралу</entry>
     <entry key="discard_note_tooltip">Сақтаусыз оралу</entry>
+    <entry key="no_email_client_found">Пошта қолданбасы табылмады</entry>
+    <entry key="email_subject">Расписание%20ПАСТ%20(десктоп)</entry>
+    <entry key="connect_to_developer_tooltip">Әзірлеушімен байланысыңыз</entry>
+    <entry key="share_email_completed">Email алмасу буферіне көшірілді</entry>
 </properties>

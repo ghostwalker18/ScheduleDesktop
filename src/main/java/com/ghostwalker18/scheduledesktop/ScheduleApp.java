@@ -51,7 +51,6 @@ public class ScheduleApp
      * Этот метод используется для создания экземпляра приложения
      * @return синглтон приложения
      */
-    @NotNull
     public static ScheduleApp getInstance(){
         try{
             if(instance == null)

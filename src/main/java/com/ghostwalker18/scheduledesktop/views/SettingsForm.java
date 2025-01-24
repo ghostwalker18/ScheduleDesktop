@@ -39,11 +39,11 @@ import static java.awt.Desktop.getDesktop;
  */
 public class SettingsForm
         extends Form {
-    private static final ResourceBundle languages = ResourceBundle.getBundle("languages",
+    private static final ResourceBundle languages = ResourceBundle.getBundle("arrays/languages",
             new XMLBundleControl());
-    private static final ResourceBundle themes = ResourceBundle.getBundle("themes",
+    private static final ResourceBundle themes = ResourceBundle.getBundle("arrays/themes",
             new XMLBundleControl());
-    private static final ResourceBundle corpuses = ResourceBundle.getBundle("corpuses",
+    private static final ResourceBundle corpuses = ResourceBundle.getBundle("arrays/corpuses",
             new XMLBundleControl());
     private static final ResourceBundle strings = ResourceBundle.getBundle("strings",
             new XMLBundleControl());
@@ -82,6 +82,7 @@ public class SettingsForm
     private JLabel themeLabel;
     private JComboBox<String> themeComboBox;
     private JButton saveButton;
+    private JButton dataTransfer;
     private JButton shareButton;
     private JLabel copyright;
     private JButton backButton;
@@ -153,6 +154,8 @@ public class SettingsForm
 
         enableCachingCB.setSelected(preferences.getBoolean("enableCaching", true));
 
+        dataTransfer.addActionListener(e -> ScheduleApp.getInstance().startActivity(ImportForm.class, null));
+
         saveButton.addActionListener(e -> {
             save();
             ScheduleApp.restartApplication();
@@ -173,7 +176,7 @@ public class SettingsForm
                             .getSystemClipboard()
                             .setContents(new StringSelection(ScheduleApp.DEVELOPER_EMAIL), null);
                     toast = new Toast(SettingsForm.this.getMainPanel(),
-                            platformStrings.getString("email_share_completed"));
+                            platformStrings.getString("share_email_completed"));
                     toast.display();
                 }
             }
@@ -184,7 +187,7 @@ public class SettingsForm
                         .getSystemClipboard()
                         .setContents(new StringSelection(ScheduleApp.DEVELOPER_EMAIL), null);
                 Toast toast = new Toast(SettingsForm.this.getMainPanel(),
-                        platformStrings.getString("email_share_completed"));
+                        platformStrings.getString("share_email_completed"));
                 toast.display();
             }
         });
@@ -201,6 +204,7 @@ public class SettingsForm
         appSettingsL.setText(strings.getString("app_settings"));
         themeLabel.setText(strings.getString("option_theme"));
         languageLabel.setText(strings.getString("option_language"));
+        dataTransfer.setText(strings.getString("data_transfer"));
         saveButton.setText(platformStrings.getString("saveButtonText"));
         saveButton.setToolTipText(platformStrings.getString("save_button_tooltip"));
         shareButton.setText(platformStrings.getString("share_app"));
@@ -346,6 +350,18 @@ public class SettingsForm
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 0, 10);
         getMainPanel().add(themeComboBox, gbc);
+
+        dataTransfer = new JButton();
+        dataTransfer.setEnabled(true);
+        dataTransfer.setHideActionText(false);
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridwidth = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 10, 0, 10);
+        getMainPanel().add(dataTransfer, gbc);
 
         saveButton = new JButton();
         saveButton.setEnabled(true);

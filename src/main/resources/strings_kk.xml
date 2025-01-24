@@ -80,4 +80,6 @@
     <entry key="import_policy_type">Импорттау режимі</entry>
     <entry key="import_data">Деректерді импорттау</entry>
     <entry key="export_data">Деректерді экспорттау</entry>
+    <entry key="import_file_dialog">Импортталатын файлды таңдаңыз</entry>
+    <entry key="import_db_error">Деректерді импорттау мүмкін болмады. Деректер пішімін тексеріңіз</entry>
 </properties>

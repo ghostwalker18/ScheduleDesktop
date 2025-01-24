@@ -78,4 +78,6 @@
     <entry key="import_policy_type">Режим импорта</entry>
     <entry key="import_data">Импортировать данные</entry>
     <entry key="export_data">Экспортировать данные</entry>
+    <entry key="import_file_dialog">Выберите файл для импорта</entry>
+    <entry key="import_db_error">Не удалось импортировать данные. Проверьте формат данных</entry>
 </properties>

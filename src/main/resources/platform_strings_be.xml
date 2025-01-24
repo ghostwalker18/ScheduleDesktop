@@ -64,4 +64,5 @@
     <entry key="email_subject">Расписание%20ПАСТ%20(десктоп)</entry>
     <entry key="connect_to_developer_tooltip">Звязацца з распрацоўшчыкам</entry>
     <entry key="share_email_completed">Email быў скапіяваны ў буфер абмену</entry>
+    <entry key="db_import_completed">Дадзеныя для імпарту былі скапіяваныя ў буфер абмену</entry>
 </properties>

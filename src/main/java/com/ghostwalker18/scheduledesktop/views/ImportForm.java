@@ -16,12 +16,15 @@ package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.common.Form;
+import com.ghostwalker18.scheduledesktop.system.FileTransferable;
+import com.ghostwalker18.scheduledesktop.system.Toast;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -86,10 +89,14 @@ public class ImportForm
                 doOperationButton.setText(strings.getString("import_data"));
                 doOperationButton.removeActionListener(this::exportDB);
                 doOperationButton.addActionListener(this::importDB);
+                importModeBox.setVisible(true);
+                importTypeLabel.setVisible(true);
             } else {
                 doOperationButton.setText(strings.getString("export_data"));
                 doOperationButton.removeActionListener(this::importDB);
                 doOperationButton.addActionListener(this::exportDB);
+                importModeBox.setVisible(false);
+                importTypeLabel.setVisible(false);
             }
 
         });
@@ -98,16 +105,41 @@ public class ImportForm
     /**
      * Этот метод используется для экспорта БД приложения.
      */
-    private void exportDB(ActionEvent e){
+    private void exportDB(ActionEvent event){
         String dataType = dataTypesBox.getSelectedItem().toString();
+        try{
+            File file = ScheduleApp.getInstance().getDatabase().exportDBFile(dataType);
+            Toolkit.getDefaultToolkit()
+                    .getSystemClipboard()
+                    .setContents(new FileTransferable().add(file), null);
+            Toast toast = new Toast(this.getMainPanel(), platformStrings.getString("db_export_completed"));
+            toast.setDuration(500);
+            toast.display();
+        } catch (Exception e){/*Not requiered*/}
     }
 
     /**
      * Этот метод используется для импорта БД приложения.
      */
-    private void importDB(ActionEvent e){
+    private void importDB(ActionEvent event){
         String importPolicy = importModeBox.getSelectedItem().toString();
         String dataType = dataTypesBox.getSelectedItem().toString();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setDialogTitle(strings.getString("import_file_dialog"));
+        int result = fileChooser.showDialog(this.getMainPanel(), platformStrings.getString("saveButtonText"));
+        if(result == JFileChooser.APPROVE_OPTION){
+            new Thread(() -> {
+                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                try{
+                    ScheduleApp.getInstance().getDatabase().importDBFile(file, dataType, importPolicy);
+                } catch (Exception e){
+                    Toast toast = new Toast(ImportForm.this.getMainPanel(), strings.getString("import_db_error"));
+                    toast.setDuration(500);
+                    toast.display();
+                }
+            }).start();
+        }
     }
 
     @Override
@@ -137,8 +169,10 @@ public class ImportForm
         dataTypesBox = new JComboBox<>();
         panel1.add(dataTypesBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         importTypeLabel = new JLabel();
+        importTypeLabel.setVisible(false);
         panel1.add(importTypeLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         importModeBox = new JComboBox<>();
+        importModeBox.setVisible(false);
         panel1.add(importModeBox, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         doOperationButton = new JButton();
         panel1.add(doOperationButton, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

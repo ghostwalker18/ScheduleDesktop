@@ -62,7 +62,6 @@
     <entry key="start_date">Початкова дата:</entry>
     <entry key="end_date">Кінцева дата:</entry>
     <entry key="text">Текст</entry>
-    <entry key="photo_error">Не вдалося завантажити фотографію</entry>
     <entry key="group">Група</entry>
     <entry key="theme">Тема</entry>
     <entry key="delete">Видалити</entry>
@@ -79,4 +78,6 @@
     <entry key="import_policy_type">Режим імпорту</entry>
     <entry key="import_data">Імпортувати дані</entry>
     <entry key="export_data">Експортувати дані</entry>
+    <entry key="import_file_dialog">Виберіть файл для імпорту</entry>
+    <entry key="import_db_error">Не вдалося імпортувати дані. Перевірте формат даних</entry>
 </properties>

@@ -25,7 +25,6 @@ import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopDarkTheme;
 import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopLightTheme;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import com.ghostwalker18.scheduledesktop.common.Application;
-import com.sun.istack.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -44,6 +43,7 @@ public class ScheduleApp
         extends Application {
     public static final String DEVELOPER_EMAIL = "ghostwalker18@mail.ru";
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
+    private final AppDatabase db;
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;
 
@@ -85,10 +85,18 @@ public class ScheduleApp
         return notesRepository;
     }
 
+    /**
+     * Этот метод используется для получения БД приложения.
+     * @return синглтон БД
+     */
+    public AppDatabase getDatabase(){
+        return db;
+    }
+
     private ScheduleApp() {
         super();
         instance = this;
-        AppDatabase db = AppDatabase.getInstance(AppDatabaseHibernateImpl.class);
+        db = AppDatabase.getInstance(AppDatabaseHibernateImpl.class);
         scheduleRepository = new ScheduleRepository(db,
                 new NetworkService(ScheduleRepository.BASE_URI));
         notesRepository = new NotesRepository(db);

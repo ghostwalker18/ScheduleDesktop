@@ -78,4 +78,6 @@
     <entry key="import_policy_type">Рэжым імпарту</entry>
     <entry key="import_data">Імпартаваць дадзеныя</entry>
     <entry key="export_data">Экспартаваць дадзеныя</entry>
+    <entry key="import_file_dialog">Выберыце файл для імпарту</entry>
+    <entry key="import_db_error">Не атрымалася імпартаваць дадзеныя. Праверце фармат дадзеных</entry>
 </properties>

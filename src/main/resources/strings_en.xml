@@ -78,4 +78,6 @@
     <entry key="import_policy_type">Import mode</entry>
     <entry key="import_data">Import data</entry>
     <entry key="export_data">Export data</entry>
+    <entry key="import_file_dialog">Select the file to import</entry>
+    <entry key="import_db_error">The data could not be imported. Check the data format</entry>
 </properties>

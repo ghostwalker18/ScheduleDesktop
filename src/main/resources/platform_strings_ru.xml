@@ -64,4 +64,5 @@
     <entry key="email_subject">Расписание%20ПАСТ%20(десктоп)</entry>
     <entry key="connect_to_developer_tooltip">Связаться с разработчиком</entry>
     <entry key="share_email_completed">Email был скопирован в буфер обмена</entry>
+    <entry key="db_import_completed">Данные для импорта были скопированы в буфер обмена</entry>
 </properties>

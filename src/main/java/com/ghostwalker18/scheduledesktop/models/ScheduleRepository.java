@@ -49,10 +49,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.prefs.Preferences;
 
 /**
@@ -81,8 +78,30 @@ public class ScheduleRepository {
     private final BehaviorSubject<BufferedImage> mondayTimes = BehaviorSubject.create();
     private final BehaviorSubject<BufferedImage> otherTimes = BehaviorSubject.create();
     private final ReplaySubject<Status> status = ReplaySubject.create();
+    private CompletableFuture<UpdateResult> updateResult;
     private final ExecutorService updateExecutorService = Executors.newFixedThreadPool(4);
-    private final List<Future<?>> updateFutures = new ArrayList<>();
+    private final List<CompletableFuture<UpdateResult>> updateFutures = new ArrayList<>();
+    private boolean allJobsDone = true;
+
+    /**
+     * Это перечисление показывает, чем завершилось обновление репозитория.
+     */
+    public enum UpdateResult {
+        SUCCESS, FAIL;
+
+        public static UpdateResult fromInt(int i){
+            if (i == 0) {
+                return SUCCESS;
+            }
+            return FAIL;
+        }
+
+        public static int toInt(UpdateResult result){
+            if(result == SUCCESS)
+                return 0;
+            return 1;
+        }
+    }
 
     /**
      * Этот класс используетс для отображения статуса обновления репозитория.
@@ -97,9 +116,46 @@ public class ScheduleRepository {
         }
     }
 
-    public ScheduleRepository(AppDatabase db, NetworkService networkService){
+    public ScheduleRepository(AppDatabase db, @NotNull NetworkService networkService){
         this.db = db;
         api = networkService.getScheduleAPI();
+    }
+
+    /**
+     * Этот метод обновляет репозиторий приложения.
+     * Метод использует многопоточность и может вызывать исключения в других потоках.
+     * Требуется интернет соединение.
+     */
+    public void update(){
+        String downloadFor = preferences.get("downloadFor", "all");
+        if(allJobsDone) {
+            allJobsDone = false;
+            updateFutures.clear();
+            if (downloadFor.equals("all") || downloadFor.equals("first"))
+                updateFutures.add(
+                        CompletableFuture.supplyAsync(this::updateFirstCorpus, updateExecutorService)
+                );
+            if (downloadFor.equals("all") || downloadFor.equals("second"))
+                updateFutures.add(
+                        CompletableFuture.supplyAsync(this::updateSecondCorpus, updateExecutorService)
+                );
+            updateFutures.add(
+                    CompletableFuture.supplyAsync(this::updateTimes, updateExecutorService)
+            );
+
+            updateResult = CompletableFuture.allOf(updateFutures.toArray(new CompletableFuture[0]))
+                    .thenApplyAsync(ignored -> {
+                        allJobsDone = true;
+                        for(CompletableFuture<UpdateResult> future : updateFutures){
+                            if(future.getNow(UpdateResult.FAIL) == UpdateResult.FAIL){
+                                preferences.put("previous_update_result",
+                                        String.valueOf(UpdateResult.toInt(UpdateResult.FAIL)));
+                                return UpdateResult.FAIL;
+                            }
+                        }
+                        return UpdateResult.SUCCESS;
+                    }, updateExecutorService);
+        }
     }
 
     /**
@@ -110,6 +166,20 @@ public class ScheduleRepository {
      */
     public Observable<Status> getStatus(){
         return status;
+    }
+
+    /**
+     * Этот метод используется для получения результата обновления репозитория.
+     */
+    public CompletableFuture<UpdateResult> onUpdateCompleted(){
+        return updateResult;
+    }
+
+    /**
+     * Этот метод используется для получения результата предыдущего обновления репозитория.
+     */
+    public UpdateResult getUpdateResult(){
+        return UpdateResult.fromInt(preferences.getInt("previous_update_result", 0));
     }
 
     /**
@@ -130,27 +200,6 @@ public class ScheduleRepository {
      */
     public Observable<BufferedImage> getOtherTimes(){
         return otherTimes;
-    }
-
-    /**
-     * Этот метод обновляет репозиторий приложения.
-     * Метод использует многопоточность и может вызывать исключения в других потоках.
-     * Требуется интернет соединение.
-     */
-    public void update(){
-        String downloadFor = preferences.get("downloadFor", "all");
-        boolean allJobsDone = true;
-        for(Future<?> future : updateFutures){
-            allJobsDone &= future.isDone();
-        }
-        if(allJobsDone){
-            updateFutures.clear();
-            if(downloadFor.equals("all") || downloadFor.equals("first"))
-                updateFutures.add(updateExecutorService.submit(this::updateFirstCorpus));
-            if(downloadFor.equals("all") || downloadFor.equals("second"))
-                updateFutures.add(updateExecutorService.submit(this::updateSecondCorpus));
-            updateFutures.add(updateExecutorService.submit(this::updateTimes));
-        }
     }
 
     /**
@@ -191,7 +240,7 @@ public class ScheduleRepository {
      * @return спискок занятий
      */
     @NotNull
-    public Observable<List<Lesson>> getSchedule(Calendar date, @Nullable String teacher, @Nullable String group){
+    public Observable<List<Lesson>> getLessons(Calendar date, @Nullable String teacher, @Nullable String group){
         if (teacher != null && group != null)
             return db.lessonDao().getLessonsForGroupWithTeacher(date, group, teacher);
         else if (teacher != null)
@@ -199,6 +248,16 @@ public class ScheduleRepository {
         else if (group != null)
             return db.lessonDao().getLessonsForGroup(date, group);
         else return BehaviorSubject.createDefault(new LinkedList<>());
+    }
+
+    /**
+     * Этот метод позволяет получить последнюю дату,
+     * для которой для заданной группы указано расписание.
+     * @param group группа
+     * @return последняя дата, для которой существует расписание
+     */
+    public Calendar getLastKnownLessonDate(String group){
+        return db.lessonDao().getLastKnownLessonDate(group);
     }
 
     /**
@@ -276,63 +335,61 @@ public class ScheduleRepository {
         return preferences.get("savedGroup", platformStrings.getString("combox_placeholder"));
     }
 
-    private void updateTimes(){
+    private UpdateResult updateTimes() {
         File mondayTimesFile = new File(MONDAY_TIMES_PATH);
         File otherTimesFile = new File(OTHER_TIMES_PATH);
-        if(!preferences.getBoolean("doNotUpdateTimes", true)
-                || !mondayTimesFile.exists() || !otherTimesFile.exists()){
+        if (!preferences.getBoolean("doNotUpdateTimes", true)
+                || !mondayTimesFile.exists() || !otherTimesFile.exists()) {
             api.getMondayTimes().enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try(ResponseBody body = response.body()){
+                    try (ResponseBody body = response.body()) {
                         BufferedImage image = ImageIO.read(body.byteStream());
                         mondayTimes.onNext(image);
                         ImageIO.write(image, "jpg", mondayTimesFile);
-                    }
-                    catch (Exception ignored){/*Not required*/}
+                    } catch (Exception ignored) {/*Not required*/}
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {}
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                }
             });
             api.getOtherTimes().enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try(ResponseBody body = response.body()){
+                    try (ResponseBody body = response.body()) {
                         BufferedImage image = ImageIO.read(body.byteStream());
                         otherTimes.onNext(image);
                         ImageIO.write(image, "jpg", otherTimesFile);
-                    }
-                    catch (Exception ignored){/*Not required*/}
+                    } catch (Exception ignored) {/*Not required*/}
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {/*Not required*/}
             });
-        }
-        else {
+        } else {
             try {
                 BufferedImage bitmap1 = ImageIO.read(mondayTimesFile);
                 mondayTimes.onNext(bitmap1);
                 BufferedImage bitmap2 = ImageIO.read(otherTimesFile);
                 otherTimes.onNext(bitmap2);
-            }
-            catch(Exception ignored){/*Not required*/}
+            } catch (Exception ignored) {/*Not required*/}
         }
+        return UpdateResult.SUCCESS;
     }
 
     /**
      * Этот метод используется для обновления БД приложения занятиями для первого корпуса
      */
-    private void updateFirstCorpus(){
-        updateSchedule(this::getLinksForFirstCorpusSchedule, converter::convertFirstCorpus);
+    private UpdateResult updateFirstCorpus(){
+        return updateSchedule(this::getLinksForFirstCorpusSchedule, converter::convertFirstCorpus);
     }
 
     /**
      * Этот метод используется для обновления БД приложения занятиями для второго корпуса
      */
-    private void updateSecondCorpus(){
-        updateSchedule(this::getLinksForSecondCorpusSchedule, converter::convertSecondCorpus);
+    private UpdateResult updateSecondCorpus(){
+        return updateSchedule(this::getLinksForSecondCorpusSchedule, converter::convertSecondCorpus);
     }
 
     /**
@@ -340,13 +397,19 @@ public class ScheduleRepository {
      * @param linksGetter метод для получения ссылок на файлы расписания
      * @param parser парсер файлов расписания
      */
-    private void updateSchedule(Callable<List<String>> linksGetter, IConverter.IConversion parser){
-        List<String> scheduleLinks = new ArrayList<>();
-        try{
+    private UpdateResult updateSchedule(Callable<List<String>> linksGetter, IConverter.IConversion parser){
+        List<String> scheduleLinks;
+        try {
             scheduleLinks = linksGetter.call();
-        } catch (Exception ignored) {/*Not required*/}
-        if(scheduleLinks.isEmpty())
+        } catch (Exception e){
+            return UpdateResult.FAIL;
+        }
+        if(scheduleLinks.isEmpty()){
             status.onNext(new Status(strings.getString("schedule_download_error"), 0));
+            return UpdateResult.FAIL;
+        }
+        final List<UpdateResult> successCounter = new ArrayList<>();
+        final CountDownLatch latch = new CountDownLatch(scheduleLinks.size());
         for(String link : scheduleLinks){
             status.onNext(new Status(strings.getString("schedule_download_status"), 10));
             api.getScheduleFile(link).enqueue(new Callback<ResponseBody>() {
@@ -376,6 +439,7 @@ public class ScheduleRepository {
                         synchronized (status){
                             status.onNext(new Status(strings.getString("processing_completed_status"), 100));
                         }
+                        successCounter.add(UpdateResult.SUCCESS);
                     }
                     catch(OpenException | ReadException | ParseException e){
                         synchronized (status){
@@ -387,13 +451,27 @@ public class ScheduleRepository {
                             status.onNext(new Status(strings.getString("schedule_parsing_error"), 0));
                         }
                     }
+                    finally {
+                        latch.countDown();
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    latch.countDown();
                     status.onNext(new Status(strings.getString("schedule_download_error"), 0));
                 }
             });
+        }
+        try{
+            latch.await();
+            if(successCounter.size() == scheduleLinks.size())
+                return UpdateResult.SUCCESS;
+            else
+                return UpdateResult.FAIL;
+        }
+        catch (Exception e) {
+            return UpdateResult.FAIL;
         }
     }
 }

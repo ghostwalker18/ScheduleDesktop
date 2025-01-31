@@ -26,7 +26,7 @@
     <entry key="download_completed">Файли розкладу були збережені за адресою:</entry>
     <entry key="backward_tooltip">Попередній тиждень</entry>
     <entry key="forward_tooltip">Наступний тиждень</entry>
-    <entry key="teachers_tooltip">Наприклад: "Иванов И.И"</entry>
+    <entry key="teachers_tooltip">Наприклад: "Иванов И.И."</entry>
     <entry key="groups_tooltip">Наприклад: "A-11"</entry>
     <entry key="weekday_tooltip">Показати розклад на цей день</entry>
     <entry key="update_tooltip">Оновити розклад</entry>
@@ -65,4 +65,15 @@
     <entry key="connect_to_developer_tooltip">Зв\'язатися з розробником</entry>
     <entry key="share_email_completed">Email був скопійований в буфер обміну</entry>
     <entry key="db_import_completed">Дані для імпорту були скопійовані в буфер обміну</entry>
+    <entry key="notifications">Повідомлення</entry>
+    <entry key="notifications_notification_app_update_channel_name">Оновлення додатків</entry>
+    <entry key="notifications_notification_app_update_channel_descr">
+        Отримайте сповіщення про нові оновлення для мобільної та настільної версії програми
+    </entry>
+    <entry key="notifications_notification_schedule_update_channel_name">Розклад</entry>
+    <entry key="notifications_notification_schedule_update_channel_descr">
+        Отримуйте повідомлення про зміни в розкладі
+    </entry>
+    <entry key="notifications_new_schedule_available">Викладено новий розклад</entry>
+    <entry key="notifications_schedule_unavailable">Упс! Не вийшло оновити розклад…</entry>
 </properties>

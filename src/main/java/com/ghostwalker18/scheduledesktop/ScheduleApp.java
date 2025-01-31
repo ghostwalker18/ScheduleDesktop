@@ -20,14 +20,23 @@ import com.ghostwalker18.scheduledesktop.database.AppDatabaseHibernateImpl;
 import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.network.NetworkService;
+import com.ghostwalker18.scheduledesktop.notifications.NotificationManagerWrapper;
+import com.ghostwalker18.scheduledesktop.notifications.ScheduleUpdateNotificationTask;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
 import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopDarkTheme;
 import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopLightTheme;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import com.ghostwalker18.scheduledesktop.common.Application;
+import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
 /**
@@ -40,12 +49,19 @@ import java.util.prefs.Preferences;
  * @version  3.0
  */
 public class ScheduleApp
-        extends Application {
+        extends Application
+        implements PreferenceChangeListener {
     public static final String DEVELOPER_EMAIL = "ghostwalker18@mail.ru";
     private static final Preferences preferences = Preferences.userNodeForPackage(ScheduleRepository.class);
+    private static final  ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
+            new XMLBundleControl());
+    private static final  ResourceBundle nonPublicStrings = ResourceBundle.getBundle("non_public_strings",
+            new XMLBundleControl());
     private final AppDatabase db;
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ScheduledFuture<?> scheduleUpdateFuture;
 
     /**
      * Этот метод используется для создания экземпляра приложения
@@ -97,6 +113,8 @@ public class ScheduleApp
         super();
         instance = this;
         db = AppDatabase.getInstance(AppDatabaseHibernateImpl.class);
+        preferences.addPreferenceChangeListener(this);
+        initPushes();
         scheduleRepository = new ScheduleRepository(db,
                 new NetworkService(ScheduleRepository.BASE_URI));
         notesRepository = new NotesRepository(db);
@@ -148,5 +166,32 @@ public class ScheduleApp
                 platformStrings.getString("saveButtonText"));
         UIManager.put("FileChooser.cancelButtonText",
                 platformStrings.getString("cancelButtonText"));
+    }
+
+    private void initPushes(){
+        NotificationManagerWrapper.getInstance().createNotificationChannel(
+                nonPublicStrings.getString("notifications_notification_app_update_channel_id"),
+                platformStrings.getString("notifications_notification_app_update_channel_name"),
+                platformStrings.getString("notifications_notification_app_update_channel_descr")
+        );
+        NotificationManagerWrapper.getInstance().createNotificationChannel(
+                nonPublicStrings.getString("notifications_notification_schedule_update_channel_id"),
+                platformStrings.getString("notifications_notification_schedule_update_channel_name"),
+                platformStrings.getString("notifications_notification_schedule_update_channel_descr")
+        );
+    }
+
+    @Override
+    public void preferenceChange(@NotNull PreferenceChangeEvent evt) {
+        switch (evt.getKey()){
+            case "schedule_notifications":
+                boolean enabled = preferences.getBoolean("schedule_notifications", false);
+                if(enabled)
+                    scheduleUpdateFuture = scheduler.scheduleAtFixedRate(
+                            new ScheduleUpdateNotificationTask(), 1, 1, TimeUnit.MINUTES);
+                else
+                    if(scheduleUpdateFuture != null)
+                        scheduleUpdateFuture.cancel(false);
+        }
     }
 }

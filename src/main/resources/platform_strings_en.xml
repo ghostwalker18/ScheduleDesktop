@@ -26,7 +26,7 @@
     <entry key="download_completed">The schedule files were saved at:</entry>
     <entry key="backward_tooltip">Previous week</entry>
     <entry key="forward_tooltip">Next week</entry>
-    <entry key="teachers_tooltip">Example: "Иванов И.И"</entry>
+    <entry key="teachers_tooltip">Example: "Иванов И.И."</entry>
     <entry key="groups_tooltip">Example: "A-11"</entry>
     <entry key="weekday_tooltip">Show schedule for this day</entry>
     <entry key="update_tooltip">Update the schedule</entry>
@@ -65,4 +65,15 @@
     <entry key="connect_to_developer_tooltip">Contact the developer</entry>
     <entry key="share_email_completed">The email was copied to the clipboard</entry>
     <entry key="db_import_completed">The data to import has been copied to the clipboard</entry>
+    <entry key="notifications">Notifications</entry>
+    <entry key="notifications_notification_app_update_channel_name">Application Updates</entry>
+    <entry key="notifications_notification_app_update_channel_descr">
+        Receive notifications about new updates for the mobile and desktop versions of the app
+    </entry>
+    <entry key="notifications_notification_schedule_update_channel_name">Schedule</entry>
+    <entry key="notifications_notification_schedule_update_channel_descr">
+        Receive notifications about schedule changes
+    </entry>
+    <entry key="notifications_new_schedule_available">A new schedule has been posted</entry>
+    <entry key="notifications_schedule_unavailable">Oops! Couldn\'t update the schedule…</entry>
 </properties>

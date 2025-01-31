@@ -114,10 +114,12 @@ public class NotesForm
 
                     @Override
                     public void onFragmentHide() {
-                        filterPanel.remove(filter);
-                        filterPanel.revalidate();
-                        filterPanel.repaint();
-                        filter = null;
+                        SwingUtilities.invokeLater(() -> {
+                            filterPanel.remove(filter);
+                            filterPanel.revalidate();
+                            filterPanel.repaint();
+                            filter = null;
+                        });
                     }
                 });
                 filterPanel.add(filter);

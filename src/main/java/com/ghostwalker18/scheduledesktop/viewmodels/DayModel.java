@@ -66,7 +66,7 @@ public class DayModel
     private void revalidateLessons(){
         if(lessonsWatchdog != null)
             lessonsWatchdog.dispose();
-        lessonsMediator = repository.getSchedule(date.getValue(), teacher, group);
+        lessonsMediator = repository.getLessons(date.getValue(), teacher, group);
         if(lessonsMediator != null)
             lessonsWatchdog = lessonsMediator.subscribe(lessons::onNext);
     }

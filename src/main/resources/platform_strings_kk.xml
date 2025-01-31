@@ -26,7 +26,7 @@
     <entry key="download_completed">Кесте файлдары сақталды:</entry>
     <entry key="backward_tooltip">Алдыңғы апта</entry>
     <entry key="forward_tooltip">Келесі апта</entry>
-    <entry key="teachers_tooltip">Мысалы: "Иванов И.И"</entry>
+    <entry key="teachers_tooltip">Мысалы: "Иванов И.И."</entry>
     <entry key="groups_tooltip">Мысалы: "A-11"</entry>
     <entry key="weekday_tooltip">Осы күнге арналған кестені көрсету</entry>
     <entry key="update_tooltip">Кестені жаңарту</entry>
@@ -65,4 +65,15 @@
     <entry key="connect_to_developer_tooltip">Әзірлеушімен байланысыңыз</entry>
     <entry key="share_email_completed">Email алмасу буферіне көшірілді</entry>
     <entry key="db_import_completed">Импорттауға арналған деректер алмасу буферіне көшірілді</entry>
+    <entry key="notifications">Хабарландырулар</entry>
+    <entry key="notifications_notification_app_update_channel_name">Қолданба жаңартулары</entry>
+    <entry key="notifications_notification_app_update_channel_descr">
+        Қолданбаның мобильді және жұмыс үстелі нұсқасы үшін жаңа жаңартулар туралы хабарландырулар алыңыз
+    </entry>
+    <entry key="notifications_notification_schedule_update_channel_name">Кесте</entry>
+    <entry key="notifications_notification_schedule_update_channel_descr">
+        Кестедегі өзгерістер туралы хабарландырулар алыңыз
+    </entry>
+    <entry key="notifications_new_schedule_available">Жаңа кесте орналастырылды</entry>
+    <entry key="notifications_schedule_unavailable">Ой! Кестені жаңарту мүмкін болмады…</entry>
 </properties>

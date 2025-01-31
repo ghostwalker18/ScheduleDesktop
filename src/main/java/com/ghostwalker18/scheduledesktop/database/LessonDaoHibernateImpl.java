@@ -147,6 +147,18 @@ public class LessonDaoHibernateImpl
     }
 
     @Override
+    public Calendar getLastKnownLessonDate(String group){
+        String hql = "select max(date) from Lesson where groupName = :group";
+        try(Session session = db.getSessionFactory().openSession()){
+            Query<Calendar> query = session.createQuery(hql, Calendar.class);
+            query.setParameter("group", group);
+            return query.getSingleResult();
+        } catch (Exception ignored){
+            return null;
+        }
+    }
+
+    @Override
     public void insertMany(List<Lesson> lessons) {
         db.runQuery(() -> {
             try (Session session = db.getSessionFactory().openSession()) {

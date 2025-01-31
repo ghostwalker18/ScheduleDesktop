@@ -80,9 +80,18 @@ public interface LessonDao {
      * @param group название группы
      * @return список предметов
      */
-    @Query(sqlStatement ="SELECT DISTINCT subjectName FROM tblSchedule WHERE groupName = :group " +
+    @Query(sqlStatement = "SELECT DISTINCT subjectName FROM tblSchedule WHERE groupName = :group " +
             "ORDER BY subjectName ASC")
     Observable<List<String>> getSubjectsForGroup(String group);
+
+    /**
+     * Этот метод позволяет получить последнюю дату,
+     * для которой для заданной группы указано расписание.
+     * @param group группа
+     * @return последняя дата, для которой существует расписание
+     */
+    @Query(sqlStatement = "SELECT MAX(lessonDate) FROM tblSchedule WHERE groupName =:group")
+    Calendar getLastKnownLessonDate(String group);
 
     /**
      * Этот метод позволяет вставить элементы Lesson в БД.

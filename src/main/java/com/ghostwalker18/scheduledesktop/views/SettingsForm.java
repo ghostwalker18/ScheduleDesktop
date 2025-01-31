@@ -15,6 +15,8 @@
 package com.ghostwalker18.scheduledesktop.views;
 
 import com.ghostwalker18.scheduledesktop.ScheduleApp;
+import com.ghostwalker18.scheduledesktop.notifications.AppNotification;
+import com.ghostwalker18.scheduledesktop.notifications.NotificationManagerWrapper;
 import com.ghostwalker18.scheduledesktop.system.MouseClickAdapter;
 import com.ghostwalker18.scheduledesktop.system.Toast;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
@@ -49,6 +51,8 @@ public class SettingsForm
             new XMLBundleControl());
     private static final  ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
+    private final ResourceBundle nonPublicStrings = ResourceBundle.getBundle("non_public_strings",
+            new XMLBundleControl());
     private static final Map<String, String> languagesCodes = new HashMap<>();
     private static final Map<String, String> themesCodes = new HashMap<>();
     private static final Map<String, String> corpusesCodes = new HashMap<>();
@@ -81,6 +85,11 @@ public class SettingsForm
     private JComboBox<String> languageComboBox;
     private JLabel themeLabel;
     private JComboBox<String> themeComboBox;
+    private JLabel notificationSettings;
+    private JLabel appUpdateNotificationL;
+    private JCheckBox appUpdateCB;
+    private JLabel scheduleUpdateNotificationL;
+    private JCheckBox scheduleUpdateCB;
     private JButton saveButton;
     private JButton dataTransfer;
     private JButton shareButton;
@@ -105,6 +114,12 @@ public class SettingsForm
 
         boolean enableCaching = enableCachingCB.isSelected();
         preferences.putBoolean("enableCaching", enableCaching);
+
+        boolean enableUpdateNotifications = appUpdateCB.isSelected();
+        preferences.putBoolean("update_notifications", enableUpdateNotifications);
+
+        boolean enableScheduleNotifications = scheduleUpdateCB.isSelected();
+        preferences.putBoolean("schedule_notifications", enableScheduleNotifications);
     }
 
     @Override
@@ -154,7 +169,24 @@ public class SettingsForm
 
         enableCachingCB.setSelected(preferences.getBoolean("enableCaching", true));
 
-        dataTransfer.addActionListener(e -> ScheduleApp.getInstance().startActivity(ImportForm.class, null));
+        appUpdateCB.setSelected(preferences.getBoolean("update_notifications", false));
+
+        scheduleUpdateCB.setSelected(preferences.getBoolean("schedule_notifications", false));
+
+        //dataTransfer.addActionListener(e -> ScheduleApp.getInstance().startActivity(ImportForm.class, null));
+        dataTransfer.addActionListener(e -> NotificationManagerWrapper.getInstance()
+                .showNotification(new AppNotification(
+                                0,
+                                platformStrings.getString(
+                                        "notifications_notification_schedule_update_channel_name"),
+                                platformStrings.getString(
+                                        "notifications_new_schedule_available"),
+                                nonPublicStrings.getString(
+                                        "notifications_notification_schedule_update_channel_id"),
+                                platformStrings.getString(
+                                        "notifications_notification_schedule_update_channel_name")
+                        )
+                ));
 
         saveButton.addActionListener(e -> {
             save();
@@ -204,6 +236,11 @@ public class SettingsForm
         appSettingsL.setText(strings.getString("app_settings"));
         themeLabel.setText(strings.getString("option_theme"));
         languageLabel.setText(strings.getString("option_language"));
+        notificationSettings.setText(platformStrings.getString("notifications"));
+        appUpdateNotificationL.setText(
+                platformStrings.getString("notifications_notification_app_update_channel_name"));
+        scheduleUpdateNotificationL.setText(
+                platformStrings.getString("notifications_notification_schedule_update_channel_name"));
         dataTransfer.setText(strings.getString("data_transfer"));
         saveButton.setText(platformStrings.getString("saveButtonText"));
         saveButton.setToolTipText(platformStrings.getString("save_button_tooltip"));
@@ -351,11 +388,59 @@ public class SettingsForm
         gbc.insets = new Insets(0, 0, 0, 10);
         getMainPanel().add(themeComboBox, gbc);
 
+        notificationSettings = new JLabel();
+        notificationSettings.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 0, 10, 0);
+        getMainPanel().add(notificationSettings, gbc);
+
+        appUpdateNotificationL = new JLabel();
+        appUpdateNotificationL.setHorizontalAlignment(10);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 10, 0, 0);
+        getMainPanel().add(appUpdateNotificationL, gbc);
+
+        appUpdateCB = new JCheckBox();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 10;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(0, 0, 0, 10);
+        getMainPanel().add(appUpdateCB, gbc);
+
+        scheduleUpdateNotificationL = new JLabel();
+        scheduleUpdateNotificationL.setHorizontalAlignment(10);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 11;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 10, 0, 0);
+        getMainPanel().add(scheduleUpdateNotificationL, gbc);
+
+        scheduleUpdateCB = new JCheckBox();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 11;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(0, 0, 0, 10);
+        getMainPanel().add(scheduleUpdateCB, gbc);
+
         dataTransfer = new JButton();
         dataTransfer.setEnabled(true);
         dataTransfer.setHideActionText(false);
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = 12;
         gbc.gridwidth = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -368,7 +453,7 @@ public class SettingsForm
         saveButton.setHideActionText(false);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 9;
+        gbc.gridy = 12;
         gbc.gridwidth = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -381,7 +466,7 @@ public class SettingsForm
         saveButton.setHideActionText(false);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 10;
+        gbc.gridy = 13;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -394,7 +479,7 @@ public class SettingsForm
         copyright.setText("2024 © Ипатов Никита");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 11;
+        gbc.gridy = 14;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;

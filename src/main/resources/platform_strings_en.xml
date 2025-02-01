@@ -70,6 +70,8 @@
     <entry key="notifications_notification_app_update_channel_descr">
         Receive notifications about new updates for the mobile and desktop versions of the app
     </entry>
+    <entry key="notifications_new_desktop_update">A new update for the desktop version is available:</entry>
+    <entry key="notifications_new_mobile_update">A new update for the mobile version is available:</entry>
     <entry key="notifications_notification_schedule_update_channel_name">Schedule</entry>
     <entry key="notifications_notification_schedule_update_channel_descr">
         Receive notifications about schedule changes

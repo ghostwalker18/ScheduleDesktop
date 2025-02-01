@@ -70,6 +70,8 @@
     <entry key="notifications_notification_app_update_channel_descr">
         Получайте уведомления о новых обновления для мобильной и десктопной версии приложения
     </entry>
+    <entry key="notifications_new_desktop_update">Доступно новое обновление для десктопной версии:</entry>
+    <entry key="notifications_new_mobile_update">Доступно новое обновление для мобильной версии:</entry>
     <entry key="notifications_notification_schedule_update_channel_name">Расписание</entry>
     <entry key="notifications_notification_schedule_update_channel_descr">
         Получайте уведомления об изменениях в расписании

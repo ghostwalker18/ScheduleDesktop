@@ -70,6 +70,8 @@
     <entry key="notifications_notification_app_update_channel_descr">
         Отримайте сповіщення про нові оновлення для мобільної та настільної версії програми
     </entry>
+    <entry key="notifications_new_desktop_update">Доступно нове оновлення для десктопної версії:</entry>
+    <entry key="notifications_new_mobile_update">Доступне нове оновлення для мобільної версії:</entry>
     <entry key="notifications_notification_schedule_update_channel_name">Розклад</entry>
     <entry key="notifications_notification_schedule_update_channel_descr">
         Отримуйте повідомлення про зміни в розкладі

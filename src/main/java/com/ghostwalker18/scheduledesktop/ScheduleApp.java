@@ -20,6 +20,7 @@ import com.ghostwalker18.scheduledesktop.database.AppDatabaseHibernateImpl;
 import com.ghostwalker18.scheduledesktop.models.NotesRepository;
 import com.ghostwalker18.scheduledesktop.models.ScheduleRepository;
 import com.ghostwalker18.scheduledesktop.network.NetworkService;
+import com.ghostwalker18.scheduledesktop.notifications.AppUpdateNotificationTask;
 import com.ghostwalker18.scheduledesktop.notifications.NotificationManagerWrapper;
 import com.ghostwalker18.scheduledesktop.notifications.ScheduleUpdateNotificationTask;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
@@ -27,7 +28,7 @@ import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopDarkTheme;
 import com.ghostwalker18.scheduledesktop.themes.ScheduleDesktopLightTheme;
 import com.ghostwalker18.scheduledesktop.views.MainForm;
 import com.ghostwalker18.scheduledesktop.common.Application;
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -58,10 +59,12 @@ public class ScheduleApp
     private static final  ResourceBundle nonPublicStrings = ResourceBundle.getBundle("non_public_strings",
             new XMLBundleControl());
     private final AppDatabase db;
+    private final NetworkService service;
     private final ScheduleRepository scheduleRepository;
     private final NotesRepository notesRepository;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private ScheduledFuture<?> scheduleUpdateFuture;
+    private ScheduledFuture<?> appUpdateFuture;
 
     /**
      * Этот метод используется для создания экземпляра приложения
@@ -114,9 +117,8 @@ public class ScheduleApp
         instance = this;
         db = AppDatabase.getInstance(AppDatabaseHibernateImpl.class);
         preferences.addPreferenceChangeListener(this);
-        initPushes();
-        scheduleRepository = new ScheduleRepository(db,
-                new NetworkService(ScheduleRepository.BASE_URI));
+        service = new NetworkService(ScheduleRepository.BASE_URI);
+        scheduleRepository = new ScheduleRepository(db, service);
         notesRepository = new NotesRepository(db);
         scheduleRepository.update();
         frame.setIconImage(Toolkit.getDefaultToolkit()
@@ -168,30 +170,48 @@ public class ScheduleApp
                 platformStrings.getString("cancelButtonText"));
     }
 
-    private void initPushes(){
-        NotificationManagerWrapper.getInstance().createNotificationChannel(
-                nonPublicStrings.getString("notifications_notification_app_update_channel_id"),
-                platformStrings.getString("notifications_notification_app_update_channel_name"),
-                platformStrings.getString("notifications_notification_app_update_channel_descr")
-        );
-        NotificationManagerWrapper.getInstance().createNotificationChannel(
-                nonPublicStrings.getString("notifications_notification_schedule_update_channel_id"),
-                platformStrings.getString("notifications_notification_schedule_update_channel_name"),
-                platformStrings.getString("notifications_notification_schedule_update_channel_descr")
-        );
-    }
-
     @Override
     public void preferenceChange(@NotNull PreferenceChangeEvent evt) {
+        boolean enabled;
         switch (evt.getKey()){
+            case "update_notifications":
+                enabled = preferences.getBoolean("update_notifications", false);
+                if(enabled){
+                    NotificationManagerWrapper.getInstance().createNotificationChannel(
+                            nonPublicStrings.getString("notifications_notification_app_update_channel_id"),
+                            platformStrings.getString("notifications_notification_app_update_channel_name"),
+                            platformStrings.getString("notifications_notification_app_update_channel_descr")
+                    );
+                    appUpdateFuture = scheduler.scheduleAtFixedRate(
+                            new AppUpdateNotificationTask(service), 1, 1, TimeUnit.MINUTES);
+                }
+                else{
+                    NotificationManagerWrapper.getInstance()
+                            .deleteNotificationChannel(
+                                    nonPublicStrings.getString("notifications_notification_app_update_channel_id"));
+                    if(appUpdateFuture != null)
+                        appUpdateFuture.cancel(false);
+                }
+                break;
             case "schedule_notifications":
-                boolean enabled = preferences.getBoolean("schedule_notifications", false);
-                if(enabled)
+                enabled = preferences.getBoolean("schedule_notifications", false);
+                if(enabled){
+                    NotificationManagerWrapper.getInstance().createNotificationChannel(
+                            nonPublicStrings.getString("notifications_notification_schedule_update_channel_id"),
+                            platformStrings.getString("notifications_notification_schedule_update_channel_name"),
+                            platformStrings.getString("notifications_notification_schedule_update_channel_descr")
+                    );
                     scheduleUpdateFuture = scheduler.scheduleAtFixedRate(
                             new ScheduleUpdateNotificationTask(), 1, 1, TimeUnit.MINUTES);
-                else
+                }
+                else{
+                    NotificationManagerWrapper.getInstance()
+                            .deleteNotificationChannel(
+                                    nonPublicStrings.getString("notifications_notification_schedule_update_channel_id"));
                     if(scheduleUpdateFuture != null)
                         scheduleUpdateFuture.cancel(false);
+                }
+
         }
     }
 }

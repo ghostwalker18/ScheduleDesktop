@@ -21,6 +21,9 @@ import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Этот класс используется для предоставления приложению услуг доступа к сети.
@@ -64,5 +67,22 @@ public class NetworkService {
         return apiBuilder
                 .build()
                 .create(ScheduleNetworkAPI.class);
+    }
+
+    /**
+     * Этот метод позволяет получить API GitHub репозитория.
+     * @return API для доступа к проверке наличия обновлений.
+     */
+    public AppUpdateNetworkAPI getUpdateAPI(){
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit.Builder apiBuilder = new Retrofit.Builder()
+                .baseUrl("https://api.github.com/repos/ghostwalker18")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .callbackExecutor(Executors.newFixedThreadPool(2));
+        return apiBuilder
+                .build()
+                .create(AppUpdateNetworkAPI.class);
     }
 }

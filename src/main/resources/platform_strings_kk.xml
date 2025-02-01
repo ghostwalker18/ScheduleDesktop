@@ -70,6 +70,8 @@
     <entry key="notifications_notification_app_update_channel_descr">
         Қолданбаның мобильді және жұмыс үстелі нұсқасы үшін жаңа жаңартулар туралы хабарландырулар алыңыз
     </entry>
+    <entry key="notifications_new_desktop_update">Жұмыс үстелінің нұсқасы үшін жаңа жаңарту қол жетімді:</entry>
+    <entry key="notifications_new_mobile_update">Мобильді нұсқа үшін жаңа жаңарту қол жетімді:</entry>
     <entry key="notifications_notification_schedule_update_channel_name">Кесте</entry>
     <entry key="notifications_notification_schedule_update_channel_descr">
         Кестедегі өзгерістер туралы хабарландырулар алыңыз

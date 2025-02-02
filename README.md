@@ -1,11 +1,10 @@
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=ghostwalker18_ScheduleDesktop&metric=alert_status)](https://sonarcloud.io/dashboard?id=ghostwalker18_ScheduleDesktop)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ghostwalker18_ScheduleDesktop&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ghostwalker18_ScheduleDesktop)
 [![Code smells](https://sonarcloud.io/api/project_badges/measure?project=ghostwalker18_ScheduleDesktop&metric=code_smells)](https://sonarcloud.io/dashboard?id=ghostwalker18_ScheduleDesktop)
-# Расписание Петрозаводского техникума городского хозяйства.
+# Расписание Петрозаводского архитектурно-строительного техникума.
 ![Расписание занятий](https://github.com/ghostwalker18/ScheduleDesktop/blob/master/promo_images/schedule1.png?raw=true)
 
-Неофициальное десктопное приложение расписания ПТГХ. Приложение представляет собой клиент, который скачивает файлы расписания с официального сайта Петрозаводского техникума городского хозяйства
-и представляет их содержимое в удобной для пользователя форме.
+Неофициальное десктопное приложение расписания ПАСТ. Приложение представляет собой клиент, который скачивает файлы расписания с официального сайта  Петрозаводского архитектурно-строительного техникума (бывшего ПТГХ) и представляет их содержимое в удобной для пользователя форме.
 <br>
 Для пользователя доступны:
 <ul>
@@ -20,7 +19,7 @@
 ### Релизы
 <ul>
   <li>Java версия - ScheduleDesktop-Java.rar</li>
-  <li>Windows версия - SchedulePCME-2.1.msi</li>
+  <li>Windows версия - SchedulePCME-2.3.msi</li>
 </ul>
 
 ### Java

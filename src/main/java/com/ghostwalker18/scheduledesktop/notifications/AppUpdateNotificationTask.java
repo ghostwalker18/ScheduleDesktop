@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  */
 public class AppUpdateNotificationTask
         implements Runnable {
-    private AppUpdateNetworkAPI api;
+    private final AppUpdateNetworkAPI api;
     private static final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
     private static final ResourceBundle nonPublicStrings = ResourceBundle.getBundle("non_public_strings",
@@ -40,7 +40,7 @@ public class AppUpdateNotificationTask
         api = service.getUpdateAPI();
     }
     private final String latestDesktopUpdateVersion = ScheduleApp.getPreferences().get("latest_desktop_update", "2.3");
-    private final String latestMobileUpdateVersion = ScheduleApp.getPreferences().get("lateat_mobile_update", "4.0");
+    private final String latestMobileUpdateVersion = ScheduleApp.getPreferences().get("latest_mobile_update", "4.0");
     @Override
     public void run() {
         try{

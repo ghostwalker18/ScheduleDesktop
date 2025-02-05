@@ -185,7 +185,7 @@ public class NotesFilterFragment
     public static class DatePicker
             extends DatePickerDialog {
         private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
-                new XMLBundleControl());;
+                new XMLBundleControl());
         private final NotesModel model;
         private final String dateType;
 

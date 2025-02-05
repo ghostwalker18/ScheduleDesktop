@@ -14,8 +14,14 @@
 
 package com.ghostwalker18.scheduledesktop.utils;
 
+import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.Calendar;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * В этом классе содержаться различные вспомогательные методы, использующиеся по всему приложению.
@@ -24,6 +30,10 @@ import java.util.Calendar;
  * @since 2.4
  */
 public class Utils {
+
+    /**
+     * Это перечисление показывает доступность занятия для посещения - прошло, идет, не началось
+     */
     public enum LessonAvailability{
         ENDED, STARTED, NOT_STARTED
     }
@@ -102,8 +112,63 @@ public class Utils {
      * @param link ссылка на файл
      * @return имя файла
      */
-    public static String getNameFromLink(String link){
+    public static String getNameFromLink(@NotNull String link){
         String[] parts = link.split("/");
         return parts[parts.length - 1];
+    }
+
+    /**
+     * Этот метод создает ZIP-архив из указанных файлов.
+     * @param sourceFiles файлы для архивации
+     * @param archive файл архива
+     */
+    public static void zip(File[] sourceFiles, File archive){
+        int BUFFER = 4096;
+        try(ZipOutputStream out = new ZipOutputStream(
+                new BufferedOutputStream(
+                        Files.newOutputStream(archive.toPath()
+                        )
+                ))
+        ){
+            byte[] data = new byte[BUFFER];
+
+            for (File sourceFile : sourceFiles) {
+                try (FileInputStream fi = new FileInputStream(sourceFile);
+                     BufferedInputStream origin = new BufferedInputStream(fi, BUFFER)
+                ) {
+                    ZipEntry entry = new ZipEntry(sourceFile.getName());
+                    out.putNextEntry(entry);
+
+                    int count;
+                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                        out.write(data, 0, count);
+                    }
+                }
+            }
+        } catch (Exception ignores){/*Not required*/}
+    }
+
+    /**
+     * Этот метод распаковывает указанный ZIP-архив.
+     * @param archive архив для распаковки
+     * @param outputDirectory место для извлеченных файлов
+     */
+    public static void unzip(@NotNull File archive, @NotNull File outputDirectory){
+        if(!outputDirectory.exists())
+            outputDirectory.mkdirs();
+        try(ZipInputStream zin = new ZipInputStream(Files.newInputStream(archive.toPath()))
+        ){
+            ZipEntry ze;
+            while ((ze = zin.getNextEntry()) != null) {
+                try(FileOutputStream fout = new FileOutputStream(
+                        outputDirectory.getName() + "/" + ze.getName())
+                ){
+                    for (int c = zin.read(); c != -1; c = zin.read()) {
+                        fout.write(c);
+                    }
+                    zin.closeEntry();
+                }
+            }
+        } catch (Exception ignored){/*Not required*/}
     }
 }

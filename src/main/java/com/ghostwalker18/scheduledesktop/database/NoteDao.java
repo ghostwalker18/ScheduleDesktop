@@ -66,10 +66,29 @@ public interface NoteDao {
     Observable<List<Note>> getNotesByKeyword(String keyword, String group);
 
     /**
+     * Этот метод позволяет синхронно получить все содержимое заметок (например, для экспорта).
+     * @return все содержимое tblNote
+     */
+    @Query(sqlStatement = "SELECT * FROM tblNote")
+    List<Note> getAllNotesSync();
+
+    /**
+     * Этот метод позволяет синхронно удалить все содержимое tblNote
+     */
+    @Query(sqlStatement = "DELETE FROM tblNote")
+    void deleteAllNotesSync();
+
+    /**
      * Этот метод позволяет внести заметку в БД.
      * @param note заметка
      */
     void insert(Note note);
+
+    /**
+     * Этот метод позволяет синхронно вставить элементы Note в БД.
+     * @param notes заметки
+     */
+    void insertManySync(List<Note> notes);
 
     /**
      * Этот метод позволяет обновить заметку из БД.

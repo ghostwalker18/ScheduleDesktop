@@ -159,6 +159,17 @@ public class LessonDaoHibernateImpl
     }
 
     @Override
+    public List<Lesson> getAllLessonsSync() {
+        String hql = "from Lesson";
+        try(Session session = db.getSessionFactory().openSession()){
+            Query<Lesson> query = session.createQuery(hql, Lesson.class);
+            return query.list();
+        } catch (Exception ignored){
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
     public void insertMany(List<Lesson> lessons) {
         db.runQuery(() -> {
             try (Session session = db.getSessionFactory().openSession()) {
@@ -181,6 +192,26 @@ public class LessonDaoHibernateImpl
     }
 
     @Override
+    public void insertManySync(List<Lesson> lessons) {
+        try (Session session = db.getSessionFactory().openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            int counter = 0;
+            for (Lesson lesson : lessons) {
+                counter++;
+                session.merge(lesson);
+                if (counter % 32 == 0) {//same as the JDBC batch size
+                    //flush a batch of inserts and release memory:
+                    session.flush();
+                    session.clear();
+                }
+            }
+            transaction.commit();
+            db.getInvalidationTracker().onNext(true);
+        }
+    }
+
+    @Override
     public void update(Lesson lesson) {
         db.runQuery(()->{
             try(Session session = db.getSessionFactory().openSession()){
@@ -191,6 +222,18 @@ public class LessonDaoHibernateImpl
                 db.getInvalidationTracker().onNext(true);
             }
         });
+    }
+
+    @Override
+    public void deleteAllLessonsSync() {
+        String hql = "delete from Lesson";
+        try(Session session = db.getSessionFactory().openSession()){
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            Query<?> query = session.createQuery(hql);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception ignored){/*Not required*/}
     }
 
     /**

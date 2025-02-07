@@ -14,8 +14,12 @@
 
 package com.ghostwalker18.scheduledesktop.database;
 
+import com.ghostwalker18.scheduledesktop.models.Lesson;
+import com.ghostwalker18.scheduledesktop.models.Note;
+import com.sun.istack.NotNull;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -39,16 +43,30 @@ public abstract class AppDatabase {
      */
     public abstract NoteDao noteDao();
     private static AppDatabase instance = null;
-    private static final  String DATABASE_NAME = "database";
+    protected static final  String DATABASE_NAME = "database";
     private final ExecutorService queryExecutorService = Executors.newCachedThreadPool();
     private final PublishSubject<Boolean> onDataBaseUpdated = PublishSubject.create();
+    protected File dbFile;
 
-    public static AppDatabase getInstance(Class<? extends AppDatabase> type){
+    /**
+     * Этот метод позволяет получить экземпляр данного класса встроенной БД приложения.
+     * @param type класс встроенной БД
+     * @param dbFile файл БД (опционально)
+     * @return встроенная БД
+     */
+    public static AppDatabase getInstance(Class<? extends AppDatabase> type, File... dbFile){
         try{
             if(instance == null)
-                instance = type.getConstructor().newInstance();
-        } catch (Exception ignored){}
+                if(dbFile != null)
+                    instance = type.getConstructor(File.class).newInstance(dbFile[0]);
+                else
+                    instance = type.getConstructor(File.class).newInstance((File) null);
+        } catch (Exception ignored){/*Not required*/}
         return instance;
+    }
+
+    protected AppDatabase(File dbFile){
+        this.dbFile = dbFile;
     }
 
     /**
@@ -71,7 +89,18 @@ public abstract class AppDatabase {
      * Этот метод позволяет получить архивированные файлы БД приложения для ее экспорта.
      * @return файл БД приложения
      */
-    public  File exportDBFile(String dataType){
+    public  File exportDBFile(@NotNull String dataType){
+        AppDatabase exportDB = AppDatabase.getInstance(instance.getClass());
+        exportDB.lessonDao().deleteAllLessonsSync();
+        exportDB.noteDao().deleteAllNotesSync();
+        if(dataType.equals("schedule") || dataType.equals("schedule_and_notes")){
+            List<Lesson> lessons = instance.lessonDao().getAllLessonsSync();
+            exportDB.lessonDao().insertManySync(lessons);
+        }
+        if(dataType.equals("notes") || dataType.equals("schedule_and_notes")){
+            List<Note> notes = instance.noteDao().getAllNotesSync();
+            exportDB.noteDao().insertManySync(notes);
+        }
         return null;
     }
 
@@ -82,6 +111,18 @@ public abstract class AppDatabase {
      * @param importPolicy политика импорта - слияние или замена данных.
      */
     public  void importDBFile(File dbFile, String dataType, String importPolicy){
-
+        AppDatabase importDB = AppDatabase.getInstance(instance.getClass(), dbFile);
+        if(dataType.equals("schedule") || dataType.equals("schedule_and_notes")){
+            if(importPolicy.equals("replace"))
+                instance.lessonDao().deleteAllLessonsSync();
+            List<Lesson> lessons = importDB.lessonDao().getAllLessonsSync();
+            instance.lessonDao().insertManySync(lessons);
+        }
+        if(dataType.equals("notes") || dataType.equals("schedule_and_notes")){
+            if(importPolicy.equals("replace"))
+                instance.noteDao().deleteAllNotesSync();
+            List<Note> notes = importDB.noteDao().getAllNotesSync();
+            instance.noteDao().insertManySync(notes);
+        }
     }
 }

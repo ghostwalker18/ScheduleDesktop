@@ -24,6 +24,8 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import java.io.File;
+
 /**
  * Этот класс представляет собой реализацию базы данных приложения
  * на основе Hibernate.
@@ -64,14 +66,15 @@ public class AppDatabaseHibernateImpl
         }
     }
 
-    public AppDatabaseHibernateImpl(){
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure("hibernate.cfg.xml")
-                .build();
+    public AppDatabaseHibernateImpl(File dbFile){
+        super(dbFile);
+        final StandardServiceRegistryBuilder registry = new StandardServiceRegistryBuilder()
+                .configure("hibernate.cfg.xml");
+        if(dbFile != null && dbFile.exists())
+            registry.applySetting("connection.url", "jdbc:sqlite:" + dbFile.getAbsolutePath());
 
-        MetadataSources sources = new MetadataSources(registry);
-        sources
-                .addAnnotatedClass(Lesson.class)
+        MetadataSources sources = new MetadataSources(registry.build());
+        sources.addAnnotatedClass(Lesson.class)
                 .addAnnotatedClass(Note.class)
                 .addPackage(this.getClass().getPackage());
         MetadataBuilder metadataBuilder = sources.getMetadataBuilder();

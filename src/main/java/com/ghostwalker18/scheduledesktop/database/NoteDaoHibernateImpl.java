@@ -21,10 +21,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Этот класс представляет собой реализацию интерфейса NoteDAO на основе Hibernate.
@@ -126,6 +123,29 @@ public class NoteDaoHibernateImpl
     }
 
     @Override
+    public List<Note> getAllNotesSync() {
+        String hql = "from Note";
+        try(Session session = db.getSessionFactory().openSession()){
+            Query<Note> query = session.createQuery(hql, Note.class);
+            return query.list();
+        } catch (Exception ignored){
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public void deleteAllNotesSync() {
+        String hql = "delete from Note";
+        try(Session session = db.getSessionFactory().openSession()){
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            Query<?> query = session.createQuery(hql);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception ignored){/*Not required*/}
+    }
+
+    @Override
     public void insert(Note note) {
         db.runQuery(() -> {
             try (Session session = db.getSessionFactory().openSession()) {
@@ -136,6 +156,26 @@ public class NoteDaoHibernateImpl
                 db.getInvalidationTracker().onNext(true);
             } catch (Exception ignored){/*Not required*/}
         });
+    }
+
+    @Override
+    public void insertManySync(List<Note> notes) {
+        try (Session session = db.getSessionFactory().openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            int counter = 0;
+            for (Note note : notes) {
+                counter++;
+                session.merge(note);
+                if (counter % 32 == 0) {//same as the JDBC batch size
+                    //flush a batch of inserts and release memory:
+                    session.flush();
+                    session.clear();
+                }
+            }
+            transaction.commit();
+            db.getInvalidationTracker().onNext(true);
+        }
     }
 
     @Override

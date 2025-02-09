@@ -25,8 +25,8 @@ import javax.swing.*;
 public abstract class Fragment
         extends JPanel
         implements ViewModelOwner {
-    private final Form parentForm;
-    private final ViewModelStore store = new ViewModelStore();
+    private transient final Form parentForm;
+    private transient final ViewModelStore store = new ViewModelStore();
 
     /**
      * Этот метод используется для создания UI интерфейса фрагмента.

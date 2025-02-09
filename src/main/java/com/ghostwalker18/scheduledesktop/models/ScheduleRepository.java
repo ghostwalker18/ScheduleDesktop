@@ -351,8 +351,7 @@ public class ScheduleRepository {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                }
+                public void onFailure(Call<ResponseBody> call, Throwable t) {/*Not required*/}
             });
             api.getOtherTimes().enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -434,7 +433,6 @@ public class ScheduleRepository {
                         Files.copy(stream, scheduleFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         scheduleFiles.add(new Pair<>(Utils.getNameFromLink(link), scheduleFile));
                         List<Lesson> lessons = parser.convert(excelFile);
-                        excelFile.close();
                         db.lessonDao().insertMany(lessons);
                         synchronized (status){
                             status.onNext(new Status(strings.getString("processing_completed_status"), 100));
@@ -469,6 +467,10 @@ public class ScheduleRepository {
                 return UpdateResult.SUCCESS;
             else
                 return UpdateResult.FAIL;
+        }
+        catch (InterruptedException | ThreadDeath e){
+            Thread.currentThread().interrupt();
+            return UpdateResult.FAIL;
         }
         catch (Exception e) {
             return UpdateResult.FAIL;

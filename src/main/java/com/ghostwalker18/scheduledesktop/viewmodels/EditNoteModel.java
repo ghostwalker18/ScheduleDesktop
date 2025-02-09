@@ -39,8 +39,8 @@ public class EditNoteModel
     private final ScheduleRepository scheduleRepository = ScheduleApp.getInstance().getScheduleRepository();
     private final NotesRepository notesRepository = ScheduleApp.getInstance().getNotesRepository();
     private final BehaviorSubject<Note> note = BehaviorSubject.createDefault(new Note());
-    private final BehaviorSubject<List<String>> noteThemesMediator = BehaviorSubject.create();
-    private Observable<List<String>> themes;
+    private final BehaviorSubject<List<String>> themes = BehaviorSubject.create();
+    private Observable<List<String>> themesMediator;
     private Disposable notesWatchdog;
     private Disposable themesWatchdog;
     private final BehaviorSubject<String> theme = BehaviorSubject.createDefault("");
@@ -50,8 +50,8 @@ public class EditNoteModel
     private boolean isEdited = false;
 
     public EditNoteModel(){
-        themes = scheduleRepository.getSubjects(scheduleRepository.getSavedGroup());
-        themesWatchdog = themes.subscribe(noteThemesMediator::onNext);
+        themesMediator = scheduleRepository.getSubjects(scheduleRepository.getSavedGroup());
+        themesWatchdog = themesMediator.subscribe(themes::onNext);
     }
 
     /**
@@ -78,8 +78,8 @@ public class EditNoteModel
     public void setGroup(String group){
         this.group.onNext(group);
         themesWatchdog.dispose();
-        themes = scheduleRepository.getSubjects(group);
-        themesWatchdog = themes.subscribe(noteThemesMediator::onNext);
+        themesMediator = scheduleRepository.getSubjects(group);
+        themesWatchdog = themesMediator.subscribe(themes::onNext);
     }
 
     /**
@@ -138,7 +138,7 @@ public class EditNoteModel
      * @return список предлаагаемых тем
      */
     public Observable<List<String>> getThemes(){
-        return noteThemesMediator;
+        return themes;
     }
 
     /**

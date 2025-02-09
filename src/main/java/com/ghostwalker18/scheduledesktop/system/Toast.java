@@ -62,9 +62,10 @@ public class Toast
 
                 dispose();
             }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
+            catch (InterruptedException | ThreadDeath e){
+                Thread.currentThread().interrupt();
             }
+            catch (Exception e) {/*Not required*/}
         }).start();
     }
 }

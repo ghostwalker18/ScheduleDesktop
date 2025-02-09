@@ -75,6 +75,10 @@ public class ScheduleUpdateNotificationTask
                                 )
                         );
             }
-        } catch (Exception ignored){}
+        }
+        catch (InterruptedException | ThreadDeath e){
+            Thread.currentThread().interrupt();
+        }
+        catch (Exception ignored){/*Not required*/}
     }
 }

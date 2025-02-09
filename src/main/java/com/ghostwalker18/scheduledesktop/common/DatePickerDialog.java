@@ -48,7 +48,7 @@ public abstract class DatePickerDialog
      */
     public abstract void onDateSet(Calendar date);
 
-    public DatePickerDialog() {
+    protected DatePickerDialog() {
         setupUI();
         setContentPane(contentPane);
         setModal(true);
@@ -61,6 +61,7 @@ public abstract class DatePickerDialog
         buttonCancel.addActionListener(e -> dispose());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 dispose();
             }

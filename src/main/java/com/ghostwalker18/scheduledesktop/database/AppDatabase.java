@@ -54,13 +54,14 @@ public abstract class AppDatabase {
      * @param dbFile файл БД (опционально)
      * @return встроенная БД
      */
-    public static AppDatabase getInstance(Class<? extends AppDatabase> type, File... dbFile){
+    public static AppDatabase getInstance(Class<? extends AppDatabase> type, @NotNull File... dbFile){
         try{
-            if(instance == null)
-                if(dbFile != null)
+            if(instance == null){
+                if(dbFile.length == 1)
                     instance = type.getConstructor(File.class).newInstance(dbFile[0]);
                 else
                     instance = type.getConstructor(File.class).newInstance((File) null);
+            }
         } catch (Exception ignored){/*Not required*/}
         return instance;
     }
@@ -73,7 +74,7 @@ public abstract class AppDatabase {
      * Этот метод позволяет выполнить запрос к БД в отдельном пуле потоков.
      * @param job запрос для асинхронного выполнения.
      */
-    public Future runQuery(Runnable job){
+    public Future<?> runQuery(Runnable job){
         return queryExecutorService.submit(job);
     }
 

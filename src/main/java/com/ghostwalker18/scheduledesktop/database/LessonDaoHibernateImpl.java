@@ -171,24 +171,7 @@ public class LessonDaoHibernateImpl
 
     @Override
     public void insertMany(List<Lesson> lessons) {
-        db.runQuery(() -> {
-            try (Session session = db.getSessionFactory().openSession()) {
-                Transaction transaction = session.getTransaction();
-                transaction.begin();
-                int counter = 0;
-                for (Lesson lesson : lessons) {
-                    counter++;
-                    session.merge(lesson);
-                    if (counter % 32 == 0) {//same as the JDBC batch size
-                        //flush a batch of inserts and release memory:
-                        session.flush();
-                        session.clear();
-                    }
-                }
-                transaction.commit();
-                db.getInvalidationTracker().onNext(true);
-            }
-        });
+        db.runQuery(() -> insertManySync(lessons));
     }
 
     @Override

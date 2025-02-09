@@ -40,7 +40,7 @@ public class EditNoteForm
             new XMLBundleControl());
     private final ResourceBundle platformStrings = ResourceBundle.getBundle("platform_strings",
             new XMLBundleControl());
-    private EditNoteModel model;
+    private transient EditNoteModel model;
     private JButton saveButton;
     private JButton discardButton;
     private JComboBox<String> groupBox;

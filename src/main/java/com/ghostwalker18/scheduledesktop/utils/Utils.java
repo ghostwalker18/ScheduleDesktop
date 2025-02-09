@@ -123,24 +123,24 @@ public class Utils {
      * @param archive файл архива
      */
     public static void zip(File[] sourceFiles, File archive){
-        int BUFFER = 4096;
+        int bufferSize = 4096;
         try(ZipOutputStream out = new ZipOutputStream(
                 new BufferedOutputStream(
                         Files.newOutputStream(archive.toPath()
                         )
                 ))
         ){
-            byte[] data = new byte[BUFFER];
+            byte[] data = new byte[bufferSize];
 
             for (File sourceFile : sourceFiles) {
                 try (FileInputStream fi = new FileInputStream(sourceFile);
-                     BufferedInputStream origin = new BufferedInputStream(fi, BUFFER)
+                     BufferedInputStream origin = new BufferedInputStream(fi, bufferSize)
                 ) {
                     ZipEntry entry = new ZipEntry(sourceFile.getName());
                     out.putNextEntry(entry);
 
                     int count;
-                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    while ((count = origin.read(data, 0, bufferSize)) != -1) {
                         out.write(data, 0, count);
                     }
                 }

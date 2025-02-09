@@ -15,8 +15,6 @@
 package com.ghostwalker18.scheduledesktop.network;
 
 import com.ghostwalker18.scheduledesktop.notifications.AppUpdateAnswer;
-import com.google.gson.Gson;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 

@@ -18,7 +18,6 @@ import com.ghostwalker18.scheduledesktop.ScheduleApp;
 import com.ghostwalker18.scheduledesktop.network.AppUpdateNetworkAPI;
 import com.ghostwalker18.scheduledesktop.network.NetworkService;
 import com.ghostwalker18.scheduledesktop.system.XMLBundleControl;
-
 import java.util.ResourceBundle;
 
 /**

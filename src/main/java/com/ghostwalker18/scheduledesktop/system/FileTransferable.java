@@ -29,8 +29,6 @@ public class FileTransferable
         implements Transferable {
     private final List<File> listOfFiles = new LinkedList<>();
 
-    public FileTransferable(){}
-
     public FileTransferable add(File file){
         listOfFiles.add(file);
         return this;

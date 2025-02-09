@@ -226,6 +226,7 @@ public class SettingsForm
         backButton.addActionListener(e -> ScheduleApp.getInstance().startActivity(MainForm.class, null));
     }
 
+    @Override
     public void onSetupLanguage() {
         setTitle(strings.getString("settings"));
         scheduleSettingsL.setText(strings.getString("schedule_settings"));

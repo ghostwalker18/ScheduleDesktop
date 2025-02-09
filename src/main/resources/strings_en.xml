@@ -14,7 +14,7 @@
   -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="app_name">PCME Schedule (unofficial)</entry>
+    <entry key="app_name">PCACE Schedule (unofficial)</entry>
     <entry key="settings">Settings</entry>
     <entry key="days_tab">Lessons</entry>
     <entry key="times_tab">Times</entry>
